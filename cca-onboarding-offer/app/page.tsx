@@ -1,65 +1,72 @@
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+import { CountdownCard } from "@/components/countdown-card";
+import { PublicShell } from "@/components/public-shell";
+import { getDeadline } from "@/lib/config";
+import { publicCopy } from "@/lib/content/public";
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <PublicShell wide>
+      <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <section className="space-y-8">
+          <CountdownCard
+            deadline={getDeadline()}
+            label={publicCopy.countdown.label}
+            title={publicCopy.countdown.title}
+          />
+          <div className="shadow-soft rounded-[2.5rem] border border-white/80 bg-white/90 p-8 sm:p-10">
+            <div className="inline-flex rounded-full border border-rose-200 bg-rose-50 px-5 py-2 text-xs font-semibold uppercase tracking-[0.32em] text-rose-600">
+              {publicCopy.home.seal[0]} {publicCopy.home.seal[1]} {publicCopy.home.seal[2]}
+            </div>
+            <h1 className="mt-6 text-balance text-5xl font-semibold tracking-tight text-slate-950 sm:text-6xl">
+              {publicCopy.home.title}
+            </h1>
+            <ol className="mt-8 space-y-5">
+              {publicCopy.home.propositions.map((lines, index) => (
+                <li
+                  key={index}
+                  className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5 text-lg leading-8 text-slate-800"
+                >
+                  <span className="mr-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-950 text-base font-semibold text-white">
+                    {index + 1}
+                  </span>
+                  <span>{lines[0]} </span>
+                  {lines[1] ? (
+                    <span className="font-semibold text-rose-600">{lines[1]}</span>
+                  ) : null}
+                  {lines[2] ? <span> {lines[2]}</span> : null}
+                </li>
+              ))}
+            </ol>
+            <Link
+              href="/select-diploma"
+              className="mt-8 inline-flex rounded-full bg-slate-950 px-7 py-4 text-sm font-semibold text-white shadow-soft"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+              {publicCopy.home.cta}
+            </Link>
+          </div>
+        </section>
+        <section className="relative">
+          <div className="absolute -left-4 top-10 hidden rounded-full border border-rose-200 bg-rose-50 px-6 py-4 text-center text-sm font-semibold text-rose-600 shadow-card md:block">
+            <div>{publicCopy.home.seal[0]}</div>
+            <div>{publicCopy.home.seal[1]}</div>
+            <div>{publicCopy.home.seal[2]}</div>
+            <div>{publicCopy.home.seal[3]}</div>
+          </div>
+          <div className="overflow-hidden rounded-[2.5rem] border border-white/80 bg-white/90 p-4 shadow-soft">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="/images/convo-img.jpg"
+              alt={publicCopy.home.imageAlt}
+              width={1718}
+              height={958}
+              priority
+              className="h-auto w-full rounded-[2rem] object-cover"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+          </div>
+        </section>
+      </div>
+    </PublicShell>
   );
 }

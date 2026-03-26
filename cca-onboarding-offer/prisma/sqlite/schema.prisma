@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id                  Int       @id @default(autoincrement())
+  registration_id     String    @unique
+  student_id          String?   @unique
+  full_name           String
+  name_with_initials  String
+  gender              String
+  nic                 String
+  nic_lookup          String
+  date_of_birth       DateTime
+  home_contact_number String
+  whatsapp_number     String
+  whatsapp_lookup     String
+  email               String
+  email_lookup        String
+  permanent_address   String
+  postal_code         String?
+  district            String
+  selected_diploma    String
+  terms_accepted      Boolean   @default(false)
+  payment_method      String?
+  payment_slip        String?
+  payment_status      String    @default("pending")
+  payhere_order_id    String?
+  amount_paid         Decimal?
+  payment_date        DateTime?
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+
+  @@unique([nic_lookup, selected_diploma])
+  @@unique([email_lookup, selected_diploma])
+  @@unique([whatsapp_lookup, selected_diploma])
+  @@index([selected_diploma])
+  @@index([payment_method])
+  @@index([payment_status])
+  @@index([payhere_order_id])
+}

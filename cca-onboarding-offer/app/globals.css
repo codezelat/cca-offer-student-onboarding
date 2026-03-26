@@ -1,26 +1,101 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-500: #3b82f6;
+  --primary-700: #1d4ed8;
+  --primary-900: #1e3a8a;
+  --accent-50: #fff1f2;
+  --accent-500: #f43f5e;
+  --accent-600: #e11d48;
+  --neutral-50: #f8fafc;
+  --neutral-100: #f1f5f9;
+  --neutral-200: #e2e8f0;
+  --neutral-300: #cbd5e1;
+  --neutral-600: #475569;
+  --neutral-700: #334155;
+  --neutral-900: #0f172a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans:
+    "Inter", "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+a,
+button {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+button:hover,
+a:hover {
+  transform: translateY(-1px);
+}
+
+.glass-effect {
+  background: color-mix(in srgb, white 78%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.bg-gradient-primary {
+  background-image: linear-gradient(135deg, #eff6ff 0%, #dbeafe 35%, #fff1f2 100%);
+}
+
+.bg-gradient-accent {
+  background-image: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 48%, #fecdd3 100%);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.shadow-soft {
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.06),
+    0 18px 48px rgb(15 23 42 / 0.12);
+}
+
+.shadow-card {
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.05),
+    0 12px 30px rgb(15 23 42 / 0.08);
+}
+
+.page-frame {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.page-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top left, rgb(251 113 133 / 0.14), transparent 38%),
+    radial-gradient(circle at top right, rgb(59 130 246 / 0.12), transparent 42%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.9), rgb(248 250 252 / 0.96));
+  pointer-events: none;
+}
+
+.page-content {
+  position: relative;
+  z-index: 1;
 }

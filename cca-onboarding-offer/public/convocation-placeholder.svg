@@ -1,0 +1,18 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="900" fill="#FFF1F2"/>
+  <rect x="80" y="80" width="1040" height="740" rx="44" fill="url(#paint0_linear_2_4)"/>
+  <circle cx="250" cy="260" r="72" fill="#FB7185"/>
+  <circle cx="425" cy="320" r="88" fill="#F43F5E" fill-opacity="0.7"/>
+  <circle cx="650" cy="280" r="94" fill="#0F172A" fill-opacity="0.18"/>
+  <circle cx="840" cy="340" r="110" fill="#1D4ED8" fill-opacity="0.3"/>
+  <path d="M180 560C280 470 405 450 520 520C615 580 700 620 820 600C915 584 988 530 1030 495V760H180V560Z" fill="#0F172A"/>
+  <text x="180" y="170" fill="#0F172A" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="700">Convocation image placeholder</text>
+  <text x="180" y="215" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500">Replace with the original asset packet for literal parity.</text>
+  <defs>
+    <linearGradient id="paint0_linear_2_4" x1="80" y1="80" x2="1120" y2="820" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE4E6"/>
+      <stop offset="0.45" stop-color="#FFF1F2"/>
+      <stop offset="1" stop-color="#DBEAFE"/>
+    </linearGradient>
+  </defs>
+</svg>

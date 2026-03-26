@@ -3,24 +3,39 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "DATABASE_URL=${DATABASE_URL:-file:./prisma/sqlite/dev.db} next dev",
+    "build": "DATABASE_URL=${DATABASE_URL:-file:./prisma/sqlite/dev.db} prisma generate --schema prisma/sqlite/schema.prisma && DATABASE_URL=${DATABASE_URL:-file:./prisma/sqlite/dev.db} next build",
+    "start": "DATABASE_URL=${DATABASE_URL:-file:./prisma/sqlite/dev.db} next start",
+    "lint": "eslint",
+    "postinstall": "DATABASE_URL=${DATABASE_URL:-file:./prisma/sqlite/dev.db} prisma generate --schema prisma/sqlite/schema.prisma",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prisma:generate": "DATABASE_URL=${DATABASE_URL:-file:./prisma/sqlite/dev.db} prisma generate --schema prisma/sqlite/schema.prisma",
+    "prisma:generate:mysql": "MYSQL_DATABASE_URL=${MYSQL_DATABASE_URL:-mysql://user:password@localhost:3306/sitc_offer} prisma generate --schema prisma/mysql/schema.prisma",
+    "prisma:migrate": "DATABASE_URL=${DATABASE_URL:-file:./prisma/sqlite/dev.db} prisma migrate dev --schema prisma/sqlite/schema.prisma",
+    "prisma:push": "DATABASE_URL=${DATABASE_URL:-file:./prisma/sqlite/dev.db} prisma db push --schema prisma/sqlite/schema.prisma"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.2",
+    "jose": "^6.2.2",
     "next": "16.2.1",
+    "pdf-lib": "^1.17.1",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "xlsx": "^0.18.5",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/coverage-v8": "^4.1.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
+    "prisma": "^6.19.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.2"
   }
 }

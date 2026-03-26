@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/mysql-client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("MYSQL_DATABASE_URL")
+}
+
+model Student {
+  id                  Int       @id @default(autoincrement())
+  registration_id     String    @unique @db.VarChar(64)
+  student_id          String?   @unique @db.VarChar(32)
+  full_name           String    @db.VarChar(255)
+  name_with_initials  String    @db.VarChar(255)
+  gender              String    @db.VarChar(16)
+  nic                 String    @db.VarChar(32)
+  nic_lookup          String    @db.VarChar(32)
+  date_of_birth       DateTime
+  home_contact_number String    @db.VarChar(32)
+  whatsapp_number     String    @db.VarChar(32)
+  whatsapp_lookup     String    @db.VarChar(32)
+  email               String    @db.VarChar(255)
+  email_lookup        String    @db.VarChar(255)
+  permanent_address   String    @db.VarChar(500)
+  postal_code         String?   @db.VarChar(16)
+  district            String    @db.VarChar(128)
+  selected_diploma    String    @db.VarChar(255)
+  terms_accepted      Boolean   @default(false)
+  payment_method      String?   @db.VarChar(64)
+  payment_slip        String?   @db.VarChar(255)
+  payment_status      String    @default("pending") @db.VarChar(64)
+  payhere_order_id    String?   @db.VarChar(128)
+  amount_paid         Decimal?  @db.Decimal(10, 2)
+  payment_date        DateTime?
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+
+  @@unique([nic_lookup, selected_diploma])
+  @@unique([email_lookup, selected_diploma])
+  @@unique([whatsapp_lookup, selected_diploma])
+  @@index([selected_diploma])
+  @@index([payment_method])
+  @@index([payment_status])
+  @@index([payhere_order_id])
+}

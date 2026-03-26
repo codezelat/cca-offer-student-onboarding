@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma / generated clients
+/generated
+/prisma/**/*.db
+/prisma/**/*.db-journal
+
+# app storage
+/storage/payment_slips/*
+!/storage/payment_slips/.gitkeep
+
+# exports
+/tmp-exports
