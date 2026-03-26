@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import * as XLSX from "xlsx";
 
 import { getSession } from "@/lib/session";
 import { getDashboardStudents } from "@/lib/student-service";
+import { createWorkbookBuffer } from "@/lib/xlsx";
 
 export const runtime = "nodejs";
 
@@ -23,79 +23,57 @@ export async function GET(request: Request) {
 
   const rows = [
     [
-      "Registration ID",
-      "Full Name",
-      "Name with Initials",
-      "Gender",
-      "NIC",
-      "Date of Birth",
-      "Email",
-      "WhatsApp Number",
-      "Home Contact",
-      "Permanent Address",
-      "Postal Code",
-      "District",
-      "Selected Diploma",
-      "Payment Method",
-      "Amount Paid",
-      "Payment Date",
-      "Payment Slip URL",
+      { value: "Registration ID" },
+      { value: "Full Name" },
+      { value: "Name with Initials" },
+      { value: "Gender" },
+      { value: "NIC" },
+      { value: "Date of Birth" },
+      { value: "Email" },
+      { value: "WhatsApp Number" },
+      { value: "Home Contact" },
+      { value: "Permanent Address" },
+      { value: "Postal Code" },
+      { value: "District" },
+      { value: "Selected Diploma" },
+      { value: "Payment Method" },
+      { value: "Amount Paid" },
+      { value: "Payment Date" },
+      { value: "Payment Slip URL" },
     ],
-    ...result.students.map((student) => [
-      student.registration_id,
-      student.full_name,
-      student.name_with_initials,
-      student.gender,
-      student.nic,
-      student.date_of_birth.toISOString().slice(0, 10),
-      student.email,
-      student.whatsapp_number,
-      student.home_contact_number,
-      student.permanent_address,
-      student.postal_code ?? "",
-      student.district,
-      student.selected_diploma,
-      student.payment_method ?? "",
-      student.amount_paid?.toString() ?? "",
-      student.payment_date?.toISOString() ?? "",
-      student.payment_slip
+    ...result.students.map((student) => {
+      const paymentSlipUrl = student.payment_slip
         ? new URL(`/files/slips/${student.id}`, request.url).toString()
-        : "",
-    ]),
+        : "";
+
+      return [
+        { value: student.registration_id },
+        { value: student.full_name },
+        { value: student.name_with_initials },
+        { value: student.gender },
+        { value: student.nic },
+        { value: student.date_of_birth.toISOString().slice(0, 10) },
+        { value: student.email },
+        { value: student.whatsapp_number },
+        { value: student.home_contact_number },
+        { value: student.permanent_address },
+        { value: student.postal_code ?? "" },
+        { value: student.district },
+        { value: student.selected_diploma },
+        { value: student.payment_method ?? "" },
+        { value: student.amount_paid?.toString() ?? "" },
+        { value: student.payment_date?.toISOString() ?? "" },
+        paymentSlipUrl
+          ? { value: paymentSlipUrl, hyperlink: paymentSlipUrl }
+          : { value: "" },
+      ];
+    }),
   ];
 
-  const workbook = XLSX.utils.book_new();
-  const sheet = XLSX.utils.aoa_to_sheet(rows);
-
-  rows[0].forEach((_, index) => {
-    const address = XLSX.utils.encode_cell({ c: index, r: 0 });
-    if (!sheet[address]) {
-      return;
-    }
-    sheet[address].s = {
-      font: { bold: true, color: { rgb: "FFFFFF" } },
-      fill: { fgColor: { rgb: "667EEA" } },
-    };
+  const buffer = await createWorkbookBuffer({
+    rows,
+    sheetName: "Students",
   });
-
-  result.students.forEach((student, index) => {
-    if (!student.payment_slip) {
-      return;
-    }
-    const cellAddress = XLSX.utils.encode_cell({ c: 16, r: index + 1 });
-    if (!sheet[cellAddress]) {
-      return;
-    }
-    sheet[cellAddress].l = {
-      Target: new URL(`/files/slips/${student.id}`, request.url).toString(),
-      Tooltip: "Payment Slip URL",
-    };
-  });
-
-  sheet["!cols"] = Array.from({ length: 18 }, () => ({ wch: 26 }));
-
-  XLSX.utils.book_append_sheet(workbook, sheet, "Students");
-  const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
 
   return new NextResponse(buffer, {
     headers: {

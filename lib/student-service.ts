@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/generated/sqlite/client";
 
 import { getWhatsAppGroupLink, REGISTRATION_FEE } from "@/lib/config";
 import { prisma } from "@/lib/db";

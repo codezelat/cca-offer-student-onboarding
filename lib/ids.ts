@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@/generated/sqlite/client";
 
 import { getDiplomaByName } from "@/lib/config";
 

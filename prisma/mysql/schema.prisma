@@ -1,11 +1,12 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../../generated/mysql-client"
+  provider     = "prisma-client"
+  output       = "../../generated/mysql"
+  runtime      = "nodejs"
+  moduleFormat = "esm"
 }
 
 datasource db {
   provider = "mysql"
-  url      = env("MYSQL_DATABASE_URL")
 }
 
 model Student {
