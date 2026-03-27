@@ -45,7 +45,7 @@ export default function HomePage() {
         {/* Propositions Section */}
         <section className="w-full space-y-10">
           <ol className="space-y-6">
-            {publicCopy.home.propositions.map((lines, index) => (
+            {publicCopy.home.propositions.map((text, index) => (
               <li
                 key={index}
                 className="flex items-start gap-6 text-base leading-7 text-neutral-600 sm:text-lg sm:leading-8 bg-neutral-50 p-6 rounded-3xl"
@@ -54,13 +54,16 @@ export default function HomePage() {
                   {index + 1}
                 </span>
                 <div className="pt-1.5">
-                  <span>{lines[0]} </span>
-                  {lines[1] ? (
-                    <strong className="font-semibold text-neutral-900">
-                      {lines[1]}
-                    </strong>
-                  ) : null}
-                  {lines[2] ? <span> {lines[2]}</span> : null}
+                  {text.split(/(\*\*.*?\*\*)/g).map((part, i) => {
+                    if (part.startsWith('**') && part.endsWith('**')) {
+                      return (
+                        <strong key={i} className="font-semibold text-neutral-900">
+                          {part.slice(2, -2)}
+                        </strong>
+                      );
+                    }
+                    return <span key={i}>{part}</span>;
+                  })}
                 </div>
               </li>
             ))}
