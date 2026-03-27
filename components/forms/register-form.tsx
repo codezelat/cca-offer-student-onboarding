@@ -10,14 +10,14 @@ import { validateSriLankanNic } from "@/lib/nic";
 import type { FormErrors, RegistrationData } from "@/lib/types";
 
 type RegisterFormProps = {
-  diploma: string;
+  bootcamps: string[];
   registrationId: string;
   courseLink?: string;
 };
 
 type RegisterState = RegistrationData;
 
-const defaultState = (diploma: string, registrationId: string): RegisterState => ({
+const defaultState = (bootcamps: string[], registrationId: string): RegisterState => ({
   registration_id: registrationId,
   full_name: "",
   name_with_initials: "",
@@ -31,17 +31,17 @@ const defaultState = (diploma: string, registrationId: string): RegisterState =>
   home_contact_number: "",
   whatsapp_number: "",
   terms_accepted: false,
-  selected_diploma: diploma,
+  selected_bootcamps: bootcamps,
 });
 
 export function RegisterForm({
-  diploma,
+  bootcamps,
   registrationId,
   courseLink,
 }: RegisterFormProps) {
   const router = useRouter();
   const [values, setValues] = useState<RegisterState>(() =>
-    defaultState(diploma, registrationId),
+    defaultState(bootcamps, registrationId),
   );
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
@@ -92,8 +92,12 @@ export function RegisterForm({
           <span className="inline-flex rounded-full bg-neutral-900 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white">
             {publicCopy.register.badge}
           </span>
-          <div className="mt-4 inline-flex rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-medium text-neutral-800">
-            {diploma}
+          <div className="mt-4 flex flex-wrap gap-2">
+            {bootcamps.map((bc) => (
+              <div key={bc} className="inline-flex rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-medium text-neutral-800">
+                {bc}
+              </div>
+            ))}
           </div>
           <h1 className="mt-6 text-3xl font-medium tracking-tight text-neutral-900">
             {publicCopy.register.title}
@@ -287,7 +291,7 @@ export function RegisterForm({
             {publicCopy.register.actions.submit}
           </button>
           <Link
-            href="/select-diploma"
+            href="/select-bootcamp"
             className="w-full sm:w-auto inline-flex justify-center rounded-full border border-neutral-300 bg-white px-8 py-4 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-50"
           >
             {publicCopy.register.actions.back}
@@ -316,7 +320,7 @@ export function RegisterForm({
               {publicCopy.register.courseCard.title}
             </h2>
             <p className="mt-3 text-sm leading-6 text-rose-900">
-              {publicCopy.register.courseCard.body.replace("{{ $diploma }}", diploma)}
+              {publicCopy.register.courseCard.body.replace("{{ $diploma }}", bootcamps.join(" & "))}
             </p>
             <a
               href={courseLink}
@@ -344,7 +348,7 @@ type FieldProps = {
 function Field({ label, error, helper, fullWidth, children }: FieldProps) {
   return (
     <label className={`flex flex-col ${fullWidth ? "sm:col-span-2" : "col-span-1"}`}>
-      <span className="mb-2 flex items-end text-xs font-semibold uppercase tracking-widest text-neutral-900 min-h-[32px]">
+      <span className="mb-2 flex items-end text-xs font-semibold uppercase tracking-widest text-neutral-900 min-h-[44px]">
         {label}
       </span>
       {children}

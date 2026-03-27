@@ -33,8 +33,12 @@ export default async function UploadSlipPage() {
             <div className="inline-flex rounded-full bg-neutral-900 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white">
               {publicCopy.register.badge}
             </div>
-            <div className="mt-4 inline-flex rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-medium text-neutral-800">
-              {data.selected_diploma}
+            <div className="mt-4 flex flex-wrap gap-2">
+              {data.selected_bootcamps.map((bc) => (
+                <div key={bc} className="inline-flex rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-medium text-neutral-800">
+                  {bc}
+                </div>
+              ))}
             </div>
             <h1 className="mt-6 text-3xl font-medium tracking-tight text-neutral-900">
               {publicCopy.uploadSlip.title}
@@ -58,11 +62,11 @@ export default async function UploadSlipPage() {
                 />
                 <Detail
                   label={publicCopy.uploadSlip.labels.selectedDiploma}
-                  value={data.selected_diploma}
+                  value={data.selected_bootcamps.join(" & ")}
                 />
                 <Detail
                   label={publicCopy.uploadSlip.labels.amountToPay}
-                  value={publicCopy.uploadSlip.labels.amount}
+                  value={`Rs. ${(3000 * data.selected_bootcamps.length).toLocaleString()}`}
                 />
               </dl>
             </div>

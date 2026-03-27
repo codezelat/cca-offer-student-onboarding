@@ -1,59 +1,34 @@
 import { env } from "@/lib/env";
-import type { BankAccount, DiplomaConfig } from "@/lib/types";
+import type { BankAccount, BootcampConfig } from "@/lib/types";
 
 export const GOOGLE_ANALYTICS_ID = "G-DE6V243K8N";
 export const SESSION_COOKIE_NAME = "sitc_offer_session";
-export const REGISTRATION_FEE = 4000;
-export const TOTAL_COURSE_FEE = 22000;
-export const EXAM_FEE = 1000;
+export const REGISTRATION_FEE = 3000;
+export const TOTAL_COURSE_FEE = 18000;
+
+export const BOOTCAMP_REG_PREFIX = "CCA/BC/2026/03";
 
 export const supportContact = {
-  whatsapp: "+94715258653",
-  phone: "+94 11 453 2139",
-  email: "info@sitc.lk",
+  whatsapp: "+94 076 677 2924",
+  phone: "+94 076 677 2924",
+  email: "ca@codezela.com",
 };
-
-export const diplomas: DiplomaConfig[] = [
-  {
-    code: "EN",
-    name: "Diploma in English",
-    full_name: "Diploma in English",
-    reg_prefix: "SITC/SC/2025/26B/EN",
-    course_link: "https://example.com/sitc/diploma-in-english",
-  },
-  {
-    code: "PC",
-    name: "Diploma in Psychology and Counseling",
-    full_name: "Diploma in Psychology and Counseling",
-    reg_prefix: "SITC/SC/2025/26B/PC",
-    course_link:
-      "https://example.com/sitc/diploma-in-psychology-and-counseling",
-  },
-  {
-    code: "IT",
-    name: "Diploma in Information Technology",
-    full_name: "Diploma in Information Technology",
-    reg_prefix: "SITC/SC/2025/26B/IT",
-    course_link:
-      "https://example.com/sitc/diploma-in-information-technology",
-  },
-  {
-    code: "HR",
-    name: "Diploma in Human Resource Management",
-    full_name: "Diploma in Human Resource Management",
-    reg_prefix: "SITC/SC/2025/26B/HR",
-    course_link:
-      "https://example.com/sitc/diploma-in-human-resource-management",
-  },
-  {
-    code: "BM",
-    name: "Diploma in Business Management",
-    full_name: "Diploma in Business Management",
-    reg_prefix: "SITC/SC/2025/26B/BM",
-    course_link:
-      "https://example.com/sitc/diploma-in-business-management",
-  },
-];
+export const bootcamps = [
+  "Software Engineer",
+  "Full Stack Developer",
+  "QA Engineer",
+  "DevOps Engineer",
+  "Cyber Security Engineer",
+  "Data Analyst",
+  "Data Engineer",
+  "AI and ML Engineer",
+  "UI UX Designer",
+  "Graphic Designer",
+  "Digital Marketing Specialist",
+  "SEO AEO Specialist",
+  "Business Analyst",
+  "Project Manager",
+] as const;
 
 export const districts = [
   "Ampara",
@@ -83,19 +58,12 @@ export const districts = [
   "Vavuniya",
 ] as const;
 
-export const whatsappGroups: Record<string, string> = {
-  "Diploma in English": "https://chat.whatsapp.com/PLACEHOLDER-ENGLISH",
-  "Diploma in Psychology and Counseling":
-    "https://chat.whatsapp.com/PLACEHOLDER-PSYCHOLOGY",
-  "Diploma in Information Technology":
-    "https://chat.whatsapp.com/PLACEHOLDER-IT",
-  "Diploma in Human Resource Management":
-    "https://chat.whatsapp.com/PLACEHOLDER-HR",
-  "Diploma in Business Management":
-    "https://chat.whatsapp.com/PLACEHOLDER-BM",
-};
+export const whatsappGroups = bootcamps.reduce((acc, bootcamp) => {
+  acc[bootcamp] = `https://chat.whatsapp.com/PLACEHOLDER-${bootcamp.toUpperCase().replace(/\s+/g, "-")}`;
+  return acc;
+}, {} as Record<string, string>);
 
-export const bankAccounts: BankAccount[] = [
+export const bankAccounts = [
   {
     bank: "Bank of Ceylon",
     accountNumber: "PLACEHOLDER-ACCOUNT-NUMBER",
@@ -122,16 +90,12 @@ export const bankAccounts: BankAccount[] = [
   },
 ];
 
-export function getDiplomaByName(name?: string | null) {
-  if (!name) {
-    return null;
-  }
-
-  return diplomas.find((diploma) => diploma.full_name === name) ?? null;
+export function getWhatsAppGroupLink(bootcampName: string) {
+  return whatsappGroups[bootcampName] ?? null;
 }
 
-export function getWhatsAppGroupLink(diplomaName: string) {
-  return whatsappGroups[diplomaName] ?? null;
+export function isValidBootcamp(name: string) {
+  return (bootcamps as readonly string[]).includes(name);
 }
 
 export function getDeadline() {

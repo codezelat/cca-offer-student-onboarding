@@ -30,7 +30,7 @@ const labelMap: Record<string, string> = {
   registration_id: "Registration ID",
   full_name: "Full Name",
   name_with_initials: "Name with Initials",
-  selected_diploma: "Selected Diploma",
+  selected_diploma: "Selected Bootcamp",
   nic: "NIC",
   whatsapp_number: "WhatsApp",
   email: "Email",

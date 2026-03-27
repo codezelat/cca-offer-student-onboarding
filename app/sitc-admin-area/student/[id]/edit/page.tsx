@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { AdminEditForm } from "@/components/forms/admin-edit-form";
 import { requireAdminSession } from "@/lib/auth";
 import { adminCopy } from "@/lib/content/admin";
-import { diplomas, districts } from "@/lib/config";
+import { bootcamps, districts } from "@/lib/config";
 import { prisma } from "@/lib/db";
 import { formatBirthDate } from "@/lib/utils";
 
@@ -71,7 +71,7 @@ export default async function AdminEditPage({ params }: Props) {
                   amount_paid: student.amount_paid?.toString() ?? "",
                 }}
                 districts={districts}
-                diplomas={diplomas}
+                diplomas={bootcamps}
               />
             </div>
           </section>

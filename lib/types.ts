@@ -16,13 +16,11 @@ export type RegistrationData = {
   home_contact_number: string;
   whatsapp_number: string;
   terms_accepted: boolean;
-  selected_diploma: string;
+  selected_bootcamps: string[];
 };
 
-export type DiplomaConfig = {
-  code: "EN" | "PC" | "IT" | "HR" | "BM";
+export type BootcampConfig = {
   name: string;
-  full_name: string;
   reg_prefix: string;
   course_link?: string;
 };

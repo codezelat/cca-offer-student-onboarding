@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { diplomas, districts } from "@/lib/config";
+import { bootcamps, districts, BOOTCAMP_REG_PREFIX } from "@/lib/config";
 import { normalizeNic, validateSriLankanNic } from "@/lib/nic";
 import type { FormErrors, ValidationResult } from "@/lib/types";
 
-const validDiplomaNames = diplomas.map((diploma) => diploma.full_name);
+const validBootcampNames = new Set(bootcamps as readonly string[]);
 const validDistricts = new Set(districts);
 
 const fullNameRegex = /^[a-zA-Z\s]+$/;
@@ -12,7 +12,7 @@ const nicRegex = /^([0-9]{9}[vVxX]|[0-9]{12})$/;
 const postalCodeRegex = /^[0-9]{5}$/;
 const homeContactRegex = /^0[0-9]{9}$/;
 const whatsappRegex = /^07[0-9]{8}$/;
-const registrationIdRegex = /^SITC\/SC\/2025\/\d+B\/(EN|PC|IT|HR|BM)\/\d{8}$/;
+const registrationIdRegex = new RegExp(`^${BOOTCAMP_REG_PREFIX.replace(/\//g, "\\/")}\\/\\d{8}$`);
 
 export const registrationSchema = z.object({
   registration_id: z
@@ -95,11 +95,12 @@ export const registrationSchema = z.object({
   terms_accepted: z.boolean().refine((value) => value, {
     message: "You must accept the terms and conditions to proceed.",
   }),
-  selected_diploma: z
-    .string()
-    .min(1, "Please select a diploma.")
-    .refine((value) => validDiplomaNames.includes(value), {
-      message: "Please select a valid diploma option.",
+  selected_bootcamps: z
+    .array(z.string())
+    .min(1, "Please select at least one bootcamp.")
+    .max(2, "You can select up to two bootcamps only.")
+    .refine((values) => values.every((v) => validBootcampNames.has(v)), {
+      message: "Please select valid bootcamp options.",
     }),
 });
 
@@ -131,11 +132,12 @@ export const adminUpdateSchema = z.object({
   permanent_address: z.string().optional().default(""),
   postal_code: z.string().optional().default(""),
   district: z.string().min(1, "Please select your district."),
-  selected_diploma: z
-    .string()
-    .min(1, "Please select a diploma.")
-    .refine((value) => validDiplomaNames.includes(value), {
-      message: "Please select a valid diploma option.",
+  selected_bootcamps: z
+    .array(z.string())
+    .min(1, "Please select at least one bootcamp.")
+    .max(2, "You can select up to two bootcamps only.")
+    .refine((values) => values.every((v) => validBootcampNames.has(v)), {
+      message: "Please select valid bootcamp options.",
     }),
 });
 

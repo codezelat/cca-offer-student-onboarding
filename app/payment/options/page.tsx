@@ -19,12 +19,13 @@ export default async function PaymentOptionsPage() {
     ["NIC", data.nic],
     ["Date of Birth", formatBirthDate(data.date_of_birth)],
     ["Email", data.email],
-    ["Program", data.selected_diploma],
+    ["Program", data.selected_bootcamps.join(" & ")],
     ["WhatsApp Number", data.whatsapp_number],
     ["Emergency Contact", data.home_contact_number],
     ["District", data.district],
     ["Postal Code", data.postal_code || "-"],
     ["Permanent Address", data.permanent_address],
+    ["Registration Fee", `Rs. ${(3000 * data.selected_bootcamps.length).toLocaleString()}`],
     ["Course Duration", publicCopy.paymentOptions.courseDuration],
   ];
 
@@ -117,7 +118,7 @@ export default async function PaymentOptionsPage() {
                 {publicCopy.paymentOptions.cta}
               </button>
               <Link
-                href={`/register?diploma=${encodeURIComponent(data.selected_diploma)}`}
+                href={`/register?bootcamp=${encodeURIComponent(data.selected_bootcamps.join(","))}`}
                 className="w-full sm:w-auto inline-flex justify-center rounded-full border border-neutral-300 bg-white px-8 py-4 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-50"
               >
                 {publicCopy.paymentOptions.back}

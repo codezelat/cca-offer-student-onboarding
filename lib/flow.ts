@@ -6,7 +6,7 @@ import { getSession } from "@/lib/session";
 export async function getRegistrationSessionOrRedirect() {
   const session = await getSession();
   if (!session.registration_data) {
-    redirect("/select-diploma");
+    redirect("/select-bootcamp");
   }
 
   return session.registration_data;

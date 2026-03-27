@@ -1,19 +1,17 @@
 import type { PrismaClient } from "@/generated/sqlite/client";
 
-import { getDiplomaByName } from "@/lib/config";
+import { BOOTCAMP_REG_PREFIX } from "@/lib/config";
 
 export async function generateRegistrationId(
   prisma: PrismaClient,
-  diplomaName: string,
+  bootcampNames: string[],
 ) {
-  const diploma = getDiplomaByName(diplomaName);
-  if (!diploma) {
-    throw new Error(`Unsupported diploma for registration ID: ${diplomaName}`);
-  }
+  // We use the same prefix for all bootcamps now
+  const prefix = BOOTCAMP_REG_PREFIX;
 
   for (let attempt = 0; attempt < 10; attempt += 1) {
     const random = `${Math.floor(Math.random() * 100000000)}`.padStart(8, "0");
-    const registrationId = `${diploma.reg_prefix}/${random}`;
+    const registrationId = `${prefix}/${random}`;
 
     const existing = await prisma.student.findUnique({
       where: { registration_id: registrationId },

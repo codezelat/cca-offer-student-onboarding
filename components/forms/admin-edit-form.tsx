@@ -27,7 +27,7 @@ type AdminEditFormProps = {
     amount_paid: string;
   };
   districts: readonly string[];
-  diplomas: DiplomaConfig[];
+  diplomas: string[];
 };
 
 export function AdminEditForm({
@@ -125,9 +125,9 @@ export function AdminEditForm({
         <Field label={adminCopy.edit.labels.selected_diploma}>
           <select value={values.selected_diploma} onChange={(e) => update("selected_diploma", e.target.value)} className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm">
             <option value="">{adminCopy.edit.labels.diplomaPlaceholder}</option>
-            {diplomas.map((diploma) => (
-              <option key={diploma.code} value={diploma.full_name}>
-                {diploma.full_name}
+            {diplomas.map((bootcamp) => (
+              <option key={bootcamp} value={bootcamp}>
+                {bootcamp}
               </option>
             ))}
           </select>

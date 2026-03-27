@@ -43,8 +43,8 @@ export default async function PayHerePage() {
             <div className="mt-8 space-y-4 rounded-3xl border border-neutral-200 bg-neutral-50 p-6">
               <Detail label={publicCopy.payhere.labels.registrationId} value={data.registration_id} />
               <Detail label={publicCopy.payhere.labels.studentName} value={data.full_name} />
-              <Detail label={publicCopy.payhere.labels.selectedDiploma} value={data.selected_diploma} />
-              <Detail label={publicCopy.payhere.labels.totalAmount} value={publicCopy.payhere.labels.amount} />
+              <Detail label={publicCopy.payhere.labels.selectedDiploma} value={data.selected_bootcamps.join(" & ")} />
+              <Detail label={publicCopy.payhere.labels.totalAmount} value={`Rs. ${Number(payment.amount).toLocaleString()}`} />
             </div>
           </section>
 

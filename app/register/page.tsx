@@ -10,20 +10,20 @@ import { publicCopy } from "@/lib/content/public";
 import { generateRegistrationId } from "@/lib/ids";
 
 type Props = {
-  searchParams: Promise<{ diploma?: string }>;
+  searchParams: Promise<{ bootcamp?: string }>;
 };
 
 export default async function RegisterPage({ searchParams }: Props) {
-  const { diploma } = await searchParams;
-  const selectedDiploma = getDiplomaByName(diploma ?? null);
+  const { bootcamp } = await searchParams;
+  const selectedBootcamps = (bootcamp ?? "").split(",").filter(Boolean);
 
-  if (!selectedDiploma) {
-    redirect("/select-diploma");
+  if (selectedBootcamps.length === 0) {
+    redirect("/select-bootcamp");
   }
 
   const registrationId = await generateRegistrationId(
     prisma,
-    selectedDiploma.full_name,
+    selectedBootcamps,
   );
 
   return (
@@ -47,9 +47,8 @@ export default async function RegisterPage({ searchParams }: Props) {
 
         <div className="w-full rounded-[2rem] border border-neutral-200 bg-white p-6 sm:p-10 shadow-sm">
           <RegisterForm
-            diploma={selectedDiploma.full_name}
+            bootcamps={selectedBootcamps}
             registrationId={registrationId}
-            courseLink={selectedDiploma.course_link}
           />
         </div>
 

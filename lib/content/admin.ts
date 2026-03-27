@@ -1,6 +1,6 @@
 export const adminCopy = {
   login: {
-    title: "Special Registration System",
+    title: "CCA Registration System",
     fields: {
       email: "Email",
       password: "Password",
@@ -9,11 +9,11 @@ export const adminCopy = {
     invalidCredentials: "Invalid credentials",
   },
   dashboard: {
-    identity: "Special Registration System",
+    identity: "CCA Registration System",
     title: "Admin Dashboard",
     logout: "Logout",
     searchPlaceholder: "Search students...",
-    diplomaFilter: "All Diplomas",
+    diplomaFilter: "All Bootcamps",
     paymentFilter: "All Payment Methods",
     paymentOptions: {
       online: "Online Payment",
@@ -26,7 +26,7 @@ export const adminCopy = {
     headers: [
       "Registration ID",
       "Full Name",
-      "Selected Diploma",
+      "Selected Bootcamp",
       "NIC",
       "WhatsApp",
       "Payment Slip",
@@ -55,7 +55,7 @@ export const adminCopy = {
     },
   },
   edit: {
-    identity: "Special Registration System",
+    identity: "CCA Registration System",
     title: "Edit Student Information",
     back: "Back to Dashboard",
     pageTitle: "Edit Student Record",
@@ -75,8 +75,8 @@ export const adminCopy = {
       postal_code: "Postal Code",
       district: "District",
       districtPlaceholder: "Select District",
-      selected_diploma: "Selected Diploma *",
-      diplomaPlaceholder: "Select a diploma",
+      selected_diploma: "Selected Bootcamp *",
+      diplomaPlaceholder: "Select a bootcamp",
       registration_id: "Registration ID",
       payment_method: "Payment Method",
       payment_status: "Payment Status",

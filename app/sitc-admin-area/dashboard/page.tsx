@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { DashboardTable } from "@/components/admin/dashboard-table";
 import { adminCopy } from "@/lib/content/admin";
-import { diplomas } from "@/lib/config";
+import { bootcamps } from "@/lib/config";
 import { requireAdminSession } from "@/lib/auth";
 import { getDashboardStudents } from "@/lib/student-service";
 
@@ -85,9 +85,9 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                 className="rounded-2xl border border-slate-200 px-4 py-3 text-sm"
               >
                 <option value="">{adminCopy.dashboard.diplomaFilter}</option>
-                {diplomas.map((diploma) => (
-                  <option key={diploma.code} value={diploma.full_name}>
-                    {diploma.full_name}
+                {bootcamps.map((bootcamp) => (
+                  <option key={bootcamp} value={bootcamp}>
+                    {bootcamp}
                   </option>
                 ))}
               </select>

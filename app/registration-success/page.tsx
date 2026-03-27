@@ -5,7 +5,7 @@ import { PrintButton } from "@/components/print-button";
 import { PublicShell } from "@/components/public-shell";
 import { publicCopy } from "@/lib/content/public";
 import { prisma } from "@/lib/db";
-import { getDiplomaWhatsappLink } from "@/lib/student-service";
+import { getBootcampWhatsappLink } from "@/lib/student-service";
 
 type Props = {
   searchParams: Promise<{ student?: string }>;
@@ -23,7 +23,7 @@ export default async function RegistrationSuccessPage({ searchParams }: Props) {
     redirect("/");
   }
 
-  const whatsappLink = getDiplomaWhatsappLink(record.selected_diploma);
+  const whatsappLink = getBootcampWhatsappLink(record.selected_diploma);
 
   return (
     <PublicShell>

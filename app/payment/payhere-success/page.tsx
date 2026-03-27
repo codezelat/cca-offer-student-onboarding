@@ -10,7 +10,7 @@ import { getDeadline, supportContact } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
 import { getSession } from "@/lib/session";
 import {
-  getDiplomaWhatsappLink,
+  getBootcampWhatsappLink,
   getStudentByPayHereLookup,
 } from "@/lib/student-service";
 import { formatCurrency, formatSimpleDate } from "@/lib/utils";
@@ -32,7 +32,20 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
   }
 
   const completed = student.payment_status === "completed";
-  const whatsappLink = getDiplomaWhatsappLink(student.selected_diploma);
+
+  // Fetch all registered bootcamps for this session
+  const baseRegId = student.registration_id.split("-")[0];
+  const allRecords = await prisma.student.findMany({
+    where: {
+      OR: [
+        { registration_id: baseRegId },
+        { registration_id: { startsWith: `${baseRegId}-` } },
+      ],
+    },
+  });
+
+  const bootcampNames = allRecords.map((r) => r.selected_diploma);
+  const whatsappLink = getBootcampWhatsappLink(bootcampNames[0]);
 
   return (
     <PublicShell>
@@ -103,7 +116,7 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
                 {publicCopy.paymentSuccess.registrationCardSubtitle}
               </div>
               <div className="mt-3 text-3xl font-bold tracking-tight text-neutral-900">
-                {student.registration_id}
+                {baseRegId}
               </div>
             </div>
           </section>
@@ -150,7 +163,7 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
               />
               <PaymentLine
                 label={publicCopy.paymentSuccess.detailsLabels.selectedCourse}
-                value={`${publicCopy.paymentSuccess.detailsLabels.diplomaPrefix} ${student.selected_diploma}`}
+                value={bootcampNames.join(" & ")}
               />
               <PaymentLine
                 label={publicCopy.paymentSuccess.detailsLabels.email}

@@ -26,9 +26,9 @@ function lookupValues(data: Pick<RegistrationData, "nic" | "email" | "whatsapp_n
   };
 }
 
-function registrationToCreateInput(data: RegistrationData) {
+function registrationToCreateInput(data: RegistrationData, bootcampName: string, suffix?: string) {
   return {
-    registration_id: data.registration_id,
+    registration_id: suffix ? `${data.registration_id}-${suffix}` : data.registration_id,
     full_name: data.full_name.trim(),
     name_with_initials: data.name_with_initials.trim(),
     gender: data.gender,
@@ -40,7 +40,7 @@ function registrationToCreateInput(data: RegistrationData) {
     permanent_address: data.permanent_address.trim(),
     postal_code: data.postal_code || null,
     district: data.district,
-    selected_diploma: data.selected_diploma,
+    selected_diploma: bootcampName,
     terms_accepted: data.terms_accepted,
     ...lookupValues(data),
   } satisfies Prisma.StudentUncheckedCreateInput;
@@ -51,10 +51,11 @@ async function sendOutcomeSms(
   data: RegistrationData,
   phone: string,
 ) {
-  const whatsappLink = getWhatsAppGroupLink(data.selected_diploma);
+  const bootcamps = data.selected_bootcamps.join(" & ");
+  const whatsappLink = getWhatsAppGroupLink(data.selected_bootcamps[0]); // Join the first one or primary
   const input = {
     studentName: data.full_name,
-    diplomaName: data.selected_diploma,
+    diplomaName: bootcamps,
     registrationId: data.registration_id,
     link: whatsappLink,
   };
@@ -71,137 +72,152 @@ async function sendOutcomeSms(
 
 export async function checkScopedDuplicates(data: RegistrationData) {
   const values = lookupValues(data);
-  const [nic, email, whatsapp] = await Promise.all([
-    prisma.student.findFirst({
-      where: {
-        nic_lookup: values.nic_lookup,
-        selected_diploma: data.selected_diploma,
-      },
-      select: { id: true },
-    }),
-    prisma.student.findFirst({
-      where: {
-        email_lookup: values.email_lookup,
-        selected_diploma: data.selected_diploma,
-      },
-      select: { id: true },
-    }),
-    prisma.student.findFirst({
-      where: {
-        whatsapp_lookup: values.whatsapp_lookup,
-        selected_diploma: data.selected_diploma,
-      },
-      select: { id: true },
-    }),
-  ]);
-
   const errors: Record<string, string[]> = {};
-  if (nic) {
-    errors.nic = [validationMessages.nic_duplicate];
-  }
-  if (email) {
-    errors.email = [validationMessages.email_duplicate];
-  }
-  if (whatsapp) {
-    errors.whatsapp_number = [validationMessages.whatsapp_duplicate];
+
+  for (const bootcamp of data.selected_bootcamps) {
+    const [nic, email, whatsapp] = await Promise.all([
+      prisma.student.findFirst({
+        where: {
+          nic_lookup: values.nic_lookup,
+          selected_diploma: bootcamp,
+        },
+        select: { id: true },
+      }),
+      prisma.student.findFirst({
+        where: {
+          email_lookup: values.email_lookup,
+          selected_diploma: bootcamp,
+        },
+        select: { id: true },
+      }),
+      prisma.student.findFirst({
+        where: {
+          whatsapp_lookup: values.whatsapp_lookup,
+          selected_diploma: bootcamp,
+        },
+        select: { id: true },
+      }),
+    ]);
+
+    if (nic) errors.nic = [validationMessages.nic_duplicate];
+    if (email) errors.email = [validationMessages.email_duplicate];
+    if (whatsapp) errors.whatsapp_number = [validationMessages.whatsapp_duplicate];
+    
+    if (Object.keys(errors).length > 0) break;
   }
 
   if (Object.keys(errors).length > 0) {
-    return {
-      success: false,
-      errors,
-    } satisfies ValidationResult<RegistrationData>;
+    return { success: false, errors } satisfies ValidationResult<RegistrationData>;
   }
 
-  return {
-    success: true,
-    data,
-  } satisfies ValidationResult<RegistrationData>;
+  return { success: true, data } satisfies ValidationResult<RegistrationData>;
 }
 
 export async function ensureStudentForOnlinePending(data: RegistrationData, orderId: string) {
-  const base = registrationToCreateInput(data);
-
-  return prisma.student.upsert({
-    where: { registration_id: data.registration_id },
-    update: {
-      ...base,
-      payment_method: "online",
-      payment_status: "pending",
-      payhere_order_id: orderId,
-      amount_paid: new Prisma.Decimal(0),
-      payment_date: null,
-    },
-    create: {
-      ...base,
-      payment_method: "online",
-      payment_status: "pending",
-      payhere_order_id: orderId,
-      amount_paid: new Prisma.Decimal(0),
-      payment_date: null,
-    },
-  });
+  const results = [];
+  for (let i = 0; i < data.selected_bootcamps.length; i++) {
+    const bootcamp = data.selected_bootcamps[i];
+    const suffix = data.selected_bootcamps.length > 1 ? `${i + 1}` : undefined;
+    const base = registrationToCreateInput(data, bootcamp, suffix);
+    
+    const regId = base.registration_id;
+    const res = await prisma.student.upsert({
+      where: { registration_id: regId },
+      update: {
+        ...base,
+        payment_method: "online",
+        payment_status: "pending",
+        payhere_order_id: orderId,
+        amount_paid: new Prisma.Decimal(0),
+        payment_date: null,
+      },
+      create: {
+        ...base,
+        payment_method: "online",
+        payment_status: "pending",
+        payhere_order_id: orderId,
+        amount_paid: new Prisma.Decimal(0),
+        payment_date: null,
+      },
+    });
+    results.push(res);
+  }
+  return results[0];
 }
 
 export async function completeStudyNowPayLater(data: RegistrationData) {
-  const studentId = await generateStudentId(prisma);
-  const base = registrationToCreateInput(data);
+  const results = [];
+  for (let i = 0; i < data.selected_bootcamps.length; i++) {
+    const bootcamp = data.selected_bootcamps[i];
+    const suffix = data.selected_bootcamps.length > 1 ? `${i + 1}` : undefined;
+    const studentId = await generateStudentId(prisma);
+    const base = registrationToCreateInput(data, bootcamp, suffix);
 
-  const student = await prisma.student.upsert({
-    where: { registration_id: data.registration_id },
-    update: {
-      ...base,
-      student_id: studentId,
-      payment_method: "study_now_pay_later",
-      payment_status: "pending_exam_fee",
-      amount_paid: new Prisma.Decimal(0),
-      payment_date: new Date(),
-    },
-    create: {
-      ...base,
-      student_id: studentId,
-      payment_method: "study_now_pay_later",
-      payment_status: "pending_exam_fee",
-      amount_paid: new Prisma.Decimal(0),
-      payment_date: new Date(),
-    },
-  });
+    const regId = base.registration_id;
+    const student = await prisma.student.upsert({
+      where: { registration_id: regId },
+      update: {
+        ...base,
+        student_id: studentId,
+        payment_method: "study_now_pay_later",
+        payment_status: "pending_exam_fee",
+        amount_paid: new Prisma.Decimal(0),
+        payment_date: new Date(),
+      },
+      create: {
+        ...base,
+        student_id: studentId,
+        payment_method: "study_now_pay_later",
+        payment_status: "pending_exam_fee",
+        amount_paid: new Prisma.Decimal(0),
+        payment_date: new Date(),
+      },
+    });
+    results.push(student);
+  }
 
   await sendOutcomeSms("study_now_pay_later", data, data.whatsapp_number);
-  return student;
+  return results[0];
 }
 
 export async function completeSlipSubmission(
   data: RegistrationData,
   filename: string,
 ) {
-  const studentId = await generateStudentId(prisma);
-  const base = registrationToCreateInput(data);
+  const results = [];
+  for (let i = 0; i < data.selected_bootcamps.length; i++) {
+    const bootcamp = data.selected_bootcamps[i];
+    const suffix = data.selected_bootcamps.length > 1 ? `${i + 1}` : undefined;
+    const studentId = await generateStudentId(prisma);
+    const base = registrationToCreateInput(data, bootcamp, suffix);
 
-  const student = await prisma.student.upsert({
-    where: { registration_id: data.registration_id },
-    update: {
-      ...base,
-      student_id: studentId,
-      payment_method: "slip",
-      payment_status: "pending",
-      payment_slip: filename,
-      amount_paid: new Prisma.Decimal(REGISTRATION_FEE),
-      payment_date: new Date(),
-    },
-    create: {
-      ...base,
-      student_id: studentId,
-      payment_method: "slip",
-      payment_status: "pending",
-      payment_slip: filename,
-      amount_paid: new Prisma.Decimal(REGISTRATION_FEE),
-      payment_date: new Date(),
-    },
-  });
+    const regId = base.registration_id;
+    const student = await prisma.student.upsert({
+      where: { registration_id: regId },
+      update: {
+        ...base,
+        student_id: studentId,
+        payment_method: "slip",
+        payment_status: "pending",
+        payment_slip: filename,
+        amount_paid: new Prisma.Decimal(REGISTRATION_FEE * data.selected_bootcamps.length),
+        payment_date: new Date(),
+      },
+      create: {
+        ...base,
+        student_id: studentId,
+        payment_method: "slip",
+        payment_status: "pending",
+        payment_slip: filename,
+        amount_paid: new Prisma.Decimal(REGISTRATION_FEE * data.selected_bootcamps.length),
+        payment_date: new Date(),
+      },
+    });
+    results.push(student);
+  }
 
   await sendOutcomeSms("slip", data, data.whatsapp_number);
-  return student;
+  return results[0];
 }
 
 export async function completeOnlinePayment(input: {
@@ -209,54 +225,68 @@ export async function completeOnlinePayment(input: {
   orderId: string;
   amount: string;
 }) {
-  const student = await prisma.student.findUnique({
-    where: { registration_id: input.registrationId },
+  // Find all records that start with this registrationId (could be the id itself or with -1, -2)
+  const students = await prisma.student.findMany({
+    where: {
+      OR: [
+        { registration_id: input.registrationId },
+        { registration_id: { startsWith: `${input.registrationId}-` } },
+      ],
+    },
   });
 
-  if (!student) {
+  if (students.length === 0) {
     return null;
   }
 
-  const studentId = student.student_id ?? (await generateStudentId(prisma));
+  const results = [];
+  for (const student of students) {
+    const studentId = student.student_id ?? (await generateStudentId(prisma));
 
-  const updated = await prisma.student.update({
-    where: { id: student.id },
-    data: {
-      student_id: studentId,
-      payment_method: "online",
-      payment_status: "completed",
-      payhere_order_id: input.orderId,
-      amount_paid: new Prisma.Decimal(input.amount),
-      payment_date: new Date(),
-    },
-  });
+    const updated = await prisma.student.update({
+      where: { id: student.id },
+      data: {
+        student_id: studentId,
+        payment_method: "online",
+        payment_status: "completed",
+        payhere_order_id: input.orderId,
+        amount_paid: new Prisma.Decimal(Number(input.amount) / students.length),
+        payment_date: new Date(),
+      },
+    });
+    results.push(updated);
+  }
 
+  // Send ONE SMS summarizing the whole things
+  const first = results[0];
+  const bootcampNames = results.map(s => s.selected_diploma);
+  
   await sendOutcomeSms(
     "online",
     {
-      registration_id: updated.registration_id,
-      full_name: updated.full_name,
-      name_with_initials: updated.name_with_initials,
-      gender: updated.gender as "male" | "female",
-      nic: updated.nic,
-      date_of_birth: updated.date_of_birth.toISOString(),
-      email: updated.email,
-      permanent_address: updated.permanent_address,
-      postal_code: updated.postal_code ?? undefined,
-      district: updated.district,
-      home_contact_number: updated.home_contact_number,
-      whatsapp_number: updated.whatsapp_number,
-      terms_accepted: updated.terms_accepted,
-      selected_diploma: updated.selected_diploma,
+      registration_id: input.registrationId, // Use the base ID for SMS
+      full_name: first.full_name,
+      name_with_initials: first.name_with_initials,
+      gender: first.gender as "male" | "female",
+      nic: first.nic,
+      date_of_birth: first.date_of_birth.toISOString(),
+      email: first.email,
+      permanent_address: first.permanent_address,
+      postal_code: first.postal_code ?? undefined,
+      district: first.district,
+      home_contact_number: first.home_contact_number,
+      whatsapp_number: first.whatsapp_number,
+      terms_accepted: first.terms_accepted,
+      selected_bootcamps: bootcampNames,
     },
-    updated.whatsapp_number,
+    first.whatsapp_number,
   );
 
-  return updated;
+  return results[0];
 }
 
-export function getDiplomaWhatsappLink(selectedDiploma: string) {
-  return getWhatsAppGroupLink(selectedDiploma);
+export function getBootcampWhatsappLink(bootcampName: string) {
+  return getWhatsAppGroupLink(bootcampName);
 }
 
 export async function getStudentByPayHereLookup(
@@ -286,8 +316,8 @@ export async function buildPayHereOrder(data: RegistrationData) {
   await ensureStudentForOnlinePending(data, orderId);
   return {
     orderId,
-    itemName: `${data.selected_diploma} Registration`,
-    amount: REGISTRATION_FEE.toFixed(2),
+    itemName: `${data.selected_bootcamps.join(" & ")} Registration`,
+    amount: (REGISTRATION_FEE * data.selected_bootcamps.length).toFixed(2),
     firstName: extractFirstName(data.full_name),
   };
 }
@@ -355,13 +385,20 @@ export async function updateStudentRecord(
     permanent_address?: string;
     postal_code?: string;
     district: string;
-    selected_diploma: string;
+    selected_bootcamps: string[];
   },
 ) {
+  // If editing, we might only want to update ONE specific record's bootcamp or both?
+  // Usually the admin edit is per record (per row). 
+  // So we accept selected_bootcamp (singular) for the actual DB update if it's the admin.
+  // Wait, let's keep it simple for admin: they edit the row's bootcamp.
+  const bootcamp = data.selected_bootcamps[0] ?? "";
+  
   return prisma.student.update({
     where: { id },
     data: {
       ...data,
+      selected_diploma: bootcamp,
       nic: data.nic.trim().toUpperCase(),
       nic_lookup: data.nic.trim().toUpperCase(),
       email_lookup: data.email.trim().toLowerCase(),

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { CountdownCard } from "@/components/countdown-card";
 import { PublicShell } from "@/components/public-shell";
 import { EligibilityGate } from "@/components/forms/eligibility-gate";
-import { getDeadline, getDiplomaByName } from "@/lib/config";
+import { getDeadline, isValidBootcamp } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
 
 type Props = {
@@ -12,10 +12,10 @@ type Props = {
 
 export default async function CheckEligibilityPage({ searchParams }: Props) {
   const { diploma } = await searchParams;
-  const selectedDiploma = getDiplomaByName(diploma ?? null);
+  const valid = diploma ? isValidBootcamp(diploma) : false;
 
-  if (!selectedDiploma) {
-    redirect("/select-diploma");
+  if (!valid) {
+    redirect("/select-bootcamp");
   }
 
   return (
@@ -31,7 +31,7 @@ export default async function CheckEligibilityPage({ searchParams }: Props) {
         </section>
 
         <section className="w-full">
-          <EligibilityGate diploma={selectedDiploma.full_name} />
+          <EligibilityGate diploma={diploma!} />
         </section>
 
       </div>

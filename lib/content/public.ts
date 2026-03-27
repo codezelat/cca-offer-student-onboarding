@@ -18,13 +18,33 @@ export const publicCopy = {
     propositions: [
       "මෙහි එක් සමස්ත පාඨමාලාවක් සඳහාම සාමාන්‍යයෙන් අය කෙරෙන මුළු ගාස්තුව **රු. 28,000 ක්** පමණි. නමුත් ඔබට විශේෂ 'නිපුණතා ශිෂ්‍යත්වය' යටතේ **රු. 10,000ක සුවිශේෂී වට්ටමක්** හිමි කර ගත හැකිය.",
       "මෙහිදී **10,000 ක අමතර ශිෂ්‍යත්වයක්** නිපුණතා ශිෂ්‍යත්ව අරමුදල මගින් ඔබ ඇතුළු තොරාගත් සිසුන් කිහිප දෙනෙකුට ලබා දෙනු ලැබේ. ඒ අනුව ඔබ ගෙවිය යුතු මුළු මුදල වන්නේ **රු. 18,000 පමණී.**",
-      "දැන් ඔබට **රුපියල් 3,000ක මුදලක් පමණක්** ගෙවා ලියාපදිංචි වී ඔබගේ ඉගෙනීම් කටයුතු ආරම්භ කළ හැකිය. ඉතිරි **රු. 15,000** පාඨමාලා ගාස්තුව සිසුන් ගෙවිය යුත්තේ **වාරික කොටස් දෙකක් වශයෙන්ය.** ඉන් පසු ද ඉගෙනීම් කටයුතු සදහා හෝ Internships සොයාදීම හෝ ලබාදීම සදහා කිසිවිටෙකත් කිසිදු අමතර මුදලක් ගෙවිය යුතු නැත.",
+      "දැන් ඔබට **රුපියල් 3,000ක මුදලක් පමණක්** ගෙවා ලියාපදිංචි වී ඔබගේ ඉගෙනීම් කටපුතු ආරම්භ කළ හැකිය. ඉතිරි **රු. 15,000** පාඨමාලා ගාස්තුව සිසුන් ගෙවිය යුත්තේ **වාරික කොටස් දෙකක් වශයෙන්ය.** ඉන් පසු ද ඉගෙනීම් කටයුතු සදහා හෝ Internships සොයාදීම හෝ ලබාදීම සදහා කිසිවිටෙකත් කිසිදු අමතර මුදලක් ගෙවිය යුතු නැත.",
     ],
   },
-  selectDiploma: {
-    title: "Choose Your Preferred Diploma Program",
+  selectBootcamp: {
+    title: "සියලුම බූට්කෑම්ප්ස් (Bootcamps)",
+    subtitle: "ඔබට වඩාත්ම ගැලපෙන බූට්කෑම්ප්ස් එකක් හෝ දෙකක් පහතින් තෝරා ගන්න.",
+    support: "Special Scholarship Support for 14 Specialized Programs",
+    cta: "බූට්කෑම්ප්ස් තහවුරු කරන්න (Confirm Bootcamps)",
+  },
+  eligibility: {
+    eyebrow: "Registration Open",
+    title: "දැන්ම ලියාපදිංචි වන්න",
+    questionSuffix: "Bootcamp Batch එකට දැනටමත් ලියාපදිංචි වී සිටීද?",
     subtitle:
-      "Select the diploma that aligns with your career goals and aspirations",
+      "Please select your answer to continue with the registration process",
+    yes: "Yes",
+    no: "No",
+    yesCardTitle: "Thank You for Your Interest!",
+    yesCardBody:
+      "We appreciate your enthusiasm. However, as you have just started a new bootcamp program, you are not eligible for this scholarship scheme on this particular program this time.",
+    yesCardNext: "What's Next?",
+    yesCardNextBody: "Stay tuned for our next intake opening.",
+    noCardTitle: "Perfect! Let's Get Started",
+    noCardBody:
+      "You're eligible to register. Click below to begin your educational journey with us!",
+    noCardCta: "Register Now",
+  },ns",
     support: "Don’t miss your chance to enroll in our prestigious programs!",
     cta: "Apply to Interest Free Student Loan",
   },
@@ -101,7 +121,7 @@ export const publicCopy = {
         placeholder: "e.g., 07XXXXXXXX (Active number)",
       },
       terms_accepted:
-        "I confirm that the information provided is accurate and I agree to the terms and conditions provided by SITC Campus via their support channels. *",
+        "I confirm that the information provided is accurate and I agree to the terms and conditions provided by CCA Campus via their support channels. *",
     },
     actions: {
       submit: "Continue to Agreement",
@@ -113,7 +133,7 @@ export const publicCopy = {
     },
     courseCard: {
       title: "Want to Know More?",
-      body: "View complete course details, syllabus, and program information for {{ $diploma }}.",
+      body: "View complete course details, syllabus, and program information for your selected bootcamps.",
       cta: "View Course Details",
     },
     nicMessages: {
@@ -136,7 +156,7 @@ export const publicCopy = {
       "NIC",
       "Date of Birth",
       "Email",
-      "Program",
+      "Bootcamp(s)",
       "WhatsApp Number",
       "Emergency Contact",
       "District",
@@ -151,9 +171,8 @@ export const publicCopy = {
     cta: "I Agree & Complete Registration",
     back: "Back to Registration Details",
     bullets: [
-      "Students have to pay the examination fee of Rs 1,000 at the end of the course. Exam will be physical at your nearest center. We have 20+ centers island-wide. If you cannot attend the examination physically, you can request for an online examination. There is only one final examination and revision support will also be provided prior to it. Students residing abroad can also sit for the online examination.",
-      "There are no any additional fees for the certificate. If you are willing to participate for the convocation you will have to pay the convocation fees to BMICH only. (Approximately Rs.4,500 only if you are attending the convocation) No certificate fees. (We provide your UGC recognized university certificate - free of charge for completing the diploma).",
-      "The complete course fees is Rs. 22,000. This should be paid to a bank account under SITC Campus upon releasing results after completing the program.",
+      "There are no any additional fees for the certificate. If you are willing to participate for the convocation you will have to pay the convocation fees to BMICH only. (Approximately Rs.4,500 only if you are attending the convocation) No certificate fees. (We provide your UGC recognized university certificate - free of charge for completing the program).",
+      "The complete course fees is Rs. 18,000. This should be paid to a bank account under CCA Campus upon releasing results after completing the program.",
     ],
   },
   uploadSlip: {
@@ -165,9 +184,9 @@ export const publicCopy = {
     labels: {
       registrationId: "Registration ID",
       studentName: "Student Name",
-      selectedDiploma: "Selected Diploma",
-      amountToPay: "Amount to Pay",
-      amount: "LKR 4,000.00",
+      selectedDiploma: "Selected Program(s)",
+      amountToPay: "Total Amount to Pay",
+      amount: "LKR 3,000 per program",
     },
     bankTitle: "Bank Transfer Details",
     bankSubtitle: "You can transfer to any of these bank accounts:",
@@ -176,7 +195,7 @@ export const publicCopy = {
       accountName: "Account Name:",
       branch: "Branch:",
     },
-    warningAmount: "Amount to Transfer: LKR 4,000.00",
+    warningAmount: "Amount to Transfer: LKR 3,000 per program",
     warningReference:
       "Please include or write your first name in the payment slip for reference",
     uploadTitle: "Upload Payment Slip",
@@ -202,13 +221,13 @@ export const publicCopy = {
     labels: {
       registrationId: "Registration ID",
       studentName: "Student Name",
-      selectedDiploma: "Selected Diploma",
+      selectedDiploma: "Selected Bootcamp(s)",
       totalAmount: "Total Amount",
-      amount: "LKR 4,000.00",
+      amount: "LKR 3,000 per program",
     },
     ctaTitle: "Complete Your Payment",
     ctaBody: "Click the button below to proceed with secure payment",
-    ctaButton: "Pay LKR 4,000.00 with PayHere",
+    ctaButton: "Pay Securely with PayHere",
     secureGateway: "Secure Payment Gateway",
     back: "Back to Payment Options",
     securityTitle: "Secure Payment",
@@ -253,8 +272,8 @@ export const publicCopy = {
     detailsTitle: "Registration Details",
     detailsLabels: {
       studentName: "Student Name",
-      selectedCourse: "Selected Course",
-      diplomaPrefix: "Diploma in",
+      selectedCourse: "Selected Bootcamp(s)",
+      diplomaPrefix: "",
       email: "Email",
       whatsapp: "WhatsApp",
     },
@@ -307,7 +326,7 @@ export const publicCopy = {
   },
   offerEnded: {
     title: "Registration Period Has Ended",
-    subtitle: "Thank you for your interest in SITC Campus diploma programs",
+    subtitle: "Thank you for your interest in CCA Campus diploma programs",
     badge: "Offer Deadline Passed",
     body: "We appreciate your interest in our diploma programs. Unfortunately, the registration period for this special offer has now closed.",
     bodyFollowup:
@@ -316,13 +335,13 @@ export const publicCopy = {
     whatsappBody:
       "Chat with us on WhatsApp to learn about upcoming intakes and special offers",
     whatsappCta: "Contact Us on WhatsApp",
-    footer: "SITC Campus - Empowering Your Future with Quality Education",
+    footer: "CCA Campus - Empowering Your Future with Quality Education",
   },
   genericSuccess: {
     title: "Registration Successful!",
     welcome:
       "Welcome, {{ $student->name_with_initials ?? $student->full_name }}!",
-    body: "You have successfully registered for the {{ $student->selected_diploma }}",
+    body: "You have successfully registered for your chosen bootcamps.",
     registrationIdTitle: "Your Registration ID",
     registrationIdBody: "Please save this ID for future reference",
     whatsappTitle: "Join Course WhatsApp Group",

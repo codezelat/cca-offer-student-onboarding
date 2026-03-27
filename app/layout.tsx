@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     default: "Student Registration",
     template: "%s | Student Registration",
   },
-  description: "SITC Campus special offer student registration system",
+  description: "CCA Campus special offer student registration system",
 };
 
 export default function RootLayout({
