@@ -9,6 +9,7 @@ const globalForPrisma = globalThis as unknown as {
 function getDatabaseUrl() {
   return (
     process.env.DATABASE_URL ??
+    process.env.POSTGRES_URL ??
     "postgresql://postgres:postgres@127.0.0.1:5432/cca_offer_student_onboarding?schema=public"
   );
 }

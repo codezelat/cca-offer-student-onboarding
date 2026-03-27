@@ -6,8 +6,22 @@ function fallbackValue(key: string, fallback: string) {
   return fallback;
 }
 
+function resolveAppUrl() {
+  const appUrl = process.env.APP_URL;
+  if (appUrl && appUrl.length > 0) {
+    return appUrl;
+  }
+
+  const vercelUrl = process.env.VERCEL_URL;
+  if (vercelUrl && vercelUrl.length > 0) {
+    return `https://${vercelUrl}`;
+  }
+
+  return "http://localhost:3000";
+}
+
 export const env = {
-  appUrl: fallbackValue("APP_URL", "http://localhost:3000"),
+  appUrl: resolveAppUrl(),
   adminUsername: fallbackValue("ADMIN_USERNAME", "admin@sitc.local"),
   adminPassword: fallbackValue("ADMIN_PASSWORD", "password123"),
   countdownDeadline: fallbackValue(
