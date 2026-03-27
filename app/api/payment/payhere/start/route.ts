@@ -9,7 +9,7 @@ import { extractLastName } from "@/lib/utils";
 
 export const runtime = "nodejs";
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     assertOfferOpen();
     const data = await getRegistrationSessionOrRedirect();
@@ -48,17 +48,10 @@ export async function POST() {
       payhere_payment: payment,
     });
 
-    return NextResponse.json({
-      success: true,
-      redirectUrl: "/payment/payhere",
-      payment,
-    });
+    return NextResponse.redirect(new URL("/payment/payhere", request.url));
   } catch (error) {
     if (error instanceof Error && error.message === "REGISTRATION_CLOSED") {
-      return NextResponse.json(
-        { success: false, message: "Registration period has ended." },
-        { status: 403 },
-      );
+      return NextResponse.redirect(new URL("/offer-ended", request.url));
     }
 
     if (error instanceof Error && error.message === "NEXT_REDIRECT") {
@@ -66,9 +59,6 @@ export async function POST() {
     }
 
     console.error(error);
-    return NextResponse.json(
-      { success: false, message: "Failed to initialize PayHere payment." },
-      { status: 500 },
-    );
+    return NextResponse.redirect(new URL("/payment/options", request.url));
   }
 }
