@@ -3,8 +3,8 @@ import Link from "next/link";
 
 import { CountdownCard } from "@/components/countdown-card";
 import { PublicShell } from "@/components/public-shell";
-import { getDeadline } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
+import { getDeadline } from "@/lib/server-config";
 
 export default function HomePage() {
   return (

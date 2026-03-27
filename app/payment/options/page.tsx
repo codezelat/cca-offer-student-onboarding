@@ -3,9 +3,10 @@ import Link from "next/link";
 import { CountdownCard } from "@/components/countdown-card";
 import { ProgressStepper } from "@/components/progress-stepper";
 import { PublicShell } from "@/components/public-shell";
-import { encodeBootcampQuery, getDeadline } from "@/lib/config";
+import { encodeBootcampQuery } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
 import { getRegistrationSessionOrRedirect } from "@/lib/flow";
+import { getDeadline } from "@/lib/server-config";
 import { cn } from "@/lib/utils";
 import { formatBirthDate } from "@/lib/utils";
 

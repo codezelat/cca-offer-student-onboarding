@@ -6,9 +6,10 @@ import { ProcessingRefresh } from "@/components/processing-refresh";
 import { ProgressStepper } from "@/components/progress-stepper";
 import { PublicShell } from "@/components/public-shell";
 import { RegistrationSessionCleaner } from "@/components/registration-session-cleaner";
-import { getDeadline, supportContact } from "@/lib/config";
+import { supportContact } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
 import { prisma } from "@/lib/db";
+import { getDeadline } from "@/lib/server-config";
 import { getSession } from "@/lib/session";
 import {
   getBootcampWhatsappLink,

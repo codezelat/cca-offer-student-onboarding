@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { publicCopy } from "@/lib/content/public";
@@ -108,12 +109,12 @@ export function EligibilityGate({ bootcamps }: EligibilityGateProps) {
           <p className="mt-6 text-base font-medium leading-relaxed text-emerald-900">
             {publicCopy.eligibility.noCardBody}
           </p>
-          <a
+          <Link
             href={`/register?bootcamp=${bootcampQuery}`}
             className="mt-10 inline-flex items-center justify-center rounded-full bg-neutral-900 px-10 py-5 text-sm font-black uppercase tracking-widest text-white shadow-xl shadow-neutral-900/20 transition-all hover:bg-neutral-800 active:scale-[0.98]"
           >
             {publicCopy.eligibility.noCardCta}
-          </a>
+          </Link>
         </div>
       ) : null}
     </div>

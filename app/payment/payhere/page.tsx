@@ -4,8 +4,8 @@ import { CountdownCard } from "@/components/countdown-card";
 import { PayHereLauncher } from "@/components/payhere-launcher";
 import { ProgressStepper } from "@/components/progress-stepper";
 import { PublicShell } from "@/components/public-shell";
-import { getDeadline } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
+import { getDeadline } from "@/lib/server-config";
 import { getSession } from "@/lib/session";
 
 export default async function PayHerePage() {

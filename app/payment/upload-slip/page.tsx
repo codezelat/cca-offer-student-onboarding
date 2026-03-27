@@ -2,9 +2,10 @@ import { CountdownCard } from "@/components/countdown-card";
 import { PublicShell } from "@/components/public-shell";
 import { ProgressStepper } from "@/components/progress-stepper";
 import { SlipUploadForm } from "@/components/forms/slip-upload-form";
-import { bankAccounts, getDeadline } from "@/lib/config";
+import { bankAccounts } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
 import { getRegistrationSessionOrRedirect } from "@/lib/flow";
+import { getDeadline } from "@/lib/server-config";
 
 export default async function UploadSlipPage() {
   const data = await getRegistrationSessionOrRedirect();

@@ -4,10 +4,11 @@ import { CountdownCard } from "@/components/countdown-card";
 import { ProgressStepper } from "@/components/progress-stepper";
 import { PublicShell } from "@/components/public-shell";
 import { RegisterForm } from "@/components/forms/register-form";
-import { decodeBootcampQuery, getDeadline } from "@/lib/config";
-import { prisma } from "@/lib/db";
+import { decodeBootcampQuery } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
+import { prisma } from "@/lib/db";
 import { generateRegistrationId } from "@/lib/ids";
+import { getDeadline } from "@/lib/server-config";
 
 type Props = {
   searchParams: Promise<{ bootcamp?: string }>;

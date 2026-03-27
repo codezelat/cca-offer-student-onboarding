@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 import { CountdownCard } from "@/components/countdown-card";
 import { PublicShell } from "@/components/public-shell";
 import { EligibilityGate } from "@/components/forms/eligibility-gate";
-import { decodeBootcampQuery, getDeadline, isValidBootcamp } from "@/lib/config";
+import { decodeBootcampQuery, isValidBootcamp } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
+import { getDeadline } from "@/lib/server-config";
 
 type Props = {
   searchParams: Promise<{ bootcamp?: string }>;

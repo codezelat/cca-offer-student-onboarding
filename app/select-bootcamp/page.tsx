@@ -1,8 +1,9 @@
 import { CountdownCard } from "@/components/countdown-card";
 import { PublicShell } from "@/components/public-shell";
 import { BootcampSelectionForm } from "@/components/forms/bootcamp-selection-form";
-import { bootcamps, getDeadline } from "@/lib/config";
+import { bootcamps } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
+import { getDeadline } from "@/lib/server-config";
 
 export default function SelectBootcampPage() {
   return (

@@ -1,5 +1,3 @@
-import { env } from "@/lib/env";
-
 export const GOOGLE_ANALYTICS_ID = "G-DE6V243K8N";
 export const SESSION_COOKIE_NAME = "sitc_offer_session";
 export const REGISTRATION_FEE = 3000;
@@ -102,8 +100,4 @@ export function decodeBootcampQuery(value?: string | null) {
     .filter(Boolean)
     .map((entry) => bootcampSlugMap[entry] ?? entry)
     .filter((entry, index, array) => isValidBootcamp(entry) && array.indexOf(entry) === index);
-}
-
-export function getDeadline() {
-  return env.countdownDeadline;
 }

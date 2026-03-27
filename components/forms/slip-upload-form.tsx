@@ -45,7 +45,6 @@ export function SlipUploadForm({ registrationId }: SlipUploadFormProps) {
         access: "private",
         contentType: file.type || undefined,
         handleUploadUrl: "/api/payment/blob/upload",
-        multipart: file.size > 4_500_000,
         onUploadProgress: ({ percentage }) => {
           setUploadProgress(Math.round(percentage));
         },
