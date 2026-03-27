@@ -323,8 +323,6 @@ The app no longer uses code-level fallback credentials or fallback session secre
 | `BLOB_READ_WRITE_TOKEN` | Vercel Blob token for private uploads and reads | Required for slip uploads and admin slip access |
 | `PAYHERE_MERCHANT_ID` | PayHere merchant ID | Required for real online payments |
 | `PAYHERE_MERCHANT_SECRET` | PayHere merchant secret | Required for hash generation and callback verification |
-| `PAYHERE_APP_ID` | PayHere application ID | Optional depending on integration usage |
-| `PAYHERE_APP_SECRET` | PayHere application secret | Optional depending on integration usage |
 | `PAYHERE_SANDBOX` | Toggle PayHere sandbox behavior | Defaults to `true` |
 | `SMS_USERNAME` | SMS gateway username | Optional |
 | `SMS_PASSWORD` | SMS gateway password | Optional |

@@ -41,8 +41,6 @@ export const env = {
   sessionSecret: requireValue("SESSION_SECRET"),
   payhereMerchantId: optionalValue("PAYHERE_MERCHANT_ID"),
   payhereMerchantSecret: optionalValue("PAYHERE_MERCHANT_SECRET"),
-  payhereAppId: optionalValue("PAYHERE_APP_ID"),
-  payhereAppSecret: optionalValue("PAYHERE_APP_SECRET"),
   payhereSandbox: (process.env.PAYHERE_SANDBOX ?? "true") === "true",
   smsUsername: optionalValue("SMS_USERNAME"),
   smsPassword: optionalValue("SMS_PASSWORD"),
