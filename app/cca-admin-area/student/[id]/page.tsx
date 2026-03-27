@@ -29,9 +29,9 @@ export default async function AdminStudentDetailPage({ params }: Props) {
     ["WhatsApp", student.whatsapp_number],
     ["Email", student.email],
     ["District", student.district],
-    ["Payment Method", student.payment_method ?? "-"],
+    ["Payment Method", student.payment_method ?? "Not Selected"],
     ["Payment Status", student.payment_status],
-    ["Amount Paid", student.amount_paid?.toString() ?? "-"],
+    ["Amount Paid", student.amount_paid ? `Rs. ${Number(student.amount_paid).toLocaleString()}` : "Rs. 0.00"],
   ];
 
   return (
@@ -39,39 +39,54 @@ export default async function AdminStudentDetailPage({ params }: Props) {
       <div className="page-content">
         <SiteHeader
           admin
-          title="Student Details"
+          title="Student Record"
           action={
             <div className="flex items-center gap-3">
               <Link
                 href="/cca-admin-area/dashboard"
-                className="rounded-xl border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-900"
+                className="rounded-xl border border-neutral-200 bg-white px-6 py-2.5 text-sm font-bold text-neutral-900 transition-all hover:bg-neutral-50 active:scale-[0.98]"
               >
-                Back to Dashboard
+                Dashboard
               </Link>
               <Link
                 href={`/cca-admin-area/student/${student.id}/edit`}
-                className="rounded-xl bg-slate-950 px-5 py-2 text-sm font-semibold text-white"
+                className="rounded-xl bg-neutral-900 px-6 py-2.5 text-sm font-bold text-white transition-all hover:bg-neutral-800 active:scale-[0.98] shadow-lg shadow-neutral-900/10"
               >
-                Edit
+                Edit Details
               </Link>
             </div>
           }
         />
-        <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-          <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-card">
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-950">
-              Student Details
-            </h1>
-            <dl className="mt-8 grid gap-4 sm:grid-cols-2">
+        <main className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+          <section className="relative overflow-hidden rounded-[2.5rem] border border-neutral-200 bg-white p-8 sm:p-12 shadow-premium">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-neutral-100 pb-10">
+              <div>
+                <h1 className="text-4xl font-black tracking-tight text-neutral-900">
+                  {student.name_with_initials || student.full_name}
+                </h1>
+                <p className="mt-2 text-base font-semibold text-neutral-500 uppercase tracking-widest">
+                  Official Student Enrollment Profile
+                </p>
+              </div>
+              <div className={`mt-6 sm:mt-0 rounded-2xl px-6 py-3 text-sm font-black uppercase tracking-widest ${
+                student.payment_status === 'completed' 
+                  ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' 
+                  : 'bg-amber-50 text-amber-600 border border-amber-100'
+              }`}>
+                {student.payment_status}
+              </div>
+            </div>
+
+            <dl className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {entries.map(([label, value]) => (
                 <div
                   key={label}
-                  className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5"
+                  className="group rounded-3xl border border-neutral-100 bg-neutral-50/50 p-6 transition-all hover:border-neutral-900/20 hover:bg-white hover:shadow-lg"
                 >
-                  <dt className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                  <dt className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">
                     {label}
                   </dt>
-                  <dd className="mt-2 text-sm font-semibold text-slate-900">{value}</dd>
+                  <dd className="mt-3 text-base font-bold text-neutral-900 tracking-tight">{value}</dd>
                 </div>
               ))}
             </dl>

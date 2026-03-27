@@ -50,34 +50,38 @@ export function AdminLoginForm() {
         </div>
       ) : null}
       <label className="block">
-        <span className="mb-2 block text-sm font-semibold text-slate-900">
+        <span className="mb-3 block text-[10px] font-bold uppercase tracking-widest text-neutral-400 px-3">
           {adminCopy.login.fields.email}
         </span>
         <input
           type="email"
           value={values.email}
+          placeholder="admin@codezela.com"
           onChange={(event) => setValues((current) => ({ ...current, email: event.target.value }))}
-          className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm"
+          className="w-full rounded-2xl border border-neutral-100 bg-neutral-50 px-5 py-4 text-sm font-medium focus:outline-none focus:border-neutral-900 transition-colors"
         />
       </label>
       <label className="block">
-        <span className="mb-2 block text-sm font-semibold text-slate-900">
+        <span className="mb-3 block text-[10px] font-bold uppercase tracking-widest text-neutral-400 px-3">
           {adminCopy.login.fields.password}
         </span>
         <input
           type="password"
           value={values.password}
+          placeholder="••••••••"
           onChange={(event) => setValues((current) => ({ ...current, password: event.target.value }))}
-          className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm"
+          className="w-full rounded-2xl border border-neutral-100 bg-neutral-50 px-5 py-4 text-sm font-medium focus:outline-none focus:border-neutral-900 transition-colors"
         />
       </label>
-      <button
-        type="submit"
-        disabled={submitting}
-        className="inline-flex w-full items-center justify-center rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
-      >
-        {adminCopy.login.submit}
-      </button>
+      <div className="pt-4">
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full rounded-2xl bg-neutral-900 px-8 py-5 text-sm font-bold text-white shadow-xl shadow-neutral-900/20 transition-all hover:bg-neutral-800 active:scale-[0.98] disabled:opacity-60"
+        >
+          {submitting ? "Verifying..." : adminCopy.login.submit}
+        </button>
+      </div>
     </form>
   );
 }

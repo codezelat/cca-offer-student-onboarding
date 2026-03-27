@@ -62,7 +62,7 @@ export default async function PaymentOptionsPage() {
                   <dt className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
                     {label}
                   </dt>
-                  <dd className="mt-1 text-sm font-semibold text-neutral-900 line-clamp-2">
+                  <dd className="mt-1 text-sm font-semibold text-neutral-900 break-words">
                     {value}
                   </dd>
                 </div>

@@ -48,62 +48,71 @@ export default async function UploadSlipPage() {
               {publicCopy.uploadSlip.subtitle}
             </p>
 
-            <div className="mt-8 rounded-[1.5rem] border border-neutral-200 bg-neutral-50 p-6">
-              <h2 className="text-lg font-medium text-neutral-900">
-                {publicCopy.uploadSlip.registrationDetails}
-              </h2>
-              <dl className="mt-6 grid gap-4 sm:grid-cols-2">
-                <Detail
-                  label={publicCopy.uploadSlip.labels.registrationId}
-                  value={data.registration_id}
-                />
-                <Detail
-                  label={publicCopy.uploadSlip.labels.studentName}
-                  value={data.full_name}
-                />
-                <Detail
-                  label={publicCopy.uploadSlip.labels.selectedDiploma}
-                  value={data.selected_bootcamps.join(" & ")}
-                />
-                <Detail
-                  label={publicCopy.uploadSlip.labels.amountToPay}
-                  value={`Rs. ${(3000 * data.selected_bootcamps.length).toLocaleString()}`}
-                />
-              </dl>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <Detail
+                label={publicCopy.uploadSlip.labels.registrationId}
+                value={data.registration_id}
+              />
+              <Detail
+                label={publicCopy.uploadSlip.labels.studentName}
+                value={data.full_name}
+              />
+              <Detail
+                label={publicCopy.uploadSlip.labels.selectedDiploma}
+                value={data.selected_bootcamps.join(" & ")}
+              />
+              <Detail
+                label={publicCopy.uploadSlip.labels.amountToPay}
+                value={`Rs. ${(3000 * data.selected_bootcamps.length).toLocaleString()}`}
+              />
             </div>
 
-            <div className="mt-8 rounded-[1.5rem] border border-neutral-200 bg-white p-6">
-              <h2 className="text-xl font-medium text-neutral-900">
+            <div className="mt-12 rounded-[2rem] border border-neutral-200 bg-white p-6 sm:p-10">
+              <h2 className="text-2xl font-bold tracking-tight text-neutral-900">
                 {publicCopy.uploadSlip.bankTitle}
               </h2>
-              <p className="mt-2 text-sm leading-6 text-neutral-600">
+              <p className="mt-2 text-base font-semibold text-emerald-600 bg-emerald-50 inline-block px-4 py-1 rounded-full border border-emerald-100">
+                Total Amount: Rs. {(3000 * data.selected_bootcamps.length).toLocaleString()}
+              </p>
+              <p className="mt-4 text-sm leading-6 text-neutral-600">
                 {publicCopy.uploadSlip.bankSubtitle}
               </p>
-              <div className="mt-6 space-y-6">
+              <div className={`mt-10 ${bankAccounts.length === 1 ? 'max-w-xl mx-auto' : 'grid gap-6 sm:grid-cols-2'}`}>
                 {bankAccounts.map((account) => (
                   <div
                     key={account.bank}
-                    className="rounded-[1.25rem] border border-neutral-200 bg-neutral-50 p-5"
+                    className="group relative rounded-[2.5rem] border border-neutral-100 bg-neutral-50 p-10 transition-all hover:border-neutral-900 hover:shadow-2xl hover:bg-white"
                   >
-                    <h3 className="text-base font-semibold text-neutral-900">{account.bank}</h3>
-                    <dl className="mt-4 space-y-3 text-sm leading-6 text-neutral-700">
-                      <div className="flex sm:justify-between flex-col sm:flex-row border-b border-neutral-200 pb-2">
-                        <dt className="font-semibold text-xs tracking-widest uppercase text-neutral-500">
+                    <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-[1.5rem] bg-neutral-900 text-white shadow-xl shadow-neutral-900/10 transition-transform group-hover:scale-105">
+                      <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    </div>
+                    <h3 className="text-2xl font-black tracking-tight text-neutral-900 italic">{account.bank}</h3>
+                    <dl className="mt-8 space-y-6">
+                      <div className="flex flex-col gap-1.5 border-b border-neutral-200/60 pb-4">
+                        <dt className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">
                           {publicCopy.uploadSlip.bankLabels.accountNumber}
                         </dt>
-                        <dd className="font-medium">{account.accountNumber}</dd>
+                        <dd className="text-lg font-black text-neutral-900 tabular-nums tracking-wider">
+                          {account.accountNumber}
+                        </dd>
                       </div>
-                      <div className="flex sm:justify-between flex-col sm:flex-row border-b border-neutral-200 pb-2">
-                        <dt className="font-semibold text-xs tracking-widest uppercase text-neutral-500">
+                      <div className="flex flex-col gap-1.5 border-b border-neutral-200/60 pb-4">
+                        <dt className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">
                           {publicCopy.uploadSlip.bankLabels.accountName}
                         </dt>
-                        <dd className="font-medium">{account.accountName}</dd>
+                        <dd className="text-base font-bold text-neutral-900 leading-relaxed">
+                          {account.accountName}
+                        </dd>
                       </div>
-                      <div className="flex sm:justify-between flex-col sm:flex-row">
-                        <dt className="font-semibold text-xs tracking-widest uppercase text-neutral-500">
+                      <div className="flex flex-col gap-1.5">
+                        <dt className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">
                           {publicCopy.uploadSlip.bankLabels.branch}
                         </dt>
-                        <dd className="font-medium">{account.branch}</dd>
+                        <dd className="text-sm font-bold text-neutral-900 uppercase tracking-widest">
+                          {account.branch}
+                        </dd>
                       </div>
                     </dl>
                   </div>
@@ -113,9 +122,9 @@ export default async function UploadSlipPage() {
           </section>
 
           <section className="rounded-[2rem] bg-neutral-50 p-6 sm:p-10 border border-neutral-200">
-            <div className="rounded-2xl border-l-4 border-l-neutral-900 border-neutral-200 bg-white p-5 text-sm leading-6 text-neutral-900">
-              <p className="font-semibold">{publicCopy.uploadSlip.warningAmount}</p>
-              <p className="mt-2">{publicCopy.uploadSlip.warningReference}</p>
+            <div className="rounded-2xl border-l-4 border-l-emerald-500 border-neutral-200 bg-white p-6 text-sm leading-6 text-neutral-900 shadow-sm">
+              <p className="font-bold text-lg">Amount to Transfer: Rs. {(3000 * data.selected_bootcamps.length).toLocaleString()} <span className="text-neutral-500 font-medium text-sm">— for {data.selected_bootcamps.length} program(s)</span></p>
+              <p className="mt-2 text-neutral-600 font-medium">{publicCopy.uploadSlip.warningReference}</p>
             </div>
 
             <form
@@ -132,16 +141,16 @@ export default async function UploadSlipPage() {
                   <SlipUploadField />
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-neutral-200/60">
                 <button
                   type="submit"
-                  className="w-full sm:w-auto inline-flex justify-center rounded-full bg-neutral-900 px-8 py-4 text-sm font-semibold text-white transition-colors hover:bg-neutral-800"
+                  className="w-full sm:w-auto inline-flex justify-center rounded-xl bg-neutral-900 px-10 py-4 text-sm font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.98]"
                 >
                   {publicCopy.uploadSlip.submit}
                 </button>
                 <a
                   href="/payment/options"
-                  className="w-full sm:w-auto inline-flex justify-center rounded-full border border-neutral-300 bg-white px-8 py-4 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-50"
+                  className="w-full sm:w-auto inline-flex justify-center rounded-xl border border-neutral-300 bg-white px-10 py-4 text-sm font-semibold text-neutral-900 transition-all hover:bg-neutral-50"
                 >
                   {publicCopy.uploadSlip.back}
                 </a>
@@ -168,11 +177,11 @@ export default async function UploadSlipPage() {
 
 function Detail({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[1.25rem] border border-neutral-200 bg-white p-4">
+    <div className="rounded-2xl border border-neutral-100 bg-white p-4 transition-all hover:border-neutral-200">
       <dt className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
         {label}
       </dt>
-      <dd className="mt-2 text-sm font-medium text-neutral-900">{value}</dd>
+      <dd className="mt-1 text-sm font-semibold text-neutral-900 break-all">{value}</dd>
     </div>
   );
 }

@@ -15,15 +15,22 @@ export default async function AdminLoginPage() {
     <div className="page-frame">
       <div className="page-content">
         <SiteHeader />
-        <main className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-6xl items-center px-4 py-10 sm:px-6 lg:px-8">
-          <section className="mx-auto w-full max-w-md rounded-[2.5rem] border border-slate-200 bg-white p-8 shadow-soft">
-            <h1 className="text-center text-3xl font-semibold tracking-tight text-slate-950">
-              {adminCopy.login.title}
-            </h1>
-            <p className="mt-3 text-center text-sm leading-6 text-slate-600">
-              {adminCopy.login.title}
-            </p>
-            <div className="mt-8">
+        <main className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-6xl items-center px-4 py-20 sm:px-6 lg:px-8">
+          <section className="mx-auto w-full max-w-md overflow-hidden rounded-[3rem] border border-neutral-100 bg-white p-10 shadow-premium group">
+            <div className="flex flex-col items-center">
+              <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-3xl bg-neutral-900 text-white shadow-xl shadow-neutral-900/10">
+                <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h1 className="text-3xl font-black tracking-tight text-neutral-900">
+                {adminCopy.login.title}
+              </h1>
+              <p className="mt-4 text-center text-sm font-semibold leading-relaxed text-neutral-500 uppercase tracking-widest">
+                Authorized Access Only
+              </p>
+            </div>
+            <div className="mt-12">
               <AdminLoginForm />
             </div>
           </section>

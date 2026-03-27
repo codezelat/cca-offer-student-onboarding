@@ -31,25 +31,25 @@ export default async function AdminEditPage({ params }: Props) {
       <div className="page-content">
         <SiteHeader
           admin
-          title={adminCopy.edit.title}
+          title="Modify Enrollment"
           action={
             <Link
               href="/cca-admin-area/dashboard"
-              className="rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-900"
+              className="rounded-xl border border-neutral-200 bg-white px-6 py-2.5 text-sm font-bold text-neutral-900 transition-all hover:bg-neutral-50"
             >
-              {adminCopy.edit.back}
+              Cancel Edit
             </Link>
           }
         />
-        <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-          <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-card">
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-950">
+        <main className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+          <section className="rounded-[2.5rem] border border-neutral-200 bg-white p-8 sm:p-12 shadow-premium">
+            <h1 className="text-4xl font-black tracking-tight text-neutral-900">
               {adminCopy.edit.pageTitle}
             </h1>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
+            <p className="mt-3 text-base font-semibold text-neutral-500 uppercase tracking-widest leading-relaxed">
               {adminCopy.edit.pageSubtitle}
             </p>
-            <div className="mt-8">
+            <div className="mt-12 border-t border-neutral-100 pt-12">
               <AdminEditForm
                 student={{
                   id: student.id,

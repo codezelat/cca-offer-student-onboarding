@@ -43,10 +43,14 @@ export function PayHereLauncher({ payment }: PayHereLauncherProps) {
           };
           window.payhere.startPayment(payment);
         }}
-        className="inline-flex w-full items-center justify-center rounded-full bg-slate-950 px-6 py-4 text-sm font-semibold text-white shadow-soft"
+        className="group relative inline-flex w-full items-center justify-center overflow-hidden rounded-xl bg-blue-600 px-8 py-4 text-base font-bold text-white shadow-xl shadow-blue-500/20 transition-all hover:bg-blue-700 active:scale-[0.98]"
       >
-        {publicCopy.payhere.ctaButton}
-      </button>
+        <span className="relative flex items-center gap-2">
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+          </svg>
+          {publicCopy.payhere.ctaButton}
+        </span>
     </>
   );
 }

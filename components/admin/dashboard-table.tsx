@@ -73,43 +73,44 @@ export function DashboardTable({ students }: DashboardTableProps) {
 
   return (
     <>
-      <div className="overflow-x-auto rounded-[2rem] border border-slate-200 bg-white shadow-card">
-        <table className="min-w-full divide-y divide-slate-200 text-left">
-          <thead className="bg-slate-50">
+      <div className="overflow-x-auto rounded-[2.5rem] border border-neutral-100 bg-white shadow-premium">
+        <table className="min-w-full divide-y divide-neutral-100 text-left">
+          <thead className="bg-neutral-50/50">
             <tr>
               {adminCopy.dashboard.headers.map((header) => (
                 <th
                   key={header}
-                  className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.24em] text-slate-500"
+                  className="px-6 py-5 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400"
                 >
                   {header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-neutral-50">
             {formatted.map((student) => (
               <tr key={student.id}>
-                <td className="px-5 py-4 text-sm font-semibold text-slate-900">
+                <td className="px-6 py-5 text-sm font-bold text-neutral-900 tabular-nums">
                   {student.registration_id}
                 </td>
-                <td className="px-5 py-4 text-sm text-slate-700">{student.full_name}</td>
-                <td className="px-5 py-4 text-sm text-slate-700">
+                <td className="px-6 py-5 text-sm font-medium text-neutral-700">{student.full_name}</td>
+                <td className="px-6 py-5 text-sm font-semibold text-neutral-600">
                   {student.selected_diploma}
                 </td>
-                <td className="px-5 py-4 text-sm text-slate-700">{student.nic}</td>
-                <td className="px-5 py-4 text-sm text-slate-700">
+                <td className="px-6 py-5 text-sm font-medium text-neutral-600 tabular-nums">{student.nic}</td>
+                <td className="px-6 py-5 text-sm font-medium text-neutral-600 tabular-nums">
                   {student.whatsapp_number}
                 </td>
-                <td className="px-5 py-4 text-sm text-slate-700">
+                <td className="px-6 py-5 text-sm">
                   {student.payment_method === "online" ? (
                     <span
-                      className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-md ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg ${
                         student.payment_status === "completed"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-amber-100 text-amber-700"
+                          ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
+                          : "bg-amber-50 text-amber-600 border border-amber-100"
                       }`}
                     >
+                      <span className={`h-1.5 w-1.5 rounded-full ${student.payment_status === "completed" ? "bg-emerald-500" : "bg-amber-500"}`} />
                       {student.payment_status === "completed"
                         ? adminCopy.dashboard.status.success
                         : adminCopy.dashboard.status.pending}
@@ -127,25 +128,25 @@ export function DashboardTable({ students }: DashboardTableProps) {
                     adminCopy.dashboard.status.noSlip
                   )}
                 </td>
-                <td className="px-5 py-4 text-sm">
-                  <div className="flex flex-wrap gap-2">
+                <td className="px-6 py-5 text-sm">
+                  <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => setViewStudent(student)}
-                      className="rounded-xl border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-900"
+                      className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-neutral-600 transition-all hover:bg-neutral-50 active:scale-[0.98]"
                     >
                       View
                     </button>
                     <Link
                       href={`/cca-admin-area/student/${student.id}/edit`}
-                      className="rounded-xl border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-900"
+                      className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-neutral-600 transition-all hover:bg-neutral-50 active:scale-[0.98]"
                     >
                       Edit
                     </Link>
                     <button
                       type="button"
                       onClick={() => setDeleteStudent(student)}
-                      className="rounded-xl border border-rose-300 px-4 py-2 text-xs font-semibold text-rose-700"
+                      className="rounded-lg border border-rose-100 bg-rose-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-rose-600 transition-all hover:bg-rose-100 active:scale-[0.98]"
                     >
                       Delete
                     </button>
@@ -241,11 +242,11 @@ function Modal({
 }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/40 p-4 backdrop-blur-sm animate-in fade-in duration-300"
       onClick={onClose}
     >
       <div
-        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[2rem] border border-slate-200 bg-white p-8 shadow-soft"
+        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[2.5rem] border border-neutral-200 bg-white p-10 shadow-2xl shadow-neutral-950/10 animate-in zoom-in-95 duration-300"
         onClick={(event) => event.stopPropagation()}
       >
         {children}

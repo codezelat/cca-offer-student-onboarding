@@ -1,5 +1,4 @@
 import { env } from "@/lib/env";
-import type { BankAccount, BootcampConfig } from "@/lib/types";
 
 export const GOOGLE_ANALYTICS_ID = "G-DE6V243K8N";
 export const SESSION_COOKIE_NAME = "sitc_offer_session";
@@ -65,28 +64,10 @@ export const whatsappGroups = bootcamps.reduce((acc, bootcamp) => {
 
 export const bankAccounts = [
   {
-    bank: "Bank of Ceylon",
-    accountNumber: "PLACEHOLDER-ACCOUNT-NUMBER",
-    accountName: "SITC Campus",
-    branch: "Main Branch",
-  },
-  {
-    bank: "Sampath Bank",
-    accountNumber: "PLACEHOLDER-ACCOUNT-NUMBER",
-    accountName: "SITC Campus",
-    branch: "Main Branch",
-  },
-  {
     bank: "Commercial Bank",
-    accountNumber: "PLACEHOLDER-ACCOUNT-NUMBER",
-    accountName: "SITC Campus",
-    branch: "Main Branch",
-  },
-  {
-    bank: "People’s Bank",
-    accountNumber: "PLACEHOLDER-ACCOUNT-NUMBER",
-    accountName: "SITC Campus",
-    branch: "Main Branch",
+    accountNumber: "1000837856",
+    accountName: "Codezela U K",
+    branch: "Union Place",
   },
 ];
 

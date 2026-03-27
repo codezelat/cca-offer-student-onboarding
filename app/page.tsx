@@ -48,21 +48,21 @@ export default function HomePage() {
             {publicCopy.home.propositions.map((text, index) => (
               <li
                 key={index}
-                className="flex items-start gap-6 text-base leading-7 text-neutral-600 sm:text-lg sm:leading-8 bg-neutral-50 p-6 rounded-3xl"
+                className="flex items-start gap-6 text-base leading-7 text-neutral-600 sm:text-lg sm:leading-8 bg-neutral-50 p-8 rounded-[2.5rem] border border-neutral-100 transition-all hover:bg-white hover:shadow-premium"
               >
-                <span className="flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-full bg-neutral-900 text-sm font-semibold text-white">
+                <span className="flex-shrink-0 flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-900 text-sm font-bold text-white shadow-lg shadow-neutral-900/10">
                   {index + 1}
                 </span>
-                <div className="pt-1.5">
+                <div className="pt-2">
                   {text.split(/(\*\*.*?\*\*)/g).map((part, i) => {
                     if (part.startsWith('**') && part.endsWith('**')) {
                       return (
-                        <strong key={i} className="font-semibold text-neutral-900">
+                        <strong key={i} className="font-bold text-neutral-900">
                           {part.slice(2, -2)}
                         </strong>
                       );
                     }
-                    return <span key={i}>{part}</span>;
+                    return <span key={i} className="font-medium">{part}</span>;
                   })}
                 </div>
               </li>
@@ -74,7 +74,7 @@ export default function HomePage() {
         <section className="w-full flex flex-col items-center space-y-8 pb-12">
           <Link
             href="/select-bootcamp"
-            className="inline-flex w-full max-w-xl rounded-full items-center justify-center bg-neutral-900 px-8 py-5 text-base font-semibold text-white transition-colors hover:bg-neutral-800 shadow-md"
+            className="inline-flex w-full max-w-xl rounded-2xl items-center justify-center bg-neutral-900 px-8 py-5 text-lg font-bold text-white transition-all hover:bg-neutral-800 shadow-xl shadow-neutral-900/10 active:scale-[0.98]"
           >
             {publicCopy.home.cta}
           </Link>

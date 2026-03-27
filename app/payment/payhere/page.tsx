@@ -31,16 +31,19 @@ export default async function PayHerePage() {
           />
         </div>
 
-        <div className="w-full flex flex-col space-y-10">
+        <div className="w-full max-w-2xl space-y-10">
           
-          <section className="rounded-[2rem] border border-neutral-200 bg-white p-6 sm:p-10">
-            <h1 className="text-3xl font-medium tracking-tight text-neutral-900">
+          <section className="text-center">
+            <h1 className="text-4xl font-bold tracking-tight text-neutral-900 sm:text-5xl">
               {publicCopy.payhere.title}
             </h1>
-            <p className="mt-2 text-base leading-7 text-neutral-600">
-              {publicCopy.payhere.subtitle}
+            <p className="mt-4 text-lg font-semibold text-emerald-600 bg-emerald-50 inline-block px-6 py-2 rounded-full border border-emerald-100 italic">
+              Total Payable: Rs. {Number(payment.amount).toLocaleString()} <span className="ml-2 text-emerald-500/70 text-sm font-medium">({data.selected_bootcamps.length} programs)</span>
             </p>
-            <div className="mt-8 space-y-4 rounded-3xl border border-neutral-200 bg-neutral-50 p-6">
+          </section>
+
+          <section className="rounded-3xl border border-neutral-100 bg-white p-8 shadow-premium">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <Detail label={publicCopy.payhere.labels.registrationId} value={data.registration_id} />
               <Detail label={publicCopy.payhere.labels.studentName} value={data.full_name} />
               <Detail label={publicCopy.payhere.labels.selectedDiploma} value={data.selected_bootcamps.join(" & ")} />
@@ -48,35 +51,40 @@ export default async function PayHerePage() {
             </div>
           </section>
 
-          <section className="rounded-[2rem] bg-neutral-50 p-6 sm:p-10 border border-neutral-200">
-            <h2 className="text-2xl font-medium tracking-tight text-neutral-900">
-              {publicCopy.payhere.ctaTitle}
-            </h2>
-            <p className="mt-3 text-base leading-7 text-neutral-600">
-              {publicCopy.payhere.ctaBody}
-            </p>
-            <div className="mt-8">
+          <section className="space-y-6">
+            <div className="flex flex-col gap-4">
               <PayHereLauncher payment={payment} />
+              <a
+                href="/payment/options"
+                className="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-8 py-4 text-sm font-semibold text-neutral-900 transition-all hover:bg-neutral-50 active:scale-[0.98]"
+              >
+                {publicCopy.payhere.back}
+              </a>
             </div>
-            <a
-              href="/payment/options"
-              className="mt-6 inline-flex justify-center rounded-full border border-neutral-300 bg-white px-8 py-4 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-50 flex-col sm:flex-row w-full sm:w-auto"
-            >
-              {publicCopy.payhere.back}
-            </a>
 
-            <div className="mt-10 rounded-3xl border border-neutral-200 bg-white p-6">
-              <h3 className="text-lg font-medium text-neutral-900">
-                {publicCopy.payhere.securityTitle}
-              </h3>
-              <ul className="mt-4 list-disc space-y-3 pl-6 text-sm leading-6 text-neutral-600">
+            <div className="rounded-3xl border border-neutral-100 bg-neutral-50/50 p-8">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-neutral-900">
+                  {publicCopy.payhere.securityTitle}
+                </h3>
+              </div>
+              <ul className="mt-6 space-y-4">
                 {publicCopy.payhere.securityLines.map((line) => (
-                  <li key={line}>{line}</li>
+                  <li key={line} className="flex gap-3 text-sm leading-6 text-neutral-600">
+                    <svg className="h-5 w-5 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {line}
+                  </li>
                 ))}
               </ul>
             </div>
           </section>
-
         </div>
       </div>
     </PublicShell>
@@ -85,11 +93,11 @@ export default async function PayHerePage() {
 
 function Detail({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:justify-between border-b border-neutral-200 pb-3 last:border-none last:pb-0">
-      <div className="text-xs font-semibold uppercase tracking-widest text-neutral-500 mb-1 sm:mb-0">
+    <div className="rounded-2xl border border-neutral-100 bg-white p-4 transition-all hover:border-neutral-200">
+      <dt className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
         {label}
-      </div>
-      <div className="text-sm font-medium text-neutral-900 text-left sm:text-right">{value}</div>
+      </dt>
+      <dd className="mt-1 text-sm font-semibold text-neutral-900 break-all">{value}</dd>
     </div>
   );
 }
