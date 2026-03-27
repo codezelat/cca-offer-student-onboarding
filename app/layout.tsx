@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 
+import { Inter } from "next/font/google";
 import { GOOGLE_ANALYTICS_ID } from "@/lib/config";
 import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
@@ -18,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full bg-neutral-50 antialiased">
-      <body className="min-h-full bg-neutral-50 font-sans text-slate-900">
+    <html lang="en" className={`h-full bg-white antialiased ${inter.className}`}>
+      <body className="min-h-full bg-white text-neutral-900">
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
           strategy="afterInteractive"

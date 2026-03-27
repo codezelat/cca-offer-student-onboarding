@@ -67,12 +67,12 @@ export function CountdownCard({
   return (
     <div
       className={cn(
-        "bg-gradient-accent shadow-soft rounded-[2rem] border border-rose-100 p-6 text-slate-900",
+        "rounded-[2rem] border-2 border-rose-500 bg-rose-600 p-6 sm:p-8 text-white shadow-xl shadow-rose-900/10",
         className,
       )}
     >
       {label ? (
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-rose-600">
+        <p className="mb-3 text-[11px] font-bold uppercase tracking-widest text-rose-200">
           {label}
         </p>
       ) : null}
@@ -80,20 +80,20 @@ export function CountdownCard({
         {title}
       </h2>
       {subtitle ? (
-        <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600 sm:text-base">
+        <p className="mt-2 text-sm text-rose-100">
           {subtitle}
         </p>
       ) : null}
-      <div className="mt-5 grid grid-cols-4 gap-3">
+      <div className="mt-8 flex flex-wrap gap-4 sm:gap-6">
         {values.map((value, index) => (
           <div
             key={labels[index]}
-            className="rounded-2xl border border-white/70 bg-white/80 px-3 py-4 text-center shadow-card"
+            className="flex flex-col items-center justify-center rounded-2xl bg-white/10 p-4 sm:w-24 border border-white/20 backdrop-blur-sm"
           >
-            <div className="text-2xl font-bold tracking-tight sm:text-4xl">
+            <div className="text-4xl font-bold tabular-nums tracking-tight sm:text-5xl" suppressHydrationWarning>
               {`${value}`.padStart(2, "0")}
             </div>
-            <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.2em] text-slate-500">
+            <div className="mt-2 text-[10px] font-bold uppercase tracking-widest text-rose-200">
               {labels[index]}
             </div>
           </div>

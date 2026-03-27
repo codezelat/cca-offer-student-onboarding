@@ -7,27 +7,33 @@ import { publicCopy } from "@/lib/content/public";
 export default function SelectDiplomaPage() {
   return (
     <PublicShell>
-      <div className="grid gap-8 lg:grid-cols-[0.88fr_1.12fr]">
-        <CountdownCard
-          deadline={getDeadline()}
-          label={publicCopy.countdown.label}
-          title={publicCopy.countdown.title}
-          subtitle={publicCopy.selectDiploma.support}
-        />
-        <section className="shadow-soft rounded-[2.5rem] border border-slate-200 bg-white/90 p-8 sm:p-10">
-          <h1 className="text-balance text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
+      <div className="flex flex-col items-center mx-auto max-w-2xl space-y-10 py-8 px-2">
+        
+        <section className="w-full">
+          <CountdownCard
+            deadline={getDeadline()}
+            label={publicCopy.countdown.label}
+            title={publicCopy.countdown.title}
+            subtitle={publicCopy.selectDiploma.support}
+          />
+        </section>
+
+        <section className="w-full text-center space-y-4">
+          <h1 className="text-balance text-4xl font-semibold tracking-tight text-neutral-900 sm:text-5xl">
             {publicCopy.selectDiploma.title}
           </h1>
-          <p className="mt-4 text-lg leading-8 text-slate-600">
+          <p className="text-lg leading-8 text-neutral-600">
             {publicCopy.selectDiploma.subtitle}
           </p>
-          <div className="mt-8">
-            <DiplomaSelectionForm
-              diplomas={diplomas}
-              cta={publicCopy.selectDiploma.cta}
-            />
-          </div>
         </section>
+
+        <section className="w-full p-8 rounded-[2rem] border border-neutral-200 bg-white shadow-sm">
+          <DiplomaSelectionForm
+            diplomas={diplomas}
+            cta={publicCopy.selectDiploma.cta}
+          />
+        </section>
+
       </div>
     </PublicShell>
   );

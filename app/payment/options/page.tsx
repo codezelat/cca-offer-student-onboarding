@@ -29,99 +29,102 @@ export default async function PaymentOptionsPage() {
   ];
 
   return (
-    <PublicShell wide>
-      <div className="grid gap-6">
-        <div className="grid gap-6 lg:grid-cols-[1fr_24rem]">
+    <PublicShell>
+      <div className="flex flex-col items-center mx-auto max-w-3xl space-y-12 py-8 px-2">
+        
+        <div className="w-full space-y-8">
+          <CountdownCard
+            deadline={getDeadline()}
+            title={publicCopy.countdown.paymentTitle}
+            subtitle={publicCopy.countdown.paymentSubtitle}
+          />
           <ProgressStepper
             title={publicCopy.paymentOptions.progressTitle}
             step={publicCopy.paymentOptions.step}
             labels={publicCopy.register.steps}
             current={2}
           />
-          <CountdownCard
-            deadline={getDeadline()}
-            title={publicCopy.countdown.paymentTitle}
-            subtitle={publicCopy.countdown.paymentSubtitle}
-          />
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <section className="shadow-card rounded-[2rem] border border-slate-200 bg-white p-8">
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+        <div className="w-full flex flex-col space-y-10">
+          
+          <section className="rounded-[2rem] border border-neutral-200 bg-white p-6 sm:p-10">
+            <h1 className="text-3xl font-medium tracking-tight text-neutral-900">
               {publicCopy.paymentOptions.registrationDetails}
             </h1>
-            <dl className="mt-6 space-y-4">
+            <dl className="mt-8 space-y-4">
               {summary.map(([label, value]) => (
                 <div
                   key={label}
-                  className="grid gap-1 border-b border-slate-100 pb-4 last:border-none last:pb-0"
+                  className="flex flex-col sm:flex-row sm:justify-between border-b border-neutral-100 pb-4 last:border-none last:pb-0"
                 >
-                  <dt className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                  <dt className="text-xs font-semibold uppercase tracking-widest text-neutral-500 mb-1 sm:mb-0">
                     {label}
                   </dt>
-                  <dd className="text-sm leading-6 text-slate-900">{value}</dd>
+                  <dd className="text-sm text-neutral-900 text-left sm:text-right">{value}</dd>
                 </div>
               ))}
             </dl>
           </section>
 
-          <section className="shadow-soft rounded-[2rem] border border-rose-100 bg-gradient-accent p-8">
-            <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
+          <section className="rounded-[2rem] bg-neutral-50 p-6 sm:p-10 border border-neutral-200">
+            <h2 className="text-2xl font-medium tracking-tight text-neutral-900">
               {publicCopy.paymentOptions.blockTitle}
             </h2>
-            <ol className="mt-6 space-y-4">
+            <ol className="mt-8 space-y-4">
               {publicCopy.paymentOptions.bullets.map((bullet, index) => (
                 <li
                   key={bullet}
-                  className="rounded-[1.5rem] border border-white/70 bg-white/85 p-5 text-sm leading-7 text-slate-800 shadow-card"
+                  className="flex items-start gap-4 rounded-3xl border border-neutral-200 bg-white p-5 text-sm leading-7 text-neutral-800"
                 >
-                  <span className="mr-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-950 text-xs font-semibold text-white">
+                  <span className="flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-xs font-semibold text-white">
                     {index + 1}
                   </span>
-                  {bullet}
+                  <span className="pt-0.5">{bullet}</span>
                 </li>
               ))}
             </ol>
 
-            <div className="mt-6 rounded-[1.75rem] border border-slate-200 bg-white/80 p-5">
-              <h3 className="text-lg font-semibold text-slate-950">
+            <div className="mt-8 rounded-[1.5rem] border border-neutral-200 bg-white p-6">
+              <h3 className="text-lg font-medium text-neutral-900">
                 {publicCopy.paymentOptions.agreementTitle}
               </h3>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
+                  <div className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
                     {publicCopy.paymentOptions.agreementLabels[0]}
                   </div>
-                  <div className="mt-2 text-sm font-semibold text-slate-900">
+                  <div className="mt-2 text-sm font-medium text-neutral-900">
                     {data.full_name}
                   </div>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
+                  <div className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
                     {publicCopy.paymentOptions.agreementLabels[1]}
                   </div>
-                  <div className="mt-2 text-sm font-semibold text-slate-900">
+                  <div className="mt-2 text-sm font-medium text-neutral-900">
                     {data.nic}
                   </div>
                 </div>
               </div>
             </div>
 
-            <form action="/api/payment/agree" method="post" className="mt-6 flex flex-wrap gap-4">
+            <form action="/api/payment/agree" method="post" className="mt-8 flex flex-col sm:flex-row gap-4">
               <button
                 type="submit"
-                className="rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white"
+                className="w-full sm:w-auto inline-flex justify-center rounded-full bg-neutral-900 px-8 py-4 text-sm font-semibold text-white transition-colors hover:bg-neutral-800"
               >
                 {publicCopy.paymentOptions.cta}
               </button>
               <Link
                 href={`/register?diploma=${encodeURIComponent(data.selected_diploma)}`}
-                className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-900"
+                className="w-full sm:w-auto inline-flex justify-center rounded-full border border-neutral-300 bg-white px-8 py-4 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-50"
               >
                 {publicCopy.paymentOptions.back}
               </Link>
             </form>
           </section>
+
         </div>
       </div>
     </PublicShell>

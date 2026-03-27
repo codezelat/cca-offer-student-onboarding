@@ -20,13 +20,20 @@ export default async function CheckEligibilityPage({ searchParams }: Props) {
 
   return (
     <PublicShell>
-      <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
-        <CountdownCard
-          deadline={getDeadline()}
-          label={publicCopy.countdown.label}
-          title={publicCopy.countdown.title}
-        />
-        <EligibilityGate diploma={selectedDiploma.full_name} />
+      <div className="flex flex-col items-center mx-auto max-w-2xl space-y-10 py-8 px-2">
+        
+        <section className="w-full">
+          <CountdownCard
+            deadline={getDeadline()}
+            label={publicCopy.countdown.label}
+            title={publicCopy.countdown.title}
+          />
+        </section>
+
+        <section className="w-full">
+          <EligibilityGate diploma={selectedDiploma.full_name} />
+        </section>
+
       </div>
     </PublicShell>
   );

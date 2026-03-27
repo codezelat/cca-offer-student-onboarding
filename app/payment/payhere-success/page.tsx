@@ -35,10 +35,11 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
   const whatsappLink = getDiplomaWhatsappLink(student.selected_diploma);
 
   return (
-    <PublicShell wide>
+    <PublicShell>
       {completed ? <RegistrationSessionCleaner /> : null}
-      <div className="grid gap-6">
-        <div className="grid gap-6 lg:grid-cols-[1fr_24rem]">
+      <div className="flex flex-col items-center mx-auto max-w-3xl space-y-12 py-8 px-2">
+        <div className="w-full space-y-8">
+          <CountdownCard deadline={getDeadline()} title={publicCopy.countdown.title} />
           <ProgressStepper
             title={publicCopy.register.progressTitle}
             step={
@@ -49,34 +50,33 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
             labels={publicCopy.register.steps}
             current={3}
           />
-          <CountdownCard deadline={getDeadline()} title={publicCopy.countdown.title} />
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[0.78fr_1.22fr]">
+        <div className="w-full flex flex-col space-y-10">
           <section
-            className={`rounded-[2rem] border p-8 shadow-soft ${
+            className={`rounded-[2rem] border p-6 sm:p-10 ${
               completed ? "border-emerald-200 bg-emerald-50" : "border-amber-200 bg-amber-50"
             }`}
           >
-            <h1 className="text-4xl font-semibold tracking-tight text-slate-950">
+            <h1 className={`text-3xl font-medium tracking-tight ${completed ? "text-emerald-950" : "text-amber-950"}`}>
               {completed
                 ? publicCopy.paymentSuccess.completedHeading
                 : publicCopy.paymentSuccess.processingHeading}
             </h1>
-            <p className="mt-4 text-xl leading-8 text-slate-800">
+            <p className={`mt-4 text-lg leading-8 ${completed ? "text-emerald-900" : "text-amber-900"}`}>
               {completed
                 ? publicCopy.paymentSuccess.completedSubheading
                 : publicCopy.paymentSuccess.processingBody}
             </p>
             {completed ? (
-              <p className="mt-4 text-base leading-7 text-slate-700">
+              <p className="mt-4 text-base leading-7 text-emerald-800">
                 {publicCopy.paymentSuccess.completedWelcome.replace(
                   "{{ $student->full_name }}",
                   student.full_name,
                 )}
               </p>
             ) : (
-              <p className="mt-4 text-base leading-7 text-slate-700">
+              <p className="mt-4 text-base leading-7 text-amber-800">
                 {publicCopy.paymentSuccess.processingRefresh.replace("5s...", "")}
                 <ProcessingRefresh />
               </p>
@@ -84,174 +84,172 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
             {!completed ? (
               <Link
                 href={`/payment/payhere-success?order_id=${encodeURIComponent(student.payhere_order_id ?? "")}`}
-                className="mt-6 inline-flex rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white"
+                className="mt-8 inline-flex justify-center rounded-full bg-neutral-900 px-8 py-4 text-sm font-semibold text-white w-full sm:w-auto"
               >
                 {publicCopy.paymentSuccess.processingAction}
               </Link>
             ) : null}
           </section>
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-card">
-              <h2 className="text-xl font-semibold text-slate-950">
-                {publicCopy.paymentSuccess.registrationCardTitle}
-              </h2>
-              <p className="mt-3 text-sm leading-6 text-slate-600">
-                {publicCopy.paymentSuccess.registrationCardBody}
-              </p>
-              <div className="mt-6 rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
-                <div className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-                  {publicCopy.paymentSuccess.registrationCardSubtitle}
-                </div>
-                <div className="mt-3 text-2xl font-semibold tracking-tight text-slate-950">
-                  {student.registration_id}
-                </div>
+          <section className="rounded-[2rem] border border-neutral-200 bg-white p-6 sm:p-10">
+            <h2 className="text-xl font-medium text-neutral-900">
+              {publicCopy.paymentSuccess.registrationCardTitle}
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-neutral-600">
+              {publicCopy.paymentSuccess.registrationCardBody}
+            </p>
+            <div className="mt-8 rounded-[1.5rem] border border-neutral-200 bg-neutral-50 p-6">
+              <div className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                {publicCopy.paymentSuccess.registrationCardSubtitle}
               </div>
-            </section>
+              <div className="mt-3 text-3xl font-bold tracking-tight text-neutral-900">
+                {student.registration_id}
+              </div>
+            </div>
+          </section>
 
-            <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-card">
-              <h2 className="text-xl font-semibold text-slate-950">
-                {publicCopy.paymentSuccess.paymentCardTitle}
-              </h2>
-              <dl className="mt-6 space-y-4 text-sm leading-6 text-slate-700">
-                <PaymentLine
-                  label={publicCopy.paymentSuccess.paymentLabels.status}
-                  value={
-                    completed
-                      ? publicCopy.paymentSuccess.paymentLabels.completed
-                      : publicCopy.paymentSuccess.paymentLabels.processing
-                  }
-                />
-                <PaymentLine
-                  label={publicCopy.paymentSuccess.paymentLabels.orderId}
-                  value={
-                    student.payhere_order_id ??
-                    publicCopy.paymentSuccess.paymentLabels.pending
-                  }
-                />
-                <PaymentLine
-                  label={publicCopy.paymentSuccess.paymentLabels.amountPaid}
-                  value={formatCurrency(student.amount_paid?.toString() ?? 4000)}
-                />
-                <PaymentLine
-                  label={publicCopy.paymentSuccess.paymentLabels.paymentDate}
-                  value={formatSimpleDate(student.payment_date)}
-                />
-              </dl>
-            </section>
+          <section className="rounded-[2rem] border border-neutral-200 bg-white p-6 sm:p-10">
+            <h2 className="text-xl font-medium text-neutral-900">
+              {publicCopy.paymentSuccess.paymentCardTitle}
+            </h2>
+            <dl className="mt-8 space-y-4">
+              <PaymentLine
+                label={publicCopy.paymentSuccess.paymentLabels.status}
+                value={
+                  completed
+                    ? publicCopy.paymentSuccess.paymentLabels.completed
+                    : publicCopy.paymentSuccess.paymentLabels.processing
+                }
+              />
+              <PaymentLine
+                label={publicCopy.paymentSuccess.paymentLabels.orderId}
+                value={
+                  student.payhere_order_id ??
+                  publicCopy.paymentSuccess.paymentLabels.pending
+                }
+              />
+              <PaymentLine
+                label={publicCopy.paymentSuccess.paymentLabels.amountPaid}
+                value={formatCurrency(student.amount_paid?.toString() ?? 4000)}
+              />
+              <PaymentLine
+                label={publicCopy.paymentSuccess.paymentLabels.paymentDate}
+                value={formatSimpleDate(student.payment_date)}
+              />
+            </dl>
+          </section>
 
-            <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-card">
-              <h2 className="text-xl font-semibold text-slate-950">
-                {publicCopy.paymentSuccess.detailsTitle}
-              </h2>
-              <dl className="mt-6 space-y-4 text-sm leading-6 text-slate-700">
-                <PaymentLine
-                  label={publicCopy.paymentSuccess.detailsLabels.studentName}
-                  value={student.full_name}
-                />
-                <PaymentLine
-                  label={publicCopy.paymentSuccess.detailsLabels.selectedCourse}
-                  value={`${publicCopy.paymentSuccess.detailsLabels.diplomaPrefix} ${student.selected_diploma}`}
-                />
-                <PaymentLine
-                  label={publicCopy.paymentSuccess.detailsLabels.email}
-                  value={student.email}
-                />
-                <PaymentLine
-                  label={publicCopy.paymentSuccess.detailsLabels.whatsapp}
-                  value={student.whatsapp_number}
-                />
-              </dl>
-            </section>
+          <section className="rounded-[2rem] border border-neutral-200 bg-neutral-50 p-6 sm:p-10">
+            <h2 className="text-xl font-medium text-neutral-900">
+              {publicCopy.paymentSuccess.detailsTitle}
+            </h2>
+            <dl className="mt-8 space-y-4">
+              <PaymentLine
+                label={publicCopy.paymentSuccess.detailsLabels.studentName}
+                value={student.full_name}
+              />
+              <PaymentLine
+                label={publicCopy.paymentSuccess.detailsLabels.selectedCourse}
+                value={`${publicCopy.paymentSuccess.detailsLabels.diplomaPrefix} ${student.selected_diploma}`}
+              />
+              <PaymentLine
+                label={publicCopy.paymentSuccess.detailsLabels.email}
+                value={student.email}
+              />
+              <PaymentLine
+                label={publicCopy.paymentSuccess.detailsLabels.whatsapp}
+                value={student.whatsapp_number}
+              />
+            </dl>
+          </section>
 
-            <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-card">
-              {completed ? (
-                <>
-                  <h2 className="text-xl font-semibold text-slate-950">
-                    {publicCopy.paymentSuccess.nextStepsTitle}
-                  </h2>
-                  <div className="mt-6 space-y-4">
-                    {publicCopy.paymentSuccess.nextSteps.map(([title, body]) => (
-                      <div
-                        key={title}
-                        className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4"
-                      >
-                        <div className="text-sm font-semibold text-slate-950">
-                          {title}
-                        </div>
-                        <div className="mt-2 text-sm leading-6 text-slate-700">
-                          {body}
-                        </div>
+          <section className="rounded-[2rem] border border-neutral-200 bg-white p-6 sm:p-10">
+            {completed ? (
+              <>
+                <h2 className="text-xl font-medium text-neutral-900">
+                  {publicCopy.paymentSuccess.nextStepsTitle}
+                </h2>
+                <div className="mt-8 space-y-4">
+                  {publicCopy.paymentSuccess.nextSteps.map(([title, body]) => (
+                    <div
+                      key={title}
+                      className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5"
+                    >
+                      <div className="text-sm font-semibold tracking-widest uppercase text-neutral-900">
+                        {title}
                       </div>
-                    ))}
-                  </div>
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <a
-                      href={`/payment/receipt/${student.id}`}
-                      className="rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white"
-                    >
-                      {publicCopy.paymentSuccess.buttons.receipt}
-                    </a>
-                    <Link
-                      href="/"
-                      className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-900"
-                    >
-                      {publicCopy.paymentSuccess.buttons.home}
-                    </Link>
-                  </div>
-                </>
-              ) : (
-                <div className="space-y-4">
-                  <Link
-                    href="/payment/options"
-                    className="inline-flex rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white"
+                      <div className="mt-2 text-sm leading-6 text-neutral-700">
+                        {body}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-10 flex flex-col sm:flex-row gap-4">
+                  <a
+                    href={`/payment/receipt/${student.id}`}
+                    className="w-full sm:w-auto inline-flex justify-center rounded-full bg-neutral-900 px-8 py-4 text-sm font-semibold text-white transition-colors hover:bg-neutral-800"
                   >
-                    {publicCopy.paymentSuccess.buttons.retry}
-                  </Link>
+                    {publicCopy.paymentSuccess.buttons.receipt}
+                  </a>
                   <Link
                     href="/"
-                    className="inline-flex rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-900"
+                    className="w-full sm:w-auto inline-flex justify-center rounded-full border border-neutral-300 bg-white px-8 py-4 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-50"
                   >
                     {publicCopy.paymentSuccess.buttons.home}
                   </Link>
                 </div>
-              )}
-            </section>
-          </div>
-        </div>
-
-        {completed && whatsappLink ? (
-          <section className="rounded-[2rem] border border-emerald-200 bg-emerald-50 p-8 shadow-card">
-            <h2 className="text-xl font-semibold text-emerald-950">
-              {publicCopy.paymentSuccess.whatsappTitle}
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-emerald-900">
-              {publicCopy.paymentSuccess.whatsappBody}
-            </p>
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-5 inline-flex rounded-full bg-emerald-700 px-6 py-3 text-sm font-semibold text-white"
-            >
-              {publicCopy.paymentSuccess.whatsappTitle}
-            </a>
+              </>
+            ) : (
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link
+                  href="/payment/options"
+                  className="w-full sm:w-auto inline-flex justify-center rounded-full bg-neutral-900 px-8 py-4 text-sm font-semibold text-white transition-colors hover:bg-neutral-800"
+                >
+                  {publicCopy.paymentSuccess.buttons.retry}
+                </Link>
+                <Link
+                  href="/"
+                  className="w-full sm:w-auto inline-flex justify-center rounded-full border border-neutral-300 bg-white px-8 py-4 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-50"
+                >
+                  {publicCopy.paymentSuccess.buttons.home}
+                </Link>
+              </div>
+            )}
           </section>
-        ) : null}
 
-        <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-card">
-          <h2 className="text-xl font-semibold text-slate-950">
-            {publicCopy.paymentSuccess.supportTitle}
-          </h2>
-          <p className="mt-3 text-sm leading-6 text-slate-700">
-            {publicCopy.paymentSuccess.supportBody}
-          </p>
-          <div className="mt-4 space-y-1 text-sm text-slate-700">
-            <p>{supportContact.phone}</p>
-            <p>{supportContact.email}</p>
-            <p>Registration ID: {student.registration_id}</p>
-          </div>
-        </section>
+          {completed && whatsappLink ? (
+            <section className="rounded-[2rem] border border-emerald-200 bg-emerald-50 p-6 sm:p-10">
+              <h2 className="text-xl font-medium text-emerald-950">
+                {publicCopy.paymentSuccess.whatsappTitle}
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-emerald-900">
+                {publicCopy.paymentSuccess.whatsappBody}
+              </p>
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-6 inline-flex justify-center rounded-full bg-[#25D366] px-8 py-4 text-sm font-semibold text-white transition-colors hover:bg-[#20bd5a] w-full sm:w-auto"
+              >
+                {publicCopy.paymentSuccess.whatsappTitle}
+              </a>
+            </section>
+          ) : null}
+
+          <section className="rounded-[2rem] border border-sky-100 bg-sky-50 p-6 sm:p-10">
+            <h2 className="text-xl font-medium text-sky-950">
+              {publicCopy.paymentSuccess.supportTitle}
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-sky-900">
+              {publicCopy.paymentSuccess.supportBody}
+            </p>
+            <div className="mt-6 space-y-1 text-sm font-medium text-sky-800">
+              <p>{supportContact.phone}</p>
+              <p>{supportContact.email}</p>
+              <p>Registration ID: <span className="text-sky-950">{student.registration_id}</span></p>
+            </div>
+          </section>
+        </div>
       </div>
     </PublicShell>
   );
@@ -259,11 +257,11 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
 
 function PaymentLine({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-3 last:border-none last:pb-0">
-      <dt className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
+    <div className="flex flex-col sm:flex-row sm:justify-between border-b border-neutral-100 pb-3 last:border-none last:pb-0">
+      <dt className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-1 sm:mb-0">
         {label}
       </dt>
-      <dd className="text-right text-sm font-semibold text-slate-900">{value}</dd>
+      <dd className="text-sm font-medium text-neutral-900 text-left sm:text-right">{value}</dd>
     </div>
   );
 }
