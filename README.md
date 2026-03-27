@@ -460,7 +460,7 @@ Use:
 
 With local fallback credentials, if no admin env vars are configured:
 
-- `admin@sitc.local`
+- `admin@cca.local`
 - `password123`
 
 ---

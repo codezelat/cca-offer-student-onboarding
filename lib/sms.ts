@@ -10,7 +10,7 @@ type SmsTemplateInput = {
 
 export function composeOnlinePaymentSms(input: SmsTemplateInput) {
   const parts = [
-    `Congratulations ${input.studentName}! Payment SUCCESSFUL for ${input.diplomaName}. Your Registration ID: ${input.registrationId}. Welcome to SITC!`,
+    `Congratulations ${input.studentName}! Payment SUCCESSFUL for ${input.diplomaName}. Your Registration ID: ${input.registrationId}. Welcome to CCA!`,
   ];
 
   if (input.link) {
