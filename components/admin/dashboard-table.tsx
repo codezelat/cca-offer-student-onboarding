@@ -46,6 +46,7 @@ export function DashboardTable({ students }: DashboardTableProps) {
   const [deleteStudent, setDeleteStudent] = useState<DashboardStudent | null>(null);
   const [deleteText, setDeleteText] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const formatted = useMemo(
     () =>
@@ -61,14 +62,31 @@ export function DashboardTable({ students }: DashboardTableProps) {
       return;
     }
 
-    setDeleting(true);
-    await fetch(`/api/admin/student/${deleteStudent.id}`, {
-      method: "DELETE",
-    });
-    setDeleting(false);
-    setDeleteStudent(null);
-    setDeleteText("");
-    router.refresh();
+    try {
+      setDeleting(true);
+      setDeleteError(null);
+
+      const response = await fetch(`/api/admin/student/${deleteStudent.id}`, {
+        method: "DELETE",
+      });
+      const payload = (await response.json().catch(() => null)) as
+        | { message?: string }
+        | null;
+
+      if (!response.ok) {
+        throw new Error(payload?.message ?? adminCopy.dashboard.delete.error);
+      }
+
+      setDeleteStudent(null);
+      setDeleteText("");
+      router.refresh();
+    } catch (error) {
+      setDeleteError(
+        error instanceof Error ? error.message : adminCopy.dashboard.delete.error,
+      );
+    } finally {
+      setDeleting(false);
+    }
   }
 
   return (
@@ -158,7 +176,11 @@ export function DashboardTable({ students }: DashboardTableProps) {
                     </Link>
                     <button
                       type="button"
-                      onClick={() => setDeleteStudent(student)}
+                      onClick={() => {
+                        setDeleteStudent(student);
+                        setDeleteText("");
+                        setDeleteError(null);
+                      }}
                       className="group flex h-9 w-9 items-center justify-center rounded-xl border border-rose-100 bg-rose-50 shadow-sm transition-all hover:bg-rose-600 hover:text-white"
                       title="Delete Student"
                     >
@@ -227,6 +249,11 @@ export function DashboardTable({ students }: DashboardTableProps) {
               {adminCopy.dashboard.delete.warning}
             </p>
           </div>
+          {deleteError ? (
+            <div className="mt-6 rounded-2xl border border-rose-200 bg-rose-50 px-5 py-4 text-sm font-semibold text-rose-800">
+              {deleteError}
+            </div>
+          ) : null}
           <label className="mt-10 block">
             <span className="mb-4 block text-[10px] font-black uppercase tracking-widest text-neutral-400 px-2">
               {adminCopy.dashboard.delete.label}

@@ -5,6 +5,7 @@ import { ProgressStepper } from "@/components/progress-stepper";
 import { PublicShell } from "@/components/public-shell";
 import { publicCopy } from "@/lib/content/public";
 import { prisma } from "@/lib/db";
+import { getRegistrationGroupWhere } from "@/lib/registration-groups";
 
 type Props = {
   searchParams: Promise<{ student?: string }>;
@@ -23,14 +24,8 @@ export default async function SlipSuccessPage({ searchParams }: Props) {
   }
 
   // Fetch all registered bootcamps for this student in this session
-  const baseRegId = record.registration_id.split("-")[0];
   const allRecords = await prisma.student.findMany({
-    where: {
-      OR: [
-        { registration_id: baseRegId },
-        { registration_id: { startsWith: `${baseRegId}-` } },
-      ],
-    },
+    where: getRegistrationGroupWhere(record.registration_id),
     orderBy: { registration_id: "asc" },
   });
 

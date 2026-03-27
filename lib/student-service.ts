@@ -330,8 +330,7 @@ export async function getDashboardStudents(input: {
   perPage?: number;
 }) {
   const page = input.page && input.page > 0 ? input.page : 1;
-  const perPage = input.perPage ?? 10;
-  const skip = (page - 1) * perPage;
+  const perPage = Math.min(Math.max(input.perPage ?? 10, 1), 100);
   const where: Prisma.StudentWhereInput = {};
 
   if (input.diploma) {
@@ -352,22 +351,24 @@ export async function getDashboardStudents(input: {
     ];
   }
 
-  const [students, total] = await Promise.all([
-    prisma.student.findMany({
-      where,
-      orderBy: { created_at: "desc" },
-      skip,
-      take: perPage,
-    }),
-    prisma.student.count({ where }),
-  ]);
+  const total = await prisma.student.count({ where });
+  const totalPages = Math.max(Math.ceil(total / perPage), 1);
+  const currentPage = Math.min(page, totalPages);
+  const skip = (currentPage - 1) * perPage;
+
+  const students = await prisma.student.findMany({
+    where,
+    orderBy: [{ created_at: "desc" }, { id: "desc" }],
+    skip,
+    take: perPage,
+  });
 
   return {
     students,
     total,
-    page,
+    page: currentPage,
     perPage,
-    totalPages: Math.max(Math.ceil(total / perPage), 1),
+    totalPages,
   };
 }
 

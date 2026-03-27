@@ -44,10 +44,11 @@ export const adminCopy = {
     next: "Next",
     viewModalTitle: "Student Details",
     delete: {
-      title: "Delete Student",
-      body: "Are you sure you want to delete {name}?",
+      title: "Delete Registration",
+      body: "Are you sure you want to delete {name} and any related program records under the same registration?",
       warning:
         "This will also delete the payment slip image if available. This action cannot be undone.",
+      error: "Unable to delete this registration right now. Please try again.",
       label: "Type DELETE to confirm:",
       placeholder: "Type DELETE",
       cancel: "Cancel",

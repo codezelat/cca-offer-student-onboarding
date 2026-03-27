@@ -17,6 +17,28 @@ type Props = {
   }>;
 };
 
+function buildPaginationItems(currentPage: number, totalPages: number) {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  const pages = new Set<number>([1, totalPages, currentPage - 1, currentPage, currentPage + 1]);
+  const filtered = Array.from(pages)
+    .filter((page) => page >= 1 && page <= totalPages)
+    .sort((a, b) => a - b);
+
+  const items: Array<number | "ellipsis"> = [];
+  for (const page of filtered) {
+    const previous = items.at(-1);
+    if (typeof previous === "number" && page - previous > 1) {
+      items.push("ellipsis");
+    }
+    items.push(page);
+  }
+
+  return items;
+}
+
 function queryString(params: Record<string, string | undefined>) {
   const search = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
@@ -43,6 +65,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
 
   const first = result.total === 0 ? 0 : (result.page - 1) * result.perPage + 1;
   const last = Math.min(result.page * result.perPage, result.total);
+  const paginationItems = buildPaginationItems(result.page, result.totalPages);
 
   return (
     <div className="page-frame">
@@ -196,23 +219,30 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                     {adminCopy.dashboard.previous}
                   </Link>
                 ) : null}
-                {Array.from({ length: result.totalPages }, (_, index) => index + 1).map(
-                  (page) => (
+                {paginationItems.map((item, index) =>
+                  item === "ellipsis" ? (
+                    <span
+                      key={`ellipsis-${index}`}
+                      className="px-2 py-3 text-xs font-black uppercase tracking-widest text-neutral-300"
+                    >
+                      ...
+                    </span>
+                  ) : (
                     <Link
-                      key={page}
+                      key={item}
                       href={`/cca-admin-area/dashboard${queryString({
                         search: params.search,
                         diploma: params.diploma,
                         payment_method: params.payment_method,
-                        page: `${page}`,
+                        page: `${item}`,
                       })}`}
                       className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-widest transition-all ${
-                        page === result.page
+                        item === result.page
                           ? "bg-neutral-900 text-white shadow-xl shadow-neutral-900/20"
                           : "border-2 border-neutral-100 bg-white text-neutral-400 hover:border-neutral-900 hover:text-neutral-900"
                       }`}
                     >
-                      {page}
+                      {item}
                     </Link>
                   ),
                 )}

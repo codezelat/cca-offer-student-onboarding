@@ -3,6 +3,7 @@ import path from "node:path";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { prisma } from "@/lib/db";
 import { supportContact } from "@/lib/config";
+import { getRegistrationGroupWhere } from "@/lib/registration-groups";
 
 export const runtime = "nodejs";
 
@@ -19,14 +20,8 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
-  const baseRegId = student.registration_id.split("-")[0];
   const allRecords = await prisma.student.findMany({
-    where: {
-      OR: [
-        { registration_id: baseRegId },
-        { registration_id: { startsWith: `${baseRegId}-` } },
-      ],
-    },
+    where: getRegistrationGroupWhere(student.registration_id),
     orderBy: { registration_id: "asc" },
   });
 

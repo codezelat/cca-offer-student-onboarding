@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/db";
+import { getRegistrationGroupWhere } from "@/lib/registration-groups";
 import { removeSlipFile } from "@/lib/storage";
 import { updateStudentRecord } from "@/lib/student-service";
 import { adminUpdateSchema } from "@/lib/validation";
@@ -82,15 +83,28 @@ export async function DELETE(
       return NextResponse.json({ message: "Not found" }, { status: 404 });
     }
 
-    if (existing.payment_slip) {
-      await removeSlipFile(existing.payment_slip);
-    }
-
-    await prisma.student.delete({
-      where: { id: existing.id },
+    const groupWhere = getRegistrationGroupWhere(existing.registration_id);
+    const groupStudents = await prisma.student.findMany({
+      where: groupWhere,
+      select: {
+        id: true,
+        payment_slip: true,
+      },
     });
 
-    return NextResponse.json({ success: true });
+    const slipToRemove =
+      groupStudents.find((student) => student.payment_slip)?.payment_slip ??
+      existing.payment_slip;
+
+    if (slipToRemove) {
+      await removeSlipFile(slipToRemove);
+    }
+
+    await prisma.student.deleteMany({
+      where: groupWhere,
+    });
+
+    return NextResponse.json({ success: true, deletedCount: groupStudents.length });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Unable to delete student." }, { status: 500 });

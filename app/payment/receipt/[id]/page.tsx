@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { formatCurrency, formatSimpleDate } from "@/lib/utils";
 import { publicCopy } from "@/lib/content/public";
 import { supportContact } from "@/lib/config";
+import { getRegistrationGroupWhere } from "@/lib/registration-groups";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -29,14 +30,8 @@ export default async function ReceiptPage({ params, searchParams }: Props) {
   }
 
   // Fetch all sister records to show all IDs if multi-program
-  const baseRegId = record.registration_id.split("-")[0];
   const allRecords = await prisma.student.findMany({
-    where: {
-      OR: [
-        { registration_id: baseRegId },
-        { registration_id: { startsWith: `${baseRegId}-` } },
-      ],
-    },
+    where: getRegistrationGroupWhere(record.registration_id),
     orderBy: { registration_id: "asc" },
   });
 

@@ -367,4 +367,10 @@ export const publicCopy = {
     footer:
       "This is a computer-generated receipt and does not require a signature.",
   },
+  notFound: {
+    title: "404 - Page Not Found",
+    subtitle: "The page you are looking for doesn't exist or has been moved.",
+    body: "We couldn't find the page you were looking for. Please check the URL or return to the homepage to continue your registration.",
+    cta: "Back to Home",
+  },
 };
