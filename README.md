@@ -2,7 +2,11 @@
 
 <div align="center">
 
-![CCA Offer Student Onboarding](public/images/convo-img.jpg)
+<div align="center">
+  <img src="public/images/cca-logo.png" style="height:120px; width:auto;" />
+  <br/><br/>
+  <img src="public/images/convo-img.jpg" style="height:300px; width:auto;" />
+</div>
 
 [![Repository](https://img.shields.io/badge/GitHub-codezelat%2Fcca--offer--student--onboarding-181717?logo=github)](https://github.com/codezelat/cca-offer-student-onboarding)
 [![Website](https://img.shields.io/badge/Website-codezela.com-0A66C2?logo=googlechrome&logoColor=white)](https://codezela.com)
