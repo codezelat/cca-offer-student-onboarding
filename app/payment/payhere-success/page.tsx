@@ -67,12 +67,17 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
         </div>
 
         <div className="w-full flex flex-col space-y-10">
+          <div className="hidden print:block print:mb-8 print:border-b-2 print:border-neutral-900 print:pb-4">
+            <h1 className="text-2xl font-bold uppercase tracking-widest text-neutral-900">Official Registration Receipt</h1>
+            <p className="text-sm text-neutral-500 mt-1">CCA Education Programs — Powered by Codezela</p>
+          </div>
+
           <section
             className={`relative overflow-hidden rounded-[2.5rem] border p-8 sm:p-12 ${
               completed ? "border-emerald-200 bg-emerald-50/50" : "border-amber-200 bg-amber-50/50"
             }`}
           >
-            <div className={`mb-8 flex h-16 w-16 items-center justify-center rounded-3xl ${completed ? "bg-emerald-500 shadow-emerald-200" : "bg-amber-500 shadow-amber-200"} text-white shadow-xl animate-in zoom-in duration-500`}>
+            <div className={`mb-8 flex h-16 w-16 items-center justify-center rounded-3xl ${completed ? "bg-emerald-500 shadow-emerald-200" : "bg-amber-500 shadow-amber-200"} text-white shadow-xl animate-in zoom-in duration-500 no-print`}>
               {completed ? (
                 <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
@@ -101,7 +106,7 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
                 )}
               </p>
             ) : (
-              <div className="mt-8 flex items-center gap-3 rounded-2xl bg-white/60 p-4 border border-amber-200/50 w-fit">
+              <div className="mt-8 flex items-center gap-3 rounded-2xl bg-white/60 p-4 border border-amber-200/50 w-fit no-print">
                 <ProcessingRefresh />
                 <span className="text-sm font-semibold text-amber-900">
                   {publicCopy.paymentSuccess.processingRefresh.replace("5s...", "Checking status...")}
@@ -111,7 +116,7 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
             {!completed ? (
               <Link
                 href={`/payment/payhere-success?order_id=${encodeURIComponent(student.payhere_order_id ?? "")}`}
-                className="mt-10 inline-flex justify-center rounded-xl bg-neutral-900 px-10 py-4 text-sm font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.98] shadow-lg shadow-neutral-900/10"
+                className="mt-10 inline-flex justify-center rounded-xl bg-neutral-900 px-10 py-4 text-sm font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.98] shadow-lg shadow-neutral-900/10 no-print"
               >
                 {publicCopy.paymentSuccess.processingAction}
               </Link>
@@ -125,12 +130,16 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
             <p className="mt-3 text-sm leading-6 text-neutral-600">
               {publicCopy.paymentSuccess.registrationCardBody}
             </p>
-            <div className="mt-8 rounded-[1.5rem] border border-neutral-200 bg-neutral-50 p-6">
-              <div className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
-                {publicCopy.paymentSuccess.registrationCardSubtitle}
+            <div className={`mt-8 rounded-[1.5rem] border ${completed ? "border-emerald-200 bg-white" : "border-neutral-200 bg-neutral-50"} p-8 shadow-sm`}>
+              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 mb-4">
+                {publicCopy.paymentSuccess.registrationCardSubtitle}(s)
               </div>
-              <div className="mt-3 text-3xl font-bold tracking-tight text-neutral-900">
-                {baseRegId}
+              <div className="flex flex-wrap gap-3">
+                {allRecords.map((r) => (
+                  <div key={r.registration_id} className="rounded-xl border border-neutral-100 bg-neutral-900 px-5 py-3 text-lg font-black tracking-tight text-white shadow-lg shadow-neutral-900/10 print:bg-neutral-100 print:text-neutral-900">
+                    {r.registration_id}
+                  </div>
+                ))}
               </div>
             </div>
           </section>
@@ -190,7 +199,7 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
             </div>
           </section>
 
-          <section className="rounded-[2rem] border border-neutral-200 bg-white p-6 sm:p-10">
+          <section className="rounded-[2rem] border border-neutral-200 bg-white p-6 sm:p-10 no-print">
             {completed ? (
               <>
                 <h2 className="text-xl font-medium text-neutral-900">
@@ -216,7 +225,8 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
                 </div>
                 <div className="mt-12 flex flex-col sm:flex-row gap-4 pt-10 border-t border-neutral-100">
                   <a
-                    href={`/payment/receipt/${student.id}`}
+                    href={`/payment/receipt/${student.id}?print=true`}
+                    target="_blank"
                     className="w-full sm:w-auto inline-flex justify-center rounded-xl bg-neutral-900 px-10 py-4 text-sm font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.98] shadow-lg shadow-neutral-900/10"
                   >
                     {publicCopy.paymentSuccess.buttons.receipt}
@@ -276,10 +286,13 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
             <p className="mt-3 text-sm leading-6 text-sky-900">
               {publicCopy.paymentSuccess.supportBody}
             </p>
-            <div className="mt-6 space-y-1 text-sm font-medium text-sky-800">
+            <div className="mt-6 space-y-2 text-sm font-medium text-sky-800">
               <p>{supportContact.phone}</p>
               <p>{supportContact.email}</p>
-              <p>Registration ID: <span className="text-sky-950">{student.registration_id}</span></p>
+              <div className="flex flex-col gap-1 mt-3 pt-3 border-t border-sky-200/50">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-sky-600">Reference IDs:</span>
+                <span className="text-sky-950 font-bold">{allRecords.map(r => r.registration_id).join(", ")}</span>
+              </div>
             </div>
           </section>
         </div>

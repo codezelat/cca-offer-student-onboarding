@@ -51,6 +51,7 @@ export function PayHereLauncher({ payment }: PayHereLauncherProps) {
           </svg>
           {publicCopy.payhere.ctaButton}
         </span>
+      </button>
     </>
   );
 }

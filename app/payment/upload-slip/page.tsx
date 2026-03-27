@@ -1,7 +1,7 @@
 import { CountdownCard } from "@/components/countdown-card";
 import { PublicShell } from "@/components/public-shell";
 import { ProgressStepper } from "@/components/progress-stepper";
-import { SlipUploadField } from "@/components/forms/slip-upload-field";
+import { SlipUploadForm } from "@/components/forms/slip-upload-form";
 import { bankAccounts, getDeadline } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
 import { getRegistrationSessionOrRedirect } from "@/lib/flow";
@@ -127,43 +127,20 @@ export default async function UploadSlipPage() {
               <p className="mt-2 text-neutral-600 font-medium">{publicCopy.uploadSlip.warningReference}</p>
             </div>
 
-            <form
-              action="/api/payment/store-slip"
-              method="post"
-              encType="multipart/form-data"
-              className="mt-8 space-y-8"
-            >
-              <div>
-                <label className="mb-3 block text-sm font-semibold uppercase tracking-widest text-neutral-900">
-                  {publicCopy.uploadSlip.uploadField}
-                </label>
-                <div className="rounded-2xl bg-white border border-neutral-200 p-2 overflow-hidden hover:border-neutral-400 transition-colors">
-                  <SlipUploadField />
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-neutral-200/60">
-                <button
-                  type="submit"
-                  className="w-full sm:w-auto inline-flex justify-center rounded-xl bg-neutral-900 px-10 py-4 text-sm font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.98]"
-                >
-                  {publicCopy.uploadSlip.submit}
-                </button>
-                <a
-                  href="/payment/options"
-                  className="w-full sm:w-auto inline-flex justify-center rounded-xl border border-neutral-300 bg-white px-10 py-4 text-sm font-semibold text-neutral-900 transition-all hover:bg-neutral-50"
-                >
-                  {publicCopy.uploadSlip.back}
-                </a>
-              </div>
-            </form>
+            <SlipUploadForm />
 
-            <div className="mt-10 rounded-2xl border border-neutral-200 bg-white p-6">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-900">
+            <div className="mt-10 rounded-2xl border border-neutral-200 bg-white p-8">
+              <h2 className="text-[10px] font-bold uppercase tracking-widest text-neutral-900 px-3">
                 {publicCopy.uploadSlip.notesTitle}
               </h2>
-              <ul className="mt-4 list-disc space-y-3 pl-6 text-sm leading-6 text-neutral-600">
+              <ul className="mt-6 space-y-4 px-3 text-sm leading-6 text-neutral-600">
                 {publicCopy.uploadSlip.notes.map((note) => (
-                  <li key={note}>{note}</li>
+                  <li key={note} className="flex gap-3">
+                    <svg className="h-5 w-5 shrink-0 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {note}
+                  </li>
                 ))}
               </ul>
             </div>

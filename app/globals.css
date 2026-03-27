@@ -85,3 +85,47 @@ button:hover {
   position: relative;
   z-index: 1;
 }
+
+@media print {
+  header, footer, .no-print, button, .countdown-card, .progress-stepper {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    padding: 0 !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  section {
+    border: 1px solid #e4e4e7 !important;
+    border-radius: 1rem !important;
+    margin-bottom: 2rem !important;
+    break-inside: avoid;
+    padding: 1.5rem !important;
+  }
+
+  .rounded-\[2rem\], .rounded-\[2\.5rem\] {
+    border-radius: 1rem !important;
+  }
+
+  .bg-neutral-50, .bg-neutral-100, .bg-emerald-50, .bg-amber-50, .bg-sky-50 {
+    background: transparent !important;
+    border: 1px solid #e4e4e7 !important;
+  }
+
+  .text-white {
+    color: black !important;
+  }
+
+  .bg-neutral-900 {
+    background: #f4f4f5 !important;
+    color: black !important;
+    border: 1px solid #18181b !important;
+  }
+}
