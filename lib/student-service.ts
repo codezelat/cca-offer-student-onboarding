@@ -410,10 +410,10 @@ export async function updateStudentRecord(
   });
 }
 
-export function getPayHereUrls() {
+export function getPayHereUrls(origin = env.appUrl) {
   return {
-    returnUrl: `${env.appUrl}/payment/payhere-success`,
-    cancelUrl: `${env.appUrl}/payment/options`,
-    notifyUrl: `${env.appUrl}/api/payment/notify`,
+    returnUrl: `${origin}/payment/payhere-success`,
+    cancelUrl: `${origin}/payment/options`,
+    notifyUrl: `${origin}/api/payment/notify`,
   };
 }

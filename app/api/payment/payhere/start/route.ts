@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const data = await getRegistrationSessionOrRedirect();
     const order = await buildPayHereOrder(data);
     const session = await getSession();
-    const urls = getPayHereUrls();
+    const urls = getPayHereUrls(new URL(request.url).origin);
     const payment = {
       sandbox: env.payhereSandbox,
       merchant_id: env.payhereMerchantId,

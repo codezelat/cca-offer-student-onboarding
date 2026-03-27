@@ -1,11 +1,12 @@
 import { cookies } from "next/headers";
+import { createHash } from "node:crypto";
 import { EncryptJWT, jwtDecrypt } from "jose";
 
 import { SESSION_COOKIE_NAME } from "@/lib/config";
 import { env } from "@/lib/env";
 import type { RegistrationData, SessionPayload } from "@/lib/types";
 
-const secret = new TextEncoder().encode(env.sessionSecret.padEnd(32, "0").slice(0, 32));
+const secret = createHash("sha256").update(env.sessionSecret).digest();
 
 async function encodeSession(payload: SessionPayload) {
   return new EncryptJWT(payload)

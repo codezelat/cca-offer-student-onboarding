@@ -307,17 +307,17 @@ flowchart LR
 
 ## ⚙️ Environment Configuration
 
-The app supports local fallback values for several settings. Production deployments should set all operationally relevant variables explicitly.
+The app no longer uses code-level fallback credentials or fallback session secrets. Operational settings should be set explicitly in local development and in each deployed environment.
 
 ### 🔑 Supported environment variables
 
 | Variable | Purpose | Local behavior / default |
 | --- | --- | --- |
 | `APP_URL` | Base URL used for generated absolute links and callbacks | Defaults to `http://localhost:3000` |
-| `ADMIN_USERNAME` | Admin login username | Defaults to `admin@sitc.local` |
-| `ADMIN_PASSWORD` | Admin login password | Defaults to `password123` |
-| `COUNTDOWN_DEADLINE` | Offer expiry and countdown cutoff | Defaults to `2026-12-31T23:59:59+05:30` |
-| `SESSION_SECRET` | Secret used for encrypted JWT session cookies | Defaults to a local-development secret string |
+| `ADMIN_USERNAME` | Admin login username | Required |
+| `ADMIN_PASSWORD` | Admin login password | Required |
+| `COUNTDOWN_DEADLINE` | Offer expiry and countdown cutoff | Required |
+| `SESSION_SECRET` | Secret used for encrypted JWT session cookies | Required |
 | `DATABASE_URL` | Runtime Neon/Postgres connection string used by the Prisma Neon adapter | No production-safe default |
 | `DIRECT_URL` | Direct Postgres connection string used by Prisma CLI commands | Falls back to `DATABASE_URL` in `prisma.config.ts` |
 | `BLOB_READ_WRITE_TOKEN` | Vercel Blob token for private uploads and reads | Required for slip uploads and admin slip access |
@@ -331,14 +331,16 @@ The app supports local fallback values for several settings. Production deployme
 | `SMS_SOURCE` | Sender/source identifier for SMS | Optional |
 | `SMS_API_URL` | SMS provider endpoint | Optional |
 
-### ⚠️ Local admin credential note
+### 🔐 Sensitive configuration note
 
-If `ADMIN_USERNAME` and `ADMIN_PASSWORD` are not set, local development falls back to:
+These values must be supplied explicitly:
 
-- Username: `admin@sitc.local`
-- Password: `password123`
+- `ADMIN_USERNAME`
+- `ADMIN_PASSWORD`
+- `SESSION_SECRET`
+- `COUNTDOWN_DEADLINE`
 
-This is suitable only for local development and should never be relied on in a real deployment.
+If any of them are missing, the app should fail fast instead of silently booting with insecure defaults.
 
 ---
 
