@@ -33,11 +33,12 @@ export default async function UploadSlipPage() {
             <div className="inline-flex rounded-full bg-neutral-900 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white">
               {publicCopy.register.badge}
             </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {data.selected_bootcamps.map((bc) => (
-                <div key={bc} className="inline-flex rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs font-medium text-neutral-800">
-                  {bc}
-                </div>
+            <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium text-neutral-500">
+              <span>Selected Bootcamps:</span>
+              {data.selected_bootcamps.map((bc, idx) => (
+                <span key={bc} className="text-neutral-900 font-semibold italic">
+                  {bc}{idx < data.selected_bootcamps.length - 1 ? "," : ""}
+                </span>
               ))}
             </div>
             <h1 className="mt-6 text-3xl font-medium tracking-tight text-neutral-900">

@@ -110,7 +110,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                 {adminCopy.dashboard.search}
               </button>
               <Link
-                href="/sitc-admin-area/dashboard"
+                href="/cca-admin-area/dashboard"
                 className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-900"
               >
                 {adminCopy.dashboard.clear}
@@ -169,7 +169,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 {result.page > 1 ? (
                   <Link
-                    href={`/sitc-admin-area/dashboard${queryString({
+                    href={`/cca-admin-area/dashboard${queryString({
                       search: params.search,
                       diploma: params.diploma,
                       payment_method: params.payment_method,
@@ -184,7 +184,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                   (page) => (
                     <Link
                       key={page}
-                      href={`/sitc-admin-area/dashboard${queryString({
+                      href={`/cca-admin-area/dashboard${queryString({
                         search: params.search,
                         diploma: params.diploma,
                         payment_method: params.payment_method,
@@ -202,7 +202,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                 )}
                 {result.page < result.totalPages ? (
                   <Link
-                    href={`/sitc-admin-area/dashboard${queryString({
+                    href={`/cca-admin-area/dashboard${queryString({
                       search: params.search,
                       diploma: params.diploma,
                       payment_method: params.payment_method,

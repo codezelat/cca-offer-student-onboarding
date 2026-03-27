@@ -43,14 +43,14 @@ export default async function AdminStudentDetailPage({ params }: Props) {
           action={
             <div className="flex items-center gap-3">
               <Link
-                href="/sitc-admin-area/dashboard"
-                className="rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-900"
+                href="/cca-admin-area/dashboard"
+                className="rounded-xl border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-900"
               >
                 Back to Dashboard
               </Link>
               <Link
-                href={`/sitc-admin-area/student/${student.id}/edit`}
-                className="rounded-full bg-slate-950 px-5 py-2 text-sm font-semibold text-white"
+                href={`/cca-admin-area/student/${student.id}/edit`}
+                className="rounded-xl bg-slate-950 px-5 py-2 text-sm font-semibold text-white"
               >
                 Edit
               </Link>

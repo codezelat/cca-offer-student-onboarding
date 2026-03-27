@@ -104,7 +104,7 @@ export function DashboardTable({ students }: DashboardTableProps) {
                 <td className="px-5 py-4 text-sm text-slate-700">
                   {student.payment_method === "online" ? (
                     <span
-                      className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                      className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-md ${
                         student.payment_status === "completed"
                           ? "bg-emerald-100 text-emerald-700"
                           : "bg-amber-100 text-amber-700"
@@ -132,20 +132,20 @@ export function DashboardTable({ students }: DashboardTableProps) {
                     <button
                       type="button"
                       onClick={() => setViewStudent(student)}
-                      className="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-900"
+                      className="rounded-xl border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-900"
                     >
                       View
                     </button>
                     <Link
-                      href={`/sitc-admin-area/student/${student.id}/edit`}
-                      className="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-900"
+                      href={`/cca-admin-area/student/${student.id}/edit`}
+                      className="rounded-xl border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-900"
                     >
                       Edit
                     </Link>
                     <button
                       type="button"
                       onClick={() => setDeleteStudent(student)}
-                      className="rounded-full border border-rose-300 px-4 py-2 text-xs font-semibold text-rose-700"
+                      className="rounded-xl border border-rose-300 px-4 py-2 text-xs font-semibold text-rose-700"
                     >
                       Delete
                     </button>

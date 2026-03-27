@@ -6,11 +6,13 @@ import { useState } from "react";
 import { publicCopy } from "@/lib/content/public";
 
 type EligibilityGateProps = {
-  diploma: string;
+  bootcamps: string[];
 };
 
-export function EligibilityGate({ diploma }: EligibilityGateProps) {
+export function EligibilityGate({ bootcamps }: EligibilityGateProps) {
   const [answer, setAnswer] = useState<"yes" | "no" | null>(null);
+  const selectedBootcamps = bootcamps.join(" හෝ ");
+  const bootcampQuery = encodeURIComponent(bootcamps.join(","));
 
   return (
     <div className="space-y-6">
@@ -22,7 +24,8 @@ export function EligibilityGate({ diploma }: EligibilityGateProps) {
           {publicCopy.eligibility.title}
         </h1>
         <p className="mt-6 text-xl leading-8 text-slate-800">
-          නොවැම්බර් 26 ආරම්භ කළ {diploma} {publicCopy.eligibility.questionSuffix}
+          මාර්තු 22 ආරම්භ කළ {selectedBootcamps}{" "}
+          {publicCopy.eligibility.questionSuffix}
         </p>
         <p className="mt-3 text-base leading-7 text-slate-600">
           {publicCopy.eligibility.subtitle}
@@ -73,7 +76,7 @@ export function EligibilityGate({ diploma }: EligibilityGateProps) {
             {publicCopy.eligibility.noCardBody}
           </p>
           <Link
-            href={`/register?diploma=${encodeURIComponent(diploma)}`}
+            href={`/register?bootcamp=${bootcampQuery}`}
             className="mt-6 inline-flex rounded-full bg-emerald-700 px-6 py-3 text-sm font-semibold text-white"
           >
             {publicCopy.eligibility.noCardCta}

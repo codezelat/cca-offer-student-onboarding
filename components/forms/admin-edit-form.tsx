@@ -4,7 +4,6 @@ import { startTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { adminCopy } from "@/lib/content/admin";
-import type { DiplomaConfig } from "@/lib/types";
 
 type AdminEditFormProps = {
   student: {
@@ -27,7 +26,7 @@ type AdminEditFormProps = {
     amount_paid: string;
   };
   districts: readonly string[];
-  diplomas: string[];
+  diplomas: readonly string[];
 };
 
 export function AdminEditForm({
@@ -61,7 +60,7 @@ export function AdminEditForm({
     }
 
     startTransition(() => {
-      router.push("/sitc-admin-area/dashboard?updated=1");
+      router.push("/cca-admin-area/dashboard?updated=1");
       router.refresh();
     });
   }
@@ -147,10 +146,10 @@ export function AdminEditForm({
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <button type="submit" disabled={submitting} className="rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white disabled:opacity-60">
+        <button type="submit" disabled={submitting} className="rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white disabled:opacity-60">
           {adminCopy.edit.actions.submit}
         </button>
-        <button type="button" onClick={() => router.push("/sitc-admin-area/dashboard")} className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-900">
+        <button type="button" onClick={() => router.push("/cca-admin-area/dashboard")} className="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-900">
           {adminCopy.edit.actions.cancel}
         </button>
       </div>

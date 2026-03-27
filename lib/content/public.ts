@@ -13,7 +13,7 @@ export const publicCopy = {
     title: "Special Scholarship Opportunity",
     subtitle:
       "Register now for the special opportunity to get a Rs. 10,000 discount on your bootcamp program.",
-    cta: "Click Here to Select Your Program",
+    cta: "Choose Your Bootcamps",
     imageAlt: "Convocation Ceremony",
     propositions: [
       "මෙහි එක් සමස්ත පාඨමාලාවක් සඳහාම සාමාන්‍යයෙන් අය කෙරෙන මුළු ගාස්තුව **රු. 28,000 ක්** පමණි. නමුත් ඔබට විශේෂ 'නිපුණතා ශිෂ්‍යත්වය' යටතේ **රු. 10,000ක සුවිශේෂී වට්ටමක්** හිමි කර ගත හැකිය.",
@@ -22,15 +22,14 @@ export const publicCopy = {
     ],
   },
   selectBootcamp: {
-    title: "සියලුම බූට්කෑම්ප්ස් (Bootcamps)",
-    subtitle: "ඔබට වඩාත්ම ගැලපෙන බූට්කෑම්ප්ස් එකක් හෝ දෙකක් පහතින් තෝරා ගන්න.",
-    support: "Special Scholarship Support for 14 Specialized Programs",
-    cta: "බූට්කෑම්ප්ස් තහවුරු කරන්න (Confirm Bootcamps)",
+    title: "Choose Your Bootcamp Programs",
+    subtitle: "Select one or two bootcamp programs that best match your goals.",
+    cta: "Continue with Selected Bootcamps",
   },
   eligibility: {
     eyebrow: "Registration Open",
     title: "දැන්ම ලියාපදිංචි වන්න",
-    questionSuffix: "Bootcamp Batch එකට දැනටමත් ලියාපදිංචි වී සිටීද?",
+    questionSuffix: "Bootcamp Batch සදහා දැනටමත් ලියාපදිංචි වී සිටීද?",
     subtitle:
       "Please select your answer to continue with the registration process",
     yes: "Yes",
@@ -43,28 +42,7 @@ export const publicCopy = {
     noCardTitle: "Perfect! Let's Get Started",
     noCardBody:
       "You're eligible to register. Click below to begin your educational journey with us!",
-    noCardCta: "Register Now",
-  },ns",
-    support: "Don’t miss your chance to enroll in our prestigious programs!",
-    cta: "Apply to Interest Free Student Loan",
-  },
-  eligibility: {
-    eyebrow: "Registration Open",
-    title: "දැන්ම ලියාපදිංචි වන්න",
-    questionSuffix: "Batch එකට දැනටමත් ලියාපදිංචි වී සිටීද?",
-    subtitle:
-      "Please select your answer to continue with the registration process",
-    yes: "Yes",
-    no: "No",
-    yesCardTitle: "Thank You for Your Interest!",
-    yesCardBody:
-      "We appreciate your enthusiasm. However, as you have just started a new diploma program, you are not eligible for this loan scheme on this particular diploma program this time.",
-    yesCardNext: "What’s Next?",
-    yesCardNextBody: "Stay tuned for our next intake opening.",
-    noCardTitle: "Perfect! Let’s Get Started",
-    noCardBody:
-      "You’re eligible to register. Click below to begin your educational journey with us!",
-    noCardCta: "Register Now",
+    noCardCta: "Continue to Registration",
   },
   register: {
     progressTitle: "Registration Progress",
@@ -124,7 +102,7 @@ export const publicCopy = {
         "I confirm that the information provided is accurate and I agree to the terms and conditions provided by CCA Campus via their support channels. *",
     },
     actions: {
-      submit: "Continue to Agreement",
+      submit: "Continue to Register",
       back: "Back",
     },
     help: {
@@ -171,8 +149,8 @@ export const publicCopy = {
     cta: "I Agree & Complete Registration",
     back: "Back to Registration Details",
     bullets: [
-      "There are no any additional fees for the certificate. If you are willing to participate for the convocation you will have to pay the convocation fees to BMICH only. (Approximately Rs.4,500 only if you are attending the convocation) No certificate fees. (We provide your UGC recognized university certificate - free of charge for completing the program).",
-      "The complete course fees is Rs. 18,000. This should be paid to a bank account under CCA Campus upon releasing results after completing the program.",
+      "This certification is accredited by Distance Education Council (DEC) under the Ministry of Industry in Sri Lanka and the SITC Campus. There are no any additional fees for the certificate or experience completion letter.",
+      "Start your learning journey for just Rs. 3,000 per program! While the full course fee is Rs. 18,000 per program after the special scholarship discount, we offer a flexible payment plan where the remaining Rs. 15,000 is split into two easy installments. Plus, there are absolutely no hidden costs for study materials or internship placements.",
     ],
   },
   uploadSlip: {

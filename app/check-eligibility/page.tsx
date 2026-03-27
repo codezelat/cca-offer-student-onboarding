@@ -7,12 +7,16 @@ import { getDeadline, isValidBootcamp } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
 
 type Props = {
-  searchParams: Promise<{ diploma?: string }>;
+  searchParams: Promise<{ bootcamp?: string }>;
 };
 
 export default async function CheckEligibilityPage({ searchParams }: Props) {
-  const { diploma } = await searchParams;
-  const valid = diploma ? isValidBootcamp(diploma) : false;
+  const { bootcamp } = await searchParams;
+  const selectedBootcamps = (bootcamp ?? "").split(",").filter(Boolean);
+  const valid =
+    selectedBootcamps.length > 0 &&
+    selectedBootcamps.length <= 2 &&
+    selectedBootcamps.every((name) => isValidBootcamp(name));
 
   if (!valid) {
     redirect("/select-bootcamp");
@@ -31,7 +35,7 @@ export default async function CheckEligibilityPage({ searchParams }: Props) {
         </section>
 
         <section className="w-full">
-          <EligibilityGate diploma={diploma!} />
+          <EligibilityGate bootcamps={selectedBootcamps} />
         </section>
 
       </div>

@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { getCountdownDeadlineDate } from "@/lib/deadline";
 
-const excludedPrefixes = ["/offer-ended", "/superadminloginsitc", "/sitc-admin-area"];
+const excludedPrefixes = ["/offer-ended", "/cca-admin-login", "/cca-admin-area"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

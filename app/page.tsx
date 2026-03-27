@@ -73,7 +73,7 @@ export default function HomePage() {
         {/* CTA Section */}
         <section className="w-full flex flex-col items-center space-y-8 pb-12">
           <Link
-            href="/select-diploma"
+            href="/select-bootcamp"
             className="inline-flex w-full max-w-xl rounded-full items-center justify-center bg-neutral-900 px-8 py-5 text-base font-semibold text-white transition-colors hover:bg-neutral-800 shadow-md"
           >
             {publicCopy.home.cta}

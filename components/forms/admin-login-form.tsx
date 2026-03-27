@@ -37,7 +37,7 @@ export function AdminLoginForm() {
     }
 
     startTransition(() => {
-      router.push("/sitc-admin-area/dashboard");
+      router.push("/cca-admin-area/dashboard");
       router.refresh();
     });
   }
@@ -74,7 +74,7 @@ export function AdminLoginForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="inline-flex w-full items-center justify-center rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
+        className="inline-flex w-full items-center justify-center rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
       >
         {adminCopy.login.submit}
       </button>

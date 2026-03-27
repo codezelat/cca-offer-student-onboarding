@@ -34,7 +34,7 @@ export default async function AdminEditPage({ params }: Props) {
           title={adminCopy.edit.title}
           action={
             <Link
-              href="/sitc-admin-area/dashboard"
+              href="/cca-admin-area/dashboard"
               className="rounded-full border border-slate-300 bg-white px-5 py-2 text-sm font-semibold text-slate-900"
             >
               {adminCopy.edit.back}

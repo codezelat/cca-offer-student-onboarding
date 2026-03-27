@@ -3,31 +3,44 @@
 import { startTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import type { DiplomaConfig } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-type DiplomaSelectionFormProps = {
-  diplomas: DiplomaConfig[];
+type BootcampSelectionFormProps = {
+  bootcamps: readonly string[];
   cta: string;
 };
 
-export function DiplomaSelectionForm({
-  diplomas,
+export function BootcampSelectionForm({
+  bootcamps,
   cta,
-}: DiplomaSelectionFormProps) {
+}: BootcampSelectionFormProps) {
   const router = useRouter();
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string[]>([]);
+
+  function toggleBootcamp(bootcamp: string) {
+    setSelected((current) => {
+      if (current.includes(bootcamp)) {
+        return current.filter((item) => item !== bootcamp);
+      }
+
+      if (current.length >= 2) {
+        return current;
+      }
+
+      return [...current, bootcamp];
+    });
+  }
 
   return (
     <div className="space-y-6">
       <div className="grid gap-4">
-        {diplomas.map((diploma) => {
-          const active = selected === diploma.full_name;
+        {bootcamps.map((bootcamp) => {
+          const active = selected.includes(bootcamp);
           return (
             <button
-              key={diploma.code}
+              key={bootcamp}
               type="button"
-              onClick={() => setSelected(diploma.full_name)}
+              onClick={() => toggleBootcamp(bootcamp)}
               className={cn(
                 "shadow-card flex items-center justify-between rounded-[1.75rem] border bg-white px-5 py-5 text-left",
                 active
@@ -36,7 +49,7 @@ export function DiplomaSelectionForm({
               )}
             >
               <div className="text-lg font-semibold text-slate-900">
-                {diploma.full_name}
+                {bootcamp}
               </div>
               <div
                 className={cn(
@@ -52,13 +65,13 @@ export function DiplomaSelectionForm({
           );
         })}
       </div>
-      {selected ? (
+      {selected.length > 0 ? (
         <button
           type="button"
           onClick={() =>
             startTransition(() => {
               router.push(
-                `/check-eligibility?diploma=${encodeURIComponent(selected)}`,
+                `/check-eligibility?bootcamp=${encodeURIComponent(selected.join(","))}`,
               );
             })
           }

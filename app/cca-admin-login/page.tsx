@@ -8,7 +8,7 @@ import { getSession } from "@/lib/session";
 export default async function AdminLoginPage() {
   const session = await getSession();
   if (session.admin_logged_in) {
-    redirect("/sitc-admin-area/dashboard");
+    redirect("/cca-admin-area/dashboard");
   }
 
   return (

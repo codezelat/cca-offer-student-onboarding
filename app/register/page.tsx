@@ -4,7 +4,7 @@ import { CountdownCard } from "@/components/countdown-card";
 import { ProgressStepper } from "@/components/progress-stepper";
 import { PublicShell } from "@/components/public-shell";
 import { RegisterForm } from "@/components/forms/register-form";
-import { getDeadline, getDiplomaByName } from "@/lib/config";
+import { getDeadline } from "@/lib/config";
 import { prisma } from "@/lib/db";
 import { publicCopy } from "@/lib/content/public";
 import { generateRegistrationId } from "@/lib/ids";
