@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
+import { WhatsAppSupport } from "./whatsapp-support";
 
 type SiteHeaderProps = {
   admin?: boolean;
@@ -24,6 +25,9 @@ export function SiteHeader({ admin = false, title, action }: SiteHeaderProps) {
           />
         </Link>
         <div className="flex items-center gap-6">
+          {!admin && (
+            <WhatsAppSupport className="hidden lg:flex" variant="header" />
+          )}
           {title ? (
             <div className="hidden text-right md:block">
               <p className="text-xs font-semibold uppercase tracking-widest text-neutral-500">

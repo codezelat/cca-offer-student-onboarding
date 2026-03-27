@@ -84,17 +84,17 @@ export function CountdownCard({
           {subtitle}
         </p>
       ) : null}
-      <div className="mt-8 flex flex-wrap gap-4 sm:gap-6">
+      <div className="mt-8 flex items-center justify-between gap-2 sm:justify-start sm:gap-6">
         {values.map((value, index) => (
           <div
             key={labels[index]}
-            className="flex flex-col items-center justify-center rounded-2xl bg-white/10 p-4 sm:w-24 border border-white/20 backdrop-blur-sm"
+            className="flex flex-1 flex-col items-center justify-center rounded-2xl bg-white/10 p-3 sm:flex-none sm:w-24 sm:p-5 border border-white/20 backdrop-blur-sm"
           >
-            <div className="text-4xl font-bold tabular-nums tracking-tight sm:text-5xl" suppressHydrationWarning>
+            <div className="text-2xl font-black tabular-nums tracking-tighter sm:text-5xl" suppressHydrationWarning>
               {`${value}`.padStart(2, "0")}
             </div>
-            <div className="mt-2 text-[10px] font-bold uppercase tracking-widest text-rose-200">
-              {labels[index]}
+            <div className="mt-1 text-[8px] font-bold uppercase tracking-widest text-rose-100 sm:mt-2 sm:text-[10px]">
+              {shortLabels || index > 1 ? labels[index].slice(0, 3) : labels[index]}
             </div>
           </div>
         ))}

@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { prisma } from "@/lib/db";
+import { supportContact } from "@/lib/config";
 
 export const runtime = "nodejs";
 
@@ -203,8 +204,7 @@ export async function GET(
     },
   );
 
-  const footerText =
-    "This is an official computer-generated digital receipt issued by CCA Campus and SITC Campus. No physical signature is required. For any inquiries, please contact our support at +94 76 677 2924.";
+  const footerText = `This is an official computer-generated digital receipt issued by CCA Campus and SITC Campus. No physical signature is required. For any inquiries, please contact our support at ${supportContact.whatsapp}.`;
   page.drawText(footerText, {
     x: 50,
     y: 50,

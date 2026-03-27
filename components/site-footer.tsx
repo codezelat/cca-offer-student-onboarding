@@ -1,20 +1,29 @@
 import Image from "next/image";
 import Link from "next/link";
 import { supportContact } from "@/lib/config";
+import { WhatsAppSupport } from "./whatsapp-support";
 
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-neutral-200 bg-white py-8">
-      <div className="mx-auto flex max-w-4xl flex-col items-center gap-5 px-4 text-center sm:px-6 lg:px-8">
-        <Link href="/" className="inline-flex items-center">
+    <footer className="border-t border-neutral-200 bg-white py-12">
+      <div className="mx-auto flex max-w-4xl flex-col items-center gap-10 px-4 text-center sm:px-6 lg:px-8">
+        <WhatsAppSupport
+          variant="footer"
+          className="max-w-md shadow-sm lg:hidden"
+        />
+
+        <Link
+          href="/"
+          className="inline-flex items-center opacity-80 hover:opacity-100 transition-opacity"
+        >
           <Image
             src="/images/logo-set-line-sub.png"
             alt="CCA and SITC Logos"
             width={1200}
             height={200}
-            className="h-26 w-auto opacity-90 transition-opacity hover:opacity-100"
+            className="h-26 w-auto opacity-90 transition-opacity hover:opacity-100 object-contain"
           />
         </Link>
 

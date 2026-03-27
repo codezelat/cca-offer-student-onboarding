@@ -8,8 +8,8 @@ export const TOTAL_COURSE_FEE = 18000;
 export const BOOTCAMP_REG_PREFIX = "CCA/BC/2026/03";
 
 export const supportContact = {
-  whatsapp: "+94 076 677 2924",
-  phone: "+94 076 677 2924",
+  whatsapp: "+94 76 677 2923",
+  phone: "+94 76 677 2923",
   email: "ca@codezela.com",
 };
 export const bootcamps = [
