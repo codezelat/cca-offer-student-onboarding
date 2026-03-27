@@ -10,10 +10,22 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "Student Registration",
-    template: "%s | Student Registration",
+    default: "CCA Offer Student Registration 2026",
+    template: "%s | CCA Offer Student Registration 2026",
   },
   description: "CCA Campus special offer student registration system",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
