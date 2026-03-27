@@ -25,11 +25,17 @@ export function EligibilityGate({ bootcamps }: EligibilityGateProps) {
           {publicCopy.eligibility.title}
         </h1>
         <div className="mt-8 space-y-4">
-          <p className="text-xl font-medium leading-relaxed text-neutral-800">
-            මාර්තු 22 ආරම්භ කළ <span className="font-black italic text-neutral-900">{selectedBootcamps}</span>{" "}
-            {publicCopy.eligibility.questionSuffix}
-          </p>
-          <p className="text-base font-medium leading-7 text-neutral-500">
+          <div className="space-y-2">
+            <p className="text-xl font-medium leading-relaxed text-neutral-800">
+              {publicCopy.eligibility.questionPrefix}{" "}
+              <span className="font-black italic text-neutral-900">{selectedBootcamps}</span>{" "}
+              {publicCopy.eligibility.questionSuffix}
+            </p>
+            <p className="text-base font-bold text-neutral-400">
+              {publicCopy.eligibility.questionEn.replace("{bootcamps}", bootcamps.join(" or "))}
+            </p>
+          </div>
+          <p className="text-sm font-medium leading-relaxed text-neutral-400">
             {publicCopy.eligibility.subtitle}
           </p>
         </div>

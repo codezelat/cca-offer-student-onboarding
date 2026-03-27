@@ -28,12 +28,13 @@ export const publicCopy = {
   },
   eligibility: {
     eyebrow: "Registration Open",
-    title: "දැන්ම ලියාපදිංචි වන්න",
+    title: "Register Now",
+    questionPrefix: "මාර්තු 22 ආරම්භ කළ",
     questionSuffix: "Bootcamp Batch සදහා දැනටමත් ලියාපදිංචි වී සිටීද?",
-    subtitle:
-      "Please select your answer to continue with the registration process",
-    yes: "Yes",
-    no: "No",
+    questionEn: "Have you already registered for the {bootcamps} Batch that started on March 22nd?",
+    subtitle: "පහතින් ඔබගේ පිළිතුර තෝරා ඉදිරියට යන්න / Please select your answer to continue",
+    yes: "ඔව් / Yes",
+    no: "නැත / No",
     yesCardTitle: "Thank You for Your Interest!",
     yesCardBody:
       "We appreciate your enthusiasm. However, as you have just started a new bootcamp program, you are not eligible for this scholarship scheme on this particular program this time.",
