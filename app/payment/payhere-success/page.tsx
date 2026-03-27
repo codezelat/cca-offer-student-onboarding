@@ -225,8 +225,9 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
                 </div>
                 <div className="mt-12 flex flex-col sm:flex-row gap-4 pt-10 border-t border-neutral-100">
                   <a
-                    href={`/payment/receipt/${student.id}?print=true`}
+                    href={`/payment/receipt/${student.id}?download=true`}
                     target="_blank"
+                    rel="noreferrer"
                     className="w-full sm:w-auto inline-flex justify-center rounded-xl bg-neutral-900 px-10 py-4 text-sm font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.98] shadow-lg shadow-neutral-900/10"
                   >
                     {publicCopy.paymentSuccess.buttons.receipt}

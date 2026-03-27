@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { PrintButton } from "@/components/print-button";
 import { PublicShell } from "@/components/public-shell";
 import { publicCopy } from "@/lib/content/public";
 import { prisma } from "@/lib/db";
@@ -111,10 +110,14 @@ export default async function RegistrationSuccessPage({ searchParams }: Props) {
             >
               {publicCopy.genericSuccess.buttons.home}
             </Link>
-            <PrintButton
-              label={publicCopy.genericSuccess.buttons.print}
+            <a
+              href={`/payment/receipt/${record.id}?download=true`}
+              target="_blank"
+              rel="noreferrer"
               className="w-full sm:w-auto inline-flex justify-center rounded-xl border border-neutral-300 bg-white px-10 py-4 text-sm font-semibold text-neutral-900 transition-all hover:bg-neutral-50 active:scale-[0.98]"
-            />
+            >
+              {publicCopy.genericSuccess.buttons.print}
+            </a>
           </div>
         </section>
       </div>

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { PrintButton } from "@/components/print-button";
 import { ProgressStepper } from "@/components/progress-stepper";
 import { PublicShell } from "@/components/public-shell";
 import { publicCopy } from "@/lib/content/public";
@@ -116,8 +115,9 @@ export default async function SlipSuccessPage({ searchParams }: Props) {
                   {publicCopy.slipSuccess.buttons.home}
                 </Link>
                 <Link
-                  href={`/payment/receipt/${record.id}?print=true`}
+                  href={`/payment/receipt/${record.id}?download=true`}
                   target="_blank"
+                  rel="noreferrer"
                   className="w-full sm:w-auto inline-flex justify-center rounded-xl border border-neutral-300 bg-white px-10 py-4 text-sm font-bold text-neutral-900 transition-all hover:bg-neutral-50 active:scale-[0.98]"
                 >
                   {publicCopy.slipSuccess.buttons.print}

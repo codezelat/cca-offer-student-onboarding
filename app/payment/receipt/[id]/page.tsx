@@ -1,20 +1,19 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { ReceiptDownloadTrigger } from "@/components/receipt-download-trigger";
 import { prisma } from "@/lib/db";
 import { formatCurrency, formatSimpleDate } from "@/lib/utils";
 import { publicCopy } from "@/lib/content/public";
 import { supportContact } from "@/lib/config";
-import { PrintButton } from "@/components/print-button";
-import { PrintTrigger } from "@/components/print-trigger";
 
 type Props = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ print?: string }>;
+  searchParams: Promise<{ download?: string }>;
 };
 
 export default async function ReceiptPage({ params, searchParams }: Props) {
   const { id } = await params;
-  const { print } = await searchParams;
+  const { download } = await searchParams;
   const studentId = Number(id);
 
   if (!studentId) {
@@ -47,10 +46,10 @@ export default async function ReceiptPage({ params, searchParams }: Props) {
   return (
     <div className="min-h-screen bg-white p-4 sm:p-8 font-sans text-neutral-900 print:p-0">
       <div className="mx-auto max-w-2xl border border-neutral-200 bg-white p-8 shadow-sm sm:p-12 print:border-none print:shadow-none">
+        {download === "true" ? (
+          <ReceiptDownloadTrigger href={`/payment/receipt/${record.id}/download`} />
+        ) : null}
         
-        {/* Auto Print Trigger */}
-        {print === 'true' && <PrintTrigger />}
-
         {/* Header */}
         <div className="flex flex-col items-center border-b-2 border-neutral-900 pb-8 text-center italic">
           <Image
@@ -178,10 +177,14 @@ export default async function ReceiptPage({ params, searchParams }: Props) {
               No physical signature is required. For any inquiries, please contact our support at {supportContact.whatsapp}.
             </p>
             <div className="mt-8 flex justify-center no-print">
-              <PrintButton
-                label="Print or Save as PDF"
+              <a
+                href={`/payment/receipt/${record.id}/download`}
+                target="_blank"
+                rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-neutral-800 active:scale-[0.98]"
-              />
+              >
+                Download Receipt PDF
+              </a>
             </div>
           </div>
         </div>

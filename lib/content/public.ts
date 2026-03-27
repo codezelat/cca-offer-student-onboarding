@@ -304,7 +304,7 @@ export const publicCopy = {
     ],
     buttons: {
       home: "Back to Home",
-      print: "Print Details",
+      print: "Download Receipt",
     },
   },
   offerEnded: {
@@ -339,7 +339,7 @@ export const publicCopy = {
     ],
     buttons: {
       home: "Back to Home",
-      print: "Print Confirmation",
+      print: "Download Receipt",
     },
   },
   receipt: {
