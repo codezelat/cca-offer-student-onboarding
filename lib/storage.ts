@@ -1,46 +1,64 @@
-import { mkdir, readFile, stat, unlink, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { del, get, head } from "@vercel/blob";
 
-const storageRoot = path.join(process.cwd(), "storage", "payment_slips");
+import {
+  SLIP_BLOB_PREFIX,
+  isAllowedSlipFile,
+} from "@/lib/slip-files";
 
-export async function ensureStorageRoot() {
-  await mkdir(storageRoot, { recursive: true });
+export type UploadedSlipReference = {
+  pathname: string;
+  url: string;
+  size: number;
+  contentType?: string | null;
+};
+
+export function isSlipBlobPath(pathname: string) {
+  return pathname.startsWith(`${SLIP_BLOB_PREFIX}/`);
 }
 
-export function getStoragePath(filename: string) {
-  return path.join(storageRoot, filename);
+export async function validateUploadedSlip(reference: UploadedSlipReference) {
+  if (!isSlipBlobPath(reference.pathname)) {
+    throw new Error("INVALID_SLIP_PATH");
+  }
+
+  const blob = await head(reference.url);
+
+  if (blob.pathname !== reference.pathname) {
+    throw new Error("SLIP_PATH_MISMATCH");
+  }
+
+  if (
+    !isAllowedSlipFile({
+      filename: blob.pathname,
+      size: blob.size,
+      contentType: blob.contentType,
+    })
+  ) {
+    throw new Error("INVALID_SLIP_FILE");
+  }
+
+  return blob;
 }
 
-export async function saveSlipFile(filename: string, content: Buffer) {
-  await ensureStorageRoot();
-  const fullPath = getStoragePath(filename);
-  await writeFile(fullPath, content);
-  return fullPath;
+export async function readSlipFile(pathname: string, ifNoneMatch?: string) {
+  if (!isSlipBlobPath(pathname)) {
+    return null;
+  }
+
+  return get(pathname, {
+    access: "private",
+    ifNoneMatch,
+  });
 }
 
-export async function readSlipFile(filename: string) {
-  const fullPath = getStoragePath(filename);
-  return readFile(fullPath);
-}
-
-export async function removeSlipFile(filename: string | null | undefined) {
-  if (!filename) {
+export async function removeSlipFile(pathname: string | null | undefined) {
+  if (!pathname || !isSlipBlobPath(pathname)) {
     return;
   }
 
-  const fullPath = getStoragePath(filename);
   try {
-    await unlink(fullPath);
+    await del(pathname);
   } catch {
     return;
-  }
-}
-
-export async function slipFileExists(filename: string) {
-  try {
-    await stat(getStoragePath(filename));
-    return true;
-  } catch {
-    return false;
   }
 }

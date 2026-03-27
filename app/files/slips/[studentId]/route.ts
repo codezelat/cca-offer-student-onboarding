@@ -1,19 +1,8 @@
-import path from "node:path";
-
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/db";
 import { readSlipFile } from "@/lib/storage";
 
 export const runtime = "nodejs";
-
-const contentTypes: Record<string, string> = {
-  jpg: "image/jpeg",
-  jpeg: "image/jpeg",
-  png: "image/png",
-  pdf: "application/pdf",
-  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  doc: "application/msword",
-};
 
 export async function GET(
   _request: Request,
@@ -34,12 +23,32 @@ export async function GET(
   }
 
   try {
-    const file = await readSlipFile(student.payment_slip);
-    const extension = path.extname(student.payment_slip).slice(1).toLowerCase();
-    return new Response(file, {
+    const result = await readSlipFile(
+      student.payment_slip,
+      _request.headers.get("if-none-match") ?? undefined,
+    );
+
+    if (!result) {
+      return new Response("Not found", { status: 404 });
+    }
+
+    if (result.statusCode === 304) {
+      return new Response(null, {
+        status: 304,
+        headers: {
+          ETag: result.blob.etag,
+          "Cache-Control": "private, no-cache",
+        },
+      });
+    }
+
+    return new Response(result.stream, {
       headers: {
-        "Content-Type": contentTypes[extension] ?? "application/octet-stream",
-        "Content-Disposition": `inline; filename="${student.payment_slip}"`,
+        "Content-Type": result.blob.contentType ?? "application/octet-stream",
+        "Content-Disposition": result.blob.contentDisposition,
+        "X-Content-Type-Options": "nosniff",
+        ETag: result.blob.etag,
+        "Cache-Control": "private, no-cache",
       },
     });
   } catch {

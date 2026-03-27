@@ -17,8 +17,9 @@
     "prisma:push": "prisma db push"
   },
   "dependencies": {
-    "@prisma/adapter-better-sqlite3": "^7.5.0",
+    "@prisma/adapter-neon": "^7.5.0",
     "@prisma/client": "^7.5.0",
+    "@vercel/blob": "^2.3.1",
     "jose": "^6.2.2",
     "next": "16.2.1",
     "pdf-lib": "^1.17.1",
@@ -31,7 +32,6 @@
     "@next/eslint-plugin-next": "16.2.1",
     "@prisma/adapter-mariadb": "^7.5.0",
     "@tailwindcss/postcss": "^4",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -41,8 +41,8 @@
     "eslint": "^10.1.0",
     "prisma": "^7.5.0",
     "tailwindcss": "^4",
-    "typescript-eslint": "^8.57.2",
     "typescript": "^5",
+    "typescript-eslint": "^8.57.2",
     "vitest": "^4.1.2"
   },
   "overrides": {

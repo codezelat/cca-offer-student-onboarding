@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@/generated/sqlite/client";
+import type { PrismaClient } from "@/generated/postgres/client";
 
 import { BOOTCAMP_REG_PREFIX } from "@/lib/config";
 

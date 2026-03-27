@@ -18,7 +18,7 @@ describe("registration validation", () => {
       home_contact_number: "",
       whatsapp_number: "",
       terms_accepted: false,
-      selected_diploma: "",
+      selected_bootcamps: [],
     });
     expect(result.success).toBe(false);
     if (result.success) {
@@ -30,7 +30,7 @@ describe("registration validation", () => {
 
   it("accepts a valid registration payload", () => {
     const result = validateRegistrationInput({
-      registration_id: "SITC/SC/2025/26B/BM/12345678",
+      registration_id: "CCA/BC/2026/03/12345678",
       full_name: "Jane Doe",
       name_with_initials: "J. Doe",
       gender: "female",
@@ -43,7 +43,7 @@ describe("registration validation", () => {
       home_contact_number: "0112345678",
       whatsapp_number: "0771234567",
       terms_accepted: true,
-      selected_diploma: "Diploma in Business Management",
+      selected_bootcamps: ["Software Engineer"],
     });
 
     expect(result.success).toBe(true);

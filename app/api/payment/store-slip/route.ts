@@ -1,45 +1,53 @@
-import path from "node:path";
-
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
 import { assertOfferOpen, getRegistrationSessionOrRedirect } from "@/lib/flow";
 import { completeSlipSubmission } from "@/lib/student-service";
 import { clearRegistrationSession } from "@/lib/session";
-import { saveSlipFile } from "@/lib/storage";
+import { validateUploadedSlip } from "@/lib/storage";
 
 export const runtime = "nodejs";
 
-const allowedExtensions = new Set(["jpg", "jpeg", "png", "pdf", "docx", "doc"]);
+const uploadedSlipSchema = z.object({
+  pathname: z.string().min(1),
+  url: z.string().url(),
+  size: z.number().int().positive(),
+  contentType: z.string().optional().nullable(),
+});
 
 export async function POST(request: Request) {
   try {
     assertOfferOpen();
     const data = await getRegistrationSessionOrRedirect();
-    const formData = await request.formData();
-    const file = formData.get("payment_slip");
+    const payload = uploadedSlipSchema.safeParse(await request.json());
 
-    if (!(file instanceof File)) {
-      return NextResponse.redirect(new URL("/payment/upload-slip", request.url));
+    if (!payload.success) {
+      return NextResponse.json(
+        { success: false, message: "Invalid uploaded slip reference." },
+        { status: 422 },
+      );
     }
 
-    const extension = path.extname(file.name).slice(1).toLowerCase();
-    if (!allowedExtensions.has(extension) || file.size > 10 * 1024 * 1024) {
-      return NextResponse.redirect(new URL("/payment/upload-slip", request.url));
-    }
-
-    const safeRegistration = data.registration_id.replace(/[^A-Za-z0-9]+/g, "_");
-    const filename = `slip_${safeRegistration}_${Date.now()}.${extension}`;
-    await saveSlipFile(filename, Buffer.from(await file.arrayBuffer()));
-
-    const student = await completeSlipSubmission(data, filename);
+    const blob = await validateUploadedSlip(payload.data);
+    const student = await completeSlipSubmission(data, blob.pathname);
     await clearRegistrationSession();
 
-    return NextResponse.redirect(
-      new URL(`/payment/slip-success?student=${student.id}`, request.url),
+    return NextResponse.json(
+      {
+        success: true,
+        redirectTo: `/payment/slip-success?student=${student.id}`,
+      },
+      { status: 200 },
     );
   } catch (error) {
     if (error instanceof Error && error.message === "REGISTRATION_CLOSED") {
-      return NextResponse.redirect(new URL("/offer-ended", request.url));
+      return NextResponse.json(
+        {
+          success: false,
+          redirectTo: "/offer-ended",
+        },
+        { status: 403 },
+      );
     }
 
     if (error instanceof Error && error.message === "NEXT_REDIRECT") {
@@ -47,6 +55,12 @@ export async function POST(request: Request) {
     }
 
     console.error(error);
-    return NextResponse.redirect(new URL("/payment/upload-slip", request.url));
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unable to save payment slip.",
+      },
+      { status: 500 },
+    );
   }
 }

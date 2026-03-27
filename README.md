@@ -36,7 +36,8 @@ CCA Offer Student Onboarding is a full-stack Next.js application built to handle
 - 💳 secure online payment initiation through PayHere
 - 🏦 manual bank-transfer slip upload and verification workflows
 - 🗂️ admin dashboard for records, exports, editing, and payment review
-- 📁 local payment-slip storage and downloadable receipt generation
+- 🗃️ Neon Postgres-backed student persistence
+- ☁️ Vercel Blob-backed private payment-slip storage and downloadable receipt generation
 - 📲 optional SMS confirmation hooks for operational follow-up
 
 This repository is maintained by [Codezela Technologies](https://codezela.com) and the source repository lives at:
@@ -97,8 +98,8 @@ This repository is maintained by [Codezela Technologies](https://codezela.com) a
 ### ⚙️ Operational capabilities
 
 - Prisma-backed student persistence.
-- SQLite runtime by default, with MySQL schema assets included for alternate generation workflows.
-- Local file-system persistence for payment slips.
+- Neon/Postgres runtime by default, with MySQL schema assets still present as alternate schema assets.
+- Private Vercel Blob storage for payment slips.
 - Optional SMS notifications when payment or registration workflows complete.
 - Deadline-driven registration control using environment-configurable timing.
 
@@ -160,13 +161,13 @@ flowchart LR
 | Language | TypeScript |
 | Styling | Tailwind CSS v4 |
 | Database ORM | Prisma 7 |
-| Default Runtime Database | SQLite |
+| Default Runtime Database | Neon Postgres |
 | Additional Database Schema Assets | MySQL Prisma schema and generated client output |
 | Testing | Vitest |
 | Validation | Zod |
 | Auth/session storage | Encrypted JWT cookie via `jose` |
 | File generation | `pdf-lib`, custom XLSX generation, `yazl` |
-| File persistence | Local filesystem |
+| File persistence | Vercel Blob private storage |
 | Payments | PayHere |
 | Messaging | External SMS gateway integration |
 
@@ -220,6 +221,7 @@ flowchart LR
 | Endpoint | Method | Purpose |
 | --- | --- | --- |
 | `/api/register` | `POST` | Validate and stage registration data in session |
+| `/api/payment/blob/upload` | `POST` | Authorize direct private slip uploads to Vercel Blob |
 | `/api/payment/payhere/start` | `POST` | Build PayHere payment payload and redirect to payment launcher |
 | `/api/payment/notify` | `POST` | Verify PayHere callback signature and mark payment complete |
 | `/api/payment/store-slip` | `POST` | Validate and store uploaded payment slip |
@@ -263,7 +265,7 @@ flowchart LR
 │   └── ui/
 ├── generated/
 │   ├── mysql/
-│   └── sqlite/
+│   └── postgres/
 ├── lib/
 │   ├── content/
 │   ├── auth.ts
@@ -282,11 +284,9 @@ flowchart LR
 │   └── xlsx.ts
 ├── prisma/
 │   ├── mysql/
-│   └── sqlite/
+│   └── postgres/
 ├── public/
 │   └── images/
-├── storage/
-│   └── payment_slips/
 └── tests/
 ```
 
@@ -297,8 +297,9 @@ flowchart LR
 - `lib/validation.ts` is the core validation source of truth for registration input.
 - `lib/session.ts` controls encrypted cookie session behavior.
 - `lib/student-service.ts` contains persistence, payment-completion, duplication, and dashboard logic.
-- `lib/storage.ts` handles slip-file writes and reads.
-- `prisma/sqlite/schema.prisma` defines the default runtime data model.
+- `lib/storage.ts` handles Blob-backed payment-slip validation, reads, and deletes.
+- `prisma/postgres/schema.prisma` defines the default runtime data model.
+- `.env.example` shows the required local and deployed configuration variables.
 
 ---
 
@@ -317,7 +318,9 @@ The app supports local fallback values for several settings. Production deployme
 | `ADMIN_PASSWORD` | Admin login password | Defaults to `password123` |
 | `COUNTDOWN_DEADLINE` | Offer expiry and countdown cutoff | Defaults to `2026-12-31T23:59:59+05:30` |
 | `SESSION_SECRET` | Secret used for encrypted JWT session cookies | Defaults to a local-development secret string |
-| `DATABASE_URL` | Database connection target | Defaults to `file:./prisma/sqlite/dev.db` |
+| `DATABASE_URL` | Runtime Neon/Postgres connection string used by the Prisma Neon adapter | No production-safe default |
+| `DIRECT_URL` | Direct Postgres connection string used by Prisma CLI commands | Falls back to `DATABASE_URL` in `prisma.config.ts` |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob token for private uploads and reads | Required for slip uploads and admin slip access |
 | `PAYHERE_MERCHANT_ID` | PayHere merchant ID | Required for real online payments |
 | `PAYHERE_MERCHANT_SECRET` | PayHere merchant secret | Required for hash generation and callback verification |
 | `PAYHERE_APP_ID` | PayHere application ID | Optional depending on integration usage |
@@ -345,13 +348,16 @@ This is suitable only for local development and should never be relied on in a r
 
 ### 🗄️ Default runtime database
 
-The live application code uses the SQLite Prisma client generated under:
+The live application code uses the Postgres Prisma client generated under:
 
-- `generated/sqlite/client`
+- `generated/postgres/client`
 
-The default database path is:
+The runtime connection is handled by the Prisma Neon adapter in `lib/db.ts` and expects a Neon/Postgres `DATABASE_URL`.
 
-- `file:./prisma/sqlite/dev.db`
+The Prisma CLI uses:
+
+- `DIRECT_URL` when present
+- otherwise `DATABASE_URL`
 
 ### 🧬 Student model fields
 
@@ -363,27 +369,27 @@ The primary persisted entity is `Student`, which includes:
 - selected bootcamp
 - normalized duplicate-detection fields
 - payment method and status
-- payment slip filename
+- payment slip blob pathname
 - PayHere order ID
 - amounts and timestamps
 
 ### 📁 File storage
 
-Uploaded payment slips are written to:
+Uploaded payment slips are stored in:
 
-- `storage/payment_slips`
+- private Vercel Blob storage
 
 Operationally, this means:
 
-- the runtime environment must allow write access to that directory
-- persistent deployments should mount durable storage if uploads must survive redeploys
-- file-serving behavior depends on the stored filename matching the database record
+- uploads do not rely on the local filesystem
+- admin slip access is mediated through the application route at `/files/slips/[studentId]`
+- `BLOB_READ_WRITE_TOKEN` must be configured in both local development and Vercel
 
 ### 🧠 Database notes
 
-- SQLite is the active runtime path in the current codebase.
-- MySQL Prisma schema assets exist under `prisma/mysql`, but the main application imports the SQLite-generated client.
-- Timestamp compatibility is intentionally preserved in the SQLite adapter configuration in `lib/db.ts`.
+- Neon/Postgres is the active runtime path in the current codebase.
+- MySQL Prisma schema assets exist under `prisma/mysql`, but the main application imports the Postgres-generated client.
+- The Prisma CLI path is configured in `prisma.config.ts`.
 
 ---
 
@@ -410,9 +416,21 @@ npm run prisma:generate
 
 ### 4. 🗃️ Prepare the database
 
-By default the app uses SQLite at `prisma/sqlite/dev.db`.
+Copy the example environment file and fill in your real values:
 
-If you want Prisma to create or sync a fresh local database file, you can point `DATABASE_URL` to a new SQLite file and run:
+```bash
+cp .env.example .env
+```
+
+At minimum for local app flows you need:
+
+- `DATABASE_URL`
+- `DIRECT_URL`
+- `BLOB_READ_WRITE_TOKEN`
+
+The app is designed for Neon Postgres in both local development and Vercel deployment.
+
+Once your database credentials are set, sync the schema:
 
 ```bash
 npm run prisma:push
@@ -504,10 +522,10 @@ npm run start
 - Set `APP_URL` to the actual public base URL.
 - Set a strong `SESSION_SECRET`.
 - Set explicit admin credentials.
+- Configure `DATABASE_URL` and `DIRECT_URL` for Neon Postgres.
+- Configure `BLOB_READ_WRITE_TOKEN` for Vercel Blob.
 - Configure real PayHere merchant credentials for card payments.
-- Ensure the runtime can write to `storage/payment_slips`.
-- If upload persistence matters across releases, back that directory with durable storage.
-- Configure the production database deliberately if moving away from local SQLite.
+- Keep the upload flow on private Blob storage; it is already designed to avoid Vercel’s server body-size bottleneck by using direct client uploads.
 
 ### 📤 Export behavior
 
@@ -545,6 +563,10 @@ The payment-slip upload flow accepts these file extensions:
 Maximum allowed file size:
 
 - `10 MB`
+
+Storage backend:
+
+- Private Vercel Blob
 
 ### 📲 SMS behavior
 

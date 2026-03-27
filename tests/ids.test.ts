@@ -12,10 +12,10 @@ describe("ID generators", () => {
 
     const id = await generateRegistrationId(
       fakePrisma,
-      "Diploma in Business Management",
+      ["Software Engineer"],
     );
 
-    expect(id).toMatch(/^SITC\/SC\/2025\/26B\/BM\/\d{8}$/);
+    expect(id).toMatch(/^CCA\/BC\/2026\/03\/\d{8}$/);
   });
 
   it("generates the first student ID from 2101", async () => {

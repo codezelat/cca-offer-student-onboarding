@@ -127,7 +127,7 @@ export default async function UploadSlipPage() {
               <p className="mt-2 text-neutral-600 font-medium">{publicCopy.uploadSlip.warningReference}</p>
             </div>
 
-            <SlipUploadForm />
+            <SlipUploadForm registrationId={data.registration_id} />
 
             <div className="mt-10 rounded-2xl border border-neutral-200 bg-white p-8">
               <h2 className="text-[10px] font-bold uppercase tracking-widest text-neutral-900 px-3">

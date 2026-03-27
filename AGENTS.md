@@ -24,9 +24,9 @@ If a fact is not grounded in the codebase, do not put it here.
 - Framework: Next.js `16.2.1` App Router with React `19.2.4`.
 - Language/tooling: TypeScript, ESLint, Vitest, Tailwind CSS v4.
 - Data layer: Prisma `7.5.0`.
-- Runtime DB in app code: SQLite through `@prisma/adapter-better-sqlite3` and the generated client at `generated/sqlite/client`.
-- Additional schema assets exist for MySQL under `prisma/mysql` and `generated/mysql`, but the default runtime path is SQLite unless code is intentionally changed.
-- Persistent local file storage: `storage/payment_slips`.
+- Runtime DB in app code: Neon/Postgres through Prisma with the generated client at `generated/postgres/client`.
+- Additional schema assets exist for MySQL under `prisma/mysql` and `generated/mysql`, but the active runtime path is Neon/Postgres.
+- Persistent file storage: Vercel Blob private storage for uploaded payment slips.
 - Domain: multi-step student onboarding and payment flow for CCA bootcamp registrations, plus a lightweight admin area.
 
 ## Repository Map
@@ -35,11 +35,11 @@ If a fact is not grounded in the codebase, do not put it here.
 - `app/api/`: server endpoints for registration, admin auth/export, payment start/notify, and session cleanup.
 - `components/`: public UI, admin UI, form components, and small client-side helpers.
 - `lib/`: business logic, validation, content copy, config, auth/session, storage, payment, IDs, SMS, and Prisma access.
-- `prisma/sqlite/`: SQLite schema and local dev database.
+- `prisma/postgres/`: Postgres schema used for local and deployed Prisma generation.
 - `prisma/mysql/`: MySQL schema assets for alternate generation paths.
 - `tests/`: Vitest coverage for validation, IDs, copy parity, PayHere hashing, NIC handling, and XLSX generation.
 - `public/images/`: marketing imagery used on public pages.
-- `storage/payment_slips/`: uploaded payment artifacts written at runtime.
+- `.env.example`: required local/deployed environment variables, including Neon and Blob credentials.
 
 ## Local Commands
 
@@ -73,7 +73,7 @@ If a fact is not grounded in the codebase, do not put it here.
 - Registration IDs are generated from `BOOTCAMP_REG_PREFIX` in `lib/config.ts` and must continue matching validation and tests.
 - Student IDs are sequential per calendar year and start at `2101`.
 - Duplicate detection is scoped per bootcamp using normalized NIC, email, and WhatsApp fields.
-- Payment slips are stored on disk under `storage/payment_slips`; changing filenames, retention, or lookup logic affects admin access and receipt flows.
+- Payment slips are stored as private Vercel Blob objects; changing pathname conventions or auth on `/files/slips/[studentId]` affects admin access and exports.
 - Online payments depend on PayHere hash generation. Treat `lib/payhere.ts` and `app/api/payment/notify/route.ts` as security-sensitive.
 - Offer availability is deadline-gated. Changes to countdown/deadline logic must preserve the closed-offer behavior.
 
@@ -96,17 +96,16 @@ When changing one of these areas, inspect its downstream callers before editing.
 ## Environment And Secrets
 
 - The app has local-development fallbacks for several env vars in `lib/env.ts`. That makes development easy, but do not treat those defaults as production-safe.
-- `SESSION_SECRET`, admin credentials, PayHere credentials, SMS credentials, and `DATABASE_URL` are operationally sensitive.
+- `SESSION_SECRET`, admin credentials, PayHere credentials, SMS credentials, `DATABASE_URL`, `DIRECT_URL`, and `BLOB_READ_WRITE_TOKEN` are operationally sensitive.
 - `APP_URL` affects generated links and callbacks. Keep it aligned with the environment when testing flows.
 - `COUNTDOWN_DEADLINE` changes both user-facing countdown behavior and registration-closed behavior.
 
 ## Database Guidance
 
-- The runtime Prisma client imported by application code is `@/generated/sqlite/client`.
-- `lib/db.ts` resolves relative SQLite `file:` URLs against `process.cwd()`; avoid changing that unless you verify dev/build/test behavior.
-- The SQLite adapter uses `timestampFormat: "unixepoch-ms"` for compatibility. Preserve this unless you explicitly migrate stored timestamp semantics.
+- The runtime Prisma client imported by application code is `@/generated/postgres/client`.
+- `lib/db.ts` uses the Prisma Neon adapter and expects `DATABASE_URL` at runtime.
+- `prisma.config.ts` uses `DIRECT_URL` when present and falls back to `DATABASE_URL` for Prisma CLI operations.
 - Do not assume MySQL is active just because MySQL schema assets exist. Check actual imports and generation targets first.
-- Treat `prisma/sqlite/dev.db` as local state, not a source file to hand-edit.
 
 ## UI And Content Guidance
 
@@ -124,6 +123,7 @@ When changing one of these areas, inspect its downstream callers before editing.
   - ID logic changes: `tests/ids.test.ts`
   - PayHere changes: `tests/payhere.test.ts`
   - NIC logic changes: `tests/nic.test.ts`
+  - Slip upload validation/path changes: `tests/slip-files.test.ts`
   - XLSX export changes: `tests/xlsx.test.ts`
 - If you change runtime behavior around Prisma or file uploads, verify the actual page or route flow manually when feasible.
 
@@ -165,3 +165,28 @@ When maintaining this file, follow these rules:
 - Describing intended architecture that the repo does not yet implement.
 - Leaving old instructions in place after moving files or changing flows.
 - Adding long prose where a precise bullet would do.
+
+<!-- VERCEL BEST PRACTICES START -->
+## Best practices for developing on Vercel
+
+These defaults are optimized for AI coding agents (and humans) working on apps that deploy to Vercel.
+
+- Treat Vercel Functions as stateless + ephemeral (no durable RAM/FS, no background daemons), use Blob or marketplace integrations for preserving state
+- Edge Functions (standalone) are deprecated; prefer Vercel Functions
+- Don't start new projects on Vercel KV/Postgres (both discontinued); use Marketplace Redis/Postgres instead
+- Store secrets in Vercel Env Variables; not in git or `NEXT_PUBLIC_*`
+- Provision Marketplace native integrations with `vercel integration add` (CI/agent-friendly)
+- Sync env + project settings with `vercel env pull` / `vercel pull` when you need local/offline parity
+- Use `waitUntil` for post-response work; avoid the deprecated Function `context` parameter
+- Set Function regions near your primary data source; avoid cross-region DB/service roundtrips
+- Tune Fluid Compute knobs (e.g., `maxDuration`, memory/CPU) for long I/O-heavy calls (LLMs, APIs)
+- Use Runtime Cache for fast **regional** caching + tag invalidation (don't treat it as global KV)
+- Use Cron Jobs for schedules; cron runs in UTC and triggers your production URL via HTTP GET
+- Use Vercel Blob for uploads/media; Use Edge Config for small, globally-read config
+- If Enable Deployment Protection is enabled, use a bypass secret to directly access them
+- Add OpenTelemetry via `@vercel/otel` on Node; don't expect OTEL support on the Edge runtime
+- Enable Web Analytics + Speed Insights early
+- Use AI Gateway for model routing, set AI_GATEWAY_API_KEY, using a model string (e.g. 'anthropic/claude-sonnet-4.6'), Gateway is already default in AI SDK
+  needed. Always curl https://ai-gateway.vercel.sh/v1/models first; never trust model IDs from memory
+- For durable agent loops or untrusted code: use Workflow (pause/resume/state) + Sandbox; use Vercel MCP for secure infra access
+<!-- VERCEL BEST PRACTICES END -->

@@ -1,45 +1,90 @@
 "use client";
 
+import { upload } from "@vercel/blob/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SlipUploadField } from "./slip-upload-field";
 import { publicCopy } from "@/lib/content/public";
+import { buildSlipBlobPath, isAllowedSlipFile } from "@/lib/slip-files";
 import { toast } from "@/lib/toast";
 
-export function SlipUploadForm() {
+type SlipUploadFormProps = {
+  registrationId: string;
+};
+
+export function SlipUploadForm({ registrationId }: SlipUploadFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
     setError(null);
+    setUploadProgress(null);
 
-    const formData = new FormData(event.currentTarget);
-    
     try {
-      const response = await fetch("/api/payment/store-slip", {
-        method: "POST",
-        body: formData,
+      const input = event.currentTarget.elements.namedItem("payment_slip");
+      if (!(input instanceof HTMLInputElement) || !input.files?.[0]) {
+        throw new Error("Please choose a payment slip to upload.");
+      }
+
+      const file = input.files[0];
+      if (
+        !isAllowedSlipFile({
+          filename: file.name,
+          size: file.size,
+          contentType: file.type || null,
+        })
+      ) {
+        throw new Error("Please upload a JPG, PNG, PDF, DOC, or DOCX file up to 10 MB.");
+      }
+
+      const blob = await upload(buildSlipBlobPath(registrationId, file.name), file, {
+        access: "private",
+        contentType: file.type || undefined,
+        handleUploadUrl: "/api/payment/blob/upload",
+        multipart: file.size > 4_500_000,
+        onUploadProgress: ({ percentage }) => {
+          setUploadProgress(Math.round(percentage));
+        },
       });
 
-      if (response.redirected) {
-        router.push(response.url);
+      const response = await fetch("/api/payment/store-slip", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          pathname: blob.pathname,
+          url: blob.url,
+          size: file.size,
+          contentType: file.type || null,
+        }),
+      });
+
+      const result = (await response.json().catch(() => null)) as
+        | { success?: boolean; message?: string; redirectTo?: string }
+        | null;
+
+      if (result?.redirectTo) {
+        router.push(result.redirectTo);
         return;
       }
 
       if (!response.ok) {
-        throw new Error("Failed to upload slip");
+        throw new Error(result?.message ?? "Failed to upload slip");
       }
-
-      const url = new URL(response.url);
-      router.push(url.pathname + url.search);
     } catch (err) {
-      const msg = "Unable to submit. Please check your connection and try again.";
+      const msg =
+        err instanceof Error
+          ? err.message
+          : "Unable to submit. Please check your connection and try again.";
       setError(msg);
       toast.error(msg);
       setIsSubmitting(false);
+      setUploadProgress(null);
     }
   }
 
@@ -66,6 +111,21 @@ export function SlipUploadForm() {
           <SlipUploadField />
         </div>
       </div>
+
+      {isSubmitting && uploadProgress !== null ? (
+        <div className="rounded-2xl border border-blue-100 bg-blue-50/60 p-5 shadow-sm">
+          <div className="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-widest text-blue-900">
+            <span>Uploading Securely</span>
+            <span>{uploadProgress}%</span>
+          </div>
+          <div className="mt-3 h-2 overflow-hidden rounded-full bg-blue-100">
+            <div
+              className="h-full rounded-full bg-blue-600 transition-[width] duration-150"
+              style={{ width: `${uploadProgress}%` }}
+            />
+          </div>
+        </div>
+      ) : null}
       
       <div className="flex flex-col sm:flex-row gap-4 pt-10 border-t border-neutral-100">
         <button
