@@ -10,14 +10,27 @@ export const publicCopy = {
     paymentSubtitle: "Choose your payment method below",
   },
   home: {
-    title: "Study Now Pay Later",
-    cta: "ඩිප්ලෝමාව තෝරාගන්න (Select Diploma)",
+    title: "Special Scholarship Opportunity",
+    subtitle:
+      "Register now for the special opportunity to get a Rs. 10,000 discount on your bootcamp program.",
+    cta: "Click Here to Select Your Program",
     imageAlt: "Convocation Ceremony",
-    seal: ["Special", "Study", "NOW", "Pay Later"],
     propositions: [
-      ["මෙය පොළී රහිත ණය යෝජනා ක්‍රමයක් වන අතර, සමස්ථ ඩිප්ලෝමා පාඨමාලාවක්ම වන්නේ", "රු. 44,000 ක්", "පමණි."],
-      ["මෙහිදී 50% ක ශිෂ්‍යත්වයක් නිපුණතා ශිෂ්‍යත්ව අරමුදල මගින් ලබා දෙනු ලැබේ. ඒ අනුව ඔබ ගෙවිය යුතු මුළු මුදල වන්නේ", "රු. 22,000 පමණී.", ""],
-      ["මෙම රු. 22,000 පාඨමාලා ගාස්තුව සිසුන් ගෙවිය යුත්තේ ඩිප්ලෝමා වැඩසටහන අවසානයේදීය. ඉන් පසු ද කිසිදු අමතර මුදලක් ගෙවිය යුතු නැත.", "", ""],
+      [
+        "මෙහි එක් සමස්ත පාඨමාලාවක් සඳහාම සාමාන්‍යයෙන් අය කෙරෙන මුළු ගාස්තුව",
+        "රු. 28,000 ක්",
+        "පමණි. නමුත් ඔබට විශේෂ 'නිපුණතා ශිෂ්‍යත්වය' යටතේ රු. 10,000ක සුවිශේෂී වට්ටමක් හිමි කර ගත හැකිය.",
+      ],
+      [
+        "මෙහිදී 10,000 ක අමතර ශිෂ්‍යත්වයක් නිපුණතා ශිෂ්‍යත්ව අරමුදල මගින් ඔබ ඇතුළු තොරාගත් සිසුන් කිහිප දෙනෙකුට ලබා දෙනු ලැබේ. ඒ අනුව ඔබ ගෙවිය යුතු මුළු මුදල වන්නේ",
+        "රු. 18,000 පමණී.",
+        "",
+      ],
+      [
+        "දැන් ඔබට රුපියල් 3,000ක මුදලක් පමණක් ගෙවා ලියාපදිංචි වී ඔබගේ ඉගෙනීම් කටයුතු ආරම්භ කළ හැකිය. ඉතිරි ",
+        "රු. 15,000",
+        "පාඨමාලා ගාස්තුව සිසුන් ගෙවිය යුත්තේ වාරික කොටස් දෙකක් වශයෙන්ය. ඉන් පසු ද ඉගෙනීම් කටයුතු සදහා හෝ Internships සොයාදීම හෝ ලබාදීම සදහා කිසිවිටෙකත් කිසිදු අමතර මුදලක් ගෙවිය යුතු නැත.",
+      ],
     ],
   },
   selectDiploma: {
@@ -56,7 +69,8 @@ export const publicCopy = {
     fields: {
       registration_id: {
         label: "Register ID *",
-        helper: "Your unique registration ID. Please save this for future reference.",
+        helper:
+          "Your unique registration ID. Please save this for future reference.",
       },
       full_name: {
         label: "Full Name *",
@@ -107,13 +121,11 @@ export const publicCopy = {
     },
     help: {
       title: "Need Help?",
-      body:
-        "If you have any questions or need assistance with the registration process, please contact our support team via WhatsApp at",
+      body: "If you have any questions or need assistance with the registration process, please contact our support team via WhatsApp at",
     },
     courseCard: {
       title: "Want to Know More?",
-      body:
-        "View complete course details, syllabus, and program information for {{ $diploma }}.",
+      body: "View complete course details, syllabus, and program information for {{ $diploma }}.",
       cta: "View Course Details",
     },
     nicMessages: {
@@ -220,8 +232,7 @@ export const publicCopy = {
     alerts: {
       cancelled:
         "Payment was cancelled. You can try again or choose another payment method.",
-      failed:
-        "Payment failed: {error}. Please try again or contact support.",
+      failed: "Payment failed: {error}. Please try again or contact support.",
     },
   },
   paymentSuccess: {
@@ -261,8 +272,14 @@ export const publicCopy = {
     },
     nextStepsTitle: "What’s Next?",
     nextSteps: [
-      ["Check Your Phone", "Confirmation details will be sent via a text message"],
-      ["Course Materials", "You’ll receive materials through the course WhatsApp group"],
+      [
+        "Check Your Phone",
+        "Confirmation details will be sent via a text message",
+      ],
+      [
+        "Course Materials",
+        "You’ll receive materials through the course WhatsApp group",
+      ],
       ["Class Schedule", "Our team will contact you with start date"],
       ["Keep Your ID", "Use your Registration ID for all communications"],
     ],
@@ -304,8 +321,7 @@ export const publicCopy = {
     title: "Registration Period Has Ended",
     subtitle: "Thank you for your interest in SITC Campus diploma programs",
     badge: "Offer Deadline Passed",
-    body:
-      "We appreciate your interest in our diploma programs. Unfortunately, the registration period for this special offer has now closed.",
+    body: "We appreciate your interest in our diploma programs. Unfortunately, the registration period for this special offer has now closed.",
     bodyFollowup:
       "But don’t worry! We have more opportunities available for you.",
     whatsappTitle: "Need More Information?",
@@ -316,7 +332,8 @@ export const publicCopy = {
   },
   genericSuccess: {
     title: "Registration Successful!",
-    welcome: "Welcome, {{ $student->name_with_initials ?? $student->full_name }}!",
+    welcome:
+      "Welcome, {{ $student->name_with_initials ?? $student->full_name }}!",
     body: "You have successfully registered for the {{ $student->selected_diploma }}",
     registrationIdTitle: "Your Registration ID",
     registrationIdBody: "Please save this ID for future reference",

@@ -26,8 +26,7 @@ export default function HomePage() {
             {publicCopy.home.title}
           </h1>
           <p className="max-w-xl text-lg text-neutral-500">
-            Register now for the special opportunity to study now and pay later
-            in 03 instalments.
+            {publicCopy.home.subtitle}
           </p>
         </section>
 
