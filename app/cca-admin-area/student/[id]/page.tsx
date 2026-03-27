@@ -58,35 +58,35 @@ export default async function AdminStudentDetailPage({ params }: Props) {
           }
         />
         <main className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-          <section className="relative overflow-hidden rounded-[2.5rem] border border-neutral-200 bg-white p-8 sm:p-12 shadow-premium">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-neutral-100 pb-10">
+          <section className="relative overflow-hidden rounded-[2.5rem] border border-neutral-100 bg-white p-10 sm:p-14 shadow-premium">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-neutral-100 pb-12">
               <div>
-                <h1 className="text-4xl font-black tracking-tight text-neutral-900">
+                <h1 className="text-5xl font-black tracking-tight text-neutral-900 uppercase italic">
                   {student.name_with_initials || student.full_name}
                 </h1>
-                <p className="mt-2 text-base font-semibold text-neutral-500 uppercase tracking-widest">
-                  Official Student Enrollment Profile
+                <p className="mt-4 text-xs font-black text-neutral-400 uppercase tracking-[0.3em]">
+                  Official Enrollment Profile
                 </p>
               </div>
-              <div className={`mt-6 sm:mt-0 rounded-2xl px-6 py-3 text-sm font-black uppercase tracking-widest ${
+              <div className={`mt-8 sm:mt-0 rounded-full px-8 py-3.5 text-xs font-black uppercase tracking-widest border shadow-sm ${
                 student.payment_status === 'completed' 
-                  ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' 
-                  : 'bg-amber-50 text-amber-600 border border-amber-100'
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
+                  : 'bg-amber-50 text-amber-700 border-amber-100'
               }`}>
                 {student.payment_status}
               </div>
             </div>
 
-            <dl className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <dl className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {entries.map(([label, value]) => (
                 <div
                   key={label}
-                  className="group rounded-3xl border border-neutral-100 bg-neutral-50/50 p-6 transition-all hover:border-neutral-900/20 hover:bg-white hover:shadow-lg"
+                  className="group rounded-[2rem] border-2 border-neutral-50 bg-neutral-50/30 p-8 transition-all hover:border-neutral-900 hover:bg-white hover:shadow-2xl hover:shadow-neutral-900/5"
                 >
-                  <dt className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">
+                  <dt className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400 mb-3 px-1">
                     {label}
                   </dt>
-                  <dd className="mt-3 text-base font-bold text-neutral-900 tracking-tight">{value}</dd>
+                  <dd className="text-lg font-bold text-neutral-900 tracking-tight">{value || "-"}</dd>
                 </div>
               ))}
             </dl>

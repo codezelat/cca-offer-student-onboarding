@@ -54,44 +54,44 @@ export default async function SlipSuccessPage({ searchParams }: Props) {
             <p className="text-sm font-bold text-neutral-500 mt-1 uppercase tracking-wider">CCA Education Programs — Powered by Codezela</p>
           </div>
 
-          <section className="w-full rounded-[2rem] border border-emerald-200 bg-emerald-50/50 p-8 sm:p-12 shadow-sm">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500 text-white mb-6 no-print">
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <section className="w-full rounded-[2.5rem] border border-emerald-100 bg-emerald-50/50 p-10 sm:p-14 shadow-premium">
+            <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-emerald-500 text-white mb-8 no-print shadow-xl shadow-emerald-500/20">
+              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight text-emerald-950">
+            <h1 className="text-4xl font-black tracking-tight text-emerald-950 uppercase italic">
               {publicCopy.slipSuccess.title}
             </h1>
-            <p className="mt-4 text-lg font-medium leading-relaxed text-emerald-900/80">
+            <p className="mt-6 text-lg font-medium leading-relaxed text-emerald-900/80">
               {publicCopy.slipSuccess.subtitle}
             </p>
           </section>
 
-          <section className="w-full rounded-[2rem] border border-neutral-200 bg-white p-8 sm:p-12 shadow-sm">
-            <h2 className="text-xl font-bold tracking-tight text-neutral-900">
+          <section className="w-full rounded-[2.5rem] border border-neutral-100 bg-white p-10 sm:p-14 shadow-premium">
+            <h2 className="text-2xl font-black tracking-tight text-neutral-900 uppercase italic">
               {publicCopy.slipSuccess.reviewTitle}
             </h2>
-            <ul className="mt-8 space-y-4">
+            <ul className="mt-10 space-y-6">
               {publicCopy.slipSuccess.reviewBullets.map((item) => (
-                <li key={item} className="flex gap-4 text-sm leading-6 text-neutral-600">
-                  <span className="flex-none text-emerald-500 font-bold">✓</span>
+                <li key={item} className="flex gap-4 text-sm font-medium leading-relaxed text-neutral-600">
+                  <span className="flex-none flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 font-black">✓</span>
                   {item}
                 </li>
               ))}
             </ul>
           </section>
 
-          <section className="w-full rounded-[2rem] border border-neutral-200 bg-neutral-50 p-8 sm:p-12 shadow-sm">
-            <h2 className="text-xl font-bold tracking-tight text-neutral-900">
+          <section className="w-full rounded-[2.5rem] border border-neutral-100 bg-neutral-900 p-10 sm:p-14 shadow-2xl">
+            <h2 className="text-2xl font-black tracking-tight text-white uppercase italic">
               {publicCopy.slipSuccess.importantTitle}
             </h2>
-            <div className="mt-8 space-y-8">
-              <div className="rounded-2xl bg-neutral-900 p-6 text-white shadow-xl shadow-neutral-900/10">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 block mb-2">
+            <div className="mt-10 space-y-10">
+              <div className="rounded-[2.5rem] bg-white/5 border border-white/10 p-8 text-white">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-500 block mb-4">
                   Assigned Registration ID(s)
                 </span>
-                <span className="text-xl font-black tracking-tighter">
+                <span className="text-3xl font-black tracking-tighter text-white font-mono bg-white/10 px-4 py-2 rounded-2xl">
                   {regIds.join(", ")}
                 </span>
               </div>
@@ -100,17 +100,17 @@ export default async function SlipSuccessPage({ searchParams }: Props) {
                 {publicCopy.slipSuccess.importantBullets
                   .filter(item => !item.includes("{{ $student->registration_id }}"))
                   .map((item) => (
-                    <li key={item} className="flex gap-4 text-sm leading-6 text-neutral-600">
-                      <span className="flex-none text-neutral-400">•</span>
+                    <li key={item} className="flex gap-4 text-sm font-medium leading-relaxed text-neutral-400">
+                      <span className="flex-none text-neutral-600">•</span>
                       {item}
                     </li>
                   ))}
               </ul>
 
-              <div className="flex flex-col sm:flex-row gap-4 no-print pt-6 border-t border-neutral-200">
+              <div className="flex flex-col sm:flex-row gap-4 no-print pt-10 border-t border-white/10">
                 <Link
                   href="/"
-                  className="w-full sm:w-auto inline-flex justify-center rounded-xl bg-neutral-900 px-10 py-4 text-sm font-bold text-white transition-all hover:bg-neutral-800 active:scale-[0.98]"
+                  className="w-full sm:w-auto inline-flex justify-center rounded-full bg-white px-10 py-5 text-sm font-black uppercase tracking-widest text-neutral-900 transition-all hover:bg-neutral-200 active:scale-[0.98]"
                 >
                   {publicCopy.slipSuccess.buttons.home}
                 </Link>
@@ -118,9 +118,12 @@ export default async function SlipSuccessPage({ searchParams }: Props) {
                   href={`/payment/receipt/${record.id}?download=true`}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full sm:w-auto inline-flex justify-center rounded-xl border border-neutral-300 bg-white px-10 py-4 text-sm font-bold text-neutral-900 transition-all hover:bg-neutral-50 active:scale-[0.98]"
+                  className="w-full sm:w-auto inline-flex justify-center rounded-full border-2 border-white/20 bg-transparent px-10 py-5 text-sm font-black uppercase tracking-widest text-white transition-all hover:bg-white/10 active:scale-[0.98]"
                 >
-                  {publicCopy.slipSuccess.buttons.print}
+                  <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  {publicCopy.slipSuccess.buttons.print.replace("Print", "Download")}
                 </Link>
               </div>
             </div>

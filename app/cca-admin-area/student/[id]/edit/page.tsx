@@ -42,14 +42,14 @@ export default async function AdminEditPage({ params }: Props) {
           }
         />
         <main className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-          <section className="rounded-[2.5rem] border border-neutral-200 bg-white p-8 sm:p-12 shadow-premium">
-            <h1 className="text-4xl font-black tracking-tight text-neutral-900">
+          <section className="rounded-[2.5rem] border border-neutral-100 bg-white p-10 sm:p-14 shadow-premium">
+            <h1 className="text-5xl font-black tracking-tight text-neutral-900 uppercase italic">
               {adminCopy.edit.pageTitle}
             </h1>
-            <p className="mt-3 text-base font-semibold text-neutral-500 uppercase tracking-widest leading-relaxed">
+            <p className="mt-4 text-xs font-black text-neutral-400 uppercase tracking-[0.3em] leading-relaxed">
               {adminCopy.edit.pageSubtitle}
             </p>
-            <div className="mt-12 border-t border-neutral-100 pt-12">
+            <div className="mt-14 border-t border-neutral-100 pt-14">
               <AdminEditForm
                 student={{
                   id: student.id,

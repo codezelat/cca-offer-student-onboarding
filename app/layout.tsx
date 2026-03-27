@@ -3,6 +3,7 @@ import Script from "next/script";
 
 import { Inter } from "next/font/google";
 import { GOOGLE_ANALYTICS_ID } from "@/lib/config";
+import { ToastContainer } from "@/components/ui/toast";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -36,6 +37,7 @@ export default function RootLayout({
           `}
         </Script>
         {children}
+        <ToastContainer />
       </body>
     </html>
   );

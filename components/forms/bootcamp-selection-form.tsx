@@ -42,43 +42,58 @@ export function BootcampSelectionForm({
               type="button"
               onClick={() => toggleBootcamp(bootcamp)}
               className={cn(
-                "shadow-card flex items-center justify-between rounded-[1.75rem] border bg-white px-5 py-5 text-left",
+                "group flex items-center justify-between rounded-[2rem] border-2 px-6 py-6 text-left transition-all active:scale-[0.99]",
                 active
-                  ? "border-blue-300 bg-blue-50"
-                  : "border-slate-200 hover:border-blue-200 hover:bg-slate-50",
+                  ? "border-neutral-900 bg-neutral-900 text-white shadow-xl shadow-neutral-900/10"
+                  : "border-neutral-200 bg-white text-neutral-900 hover:border-neutral-300 hover:bg-neutral-50 shadow-sm",
               )}
             >
-              <div className="text-lg font-semibold text-slate-900">
-                {bootcamp}
+              <div className="flex flex-col">
+                <div className={cn(
+                  "text-lg font-bold tracking-tight transition-colors",
+                  active ? "text-white" : "text-neutral-900"
+                )}>
+                  {bootcamp}
+                </div>
+                <div className={cn(
+                  "text-[10px] font-bold uppercase tracking-widest transition-colors",
+                  active ? "text-neutral-400" : "text-neutral-400"
+                )}>
+                  Professional Program
+                </div>
               </div>
               <div
                 className={cn(
-                  "flex h-7 w-7 items-center justify-center rounded-full border-2",
+                  "flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all",
                   active
-                    ? "border-blue-600 bg-blue-600 text-white"
-                    : "border-slate-300 bg-white text-transparent",
+                    ? "border-white bg-white text-neutral-900"
+                    : "border-neutral-200 bg-transparent text-transparent group-hover:border-neutral-300",
                 )}
               >
-                ✓
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7" />
+                </svg>
               </div>
             </button>
           );
         })}
       </div>
       {selected.length > 0 ? (
-        <button
-          type="button"
-          onClick={() =>
-            startTransition(() => {
-              router.push(
-                `/check-eligibility?bootcamp=${encodeURIComponent(selected.join(","))}`,
-              );
-            })
-          }
-          className="inline-flex w-full items-center justify-center rounded-full bg-slate-950 px-6 py-4 text-sm font-semibold text-white shadow-soft sm:w-auto"
-        >
-          {cta}
-        </button>
+        <div className="flex pt-6">
+          <button
+            type="button"
+            onClick={() =>
+              startTransition(() => {
+                router.push(
+                  `/check-eligibility?bootcamp=${encodeURIComponent(selected.join(","))}`,
+                );
+              })
+            }
+            className="inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-10 py-5 text-base font-bold text-white shadow-xl shadow-emerald-500/20 transition-all hover:bg-emerald-700 hover:shadow-emerald-500/30 active:scale-[0.98] sm:w-auto"
+          >
+            {cta}
+          </button>
+        </div>
       ) : null}
     </div>
   );

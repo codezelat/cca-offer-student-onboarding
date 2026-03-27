@@ -3,6 +3,7 @@
 import Script from "next/script";
 
 import { publicCopy } from "@/lib/content/public";
+import { toast } from "@/lib/toast";
 import type { PayHerePayment } from "@/lib/types";
 
 declare global {
@@ -28,7 +29,7 @@ export function PayHereLauncher({ payment }: PayHereLauncherProps) {
         type="button"
         onClick={() => {
           if (!window.payhere) {
-            window.alert("PayHere is not available right now.");
+            toast.error("Payment gateway is temporarily unavailable. Please try again in a moment.");
             return;
           }
 
@@ -36,10 +37,10 @@ export function PayHereLauncher({ payment }: PayHereLauncherProps) {
             window.location.href = `/payment/payhere-success?order_id=${encodeURIComponent(orderId)}`;
           };
           window.payhere.onDismissed = () => {
-            window.alert(publicCopy.payhere.alerts.cancelled);
+            toast.info(publicCopy.payhere.alerts.cancelled);
           };
           window.payhere.onError = (error) => {
-            window.alert(publicCopy.payhere.alerts.failed.replace("{error}", error));
+            toast.error(publicCopy.payhere.alerts.failed.replace("{error}", error));
           };
           window.payhere.startPayment(payment);
         }}

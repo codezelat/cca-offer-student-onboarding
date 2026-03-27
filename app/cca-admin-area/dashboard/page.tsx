@@ -78,23 +78,23 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                 Student updated successfully.
               </div>
             ) : null}
-            <form className="mt-10 grid gap-4 lg:grid-cols-[1.5fr_1fr_1fr_auto_auto_auto] items-end">
+            <form className="mt-10 grid gap-5 lg:grid-cols-[1.5fr_1fr_1fr_auto_auto_auto] items-end bg-neutral-50/50 p-6 rounded-3xl border border-neutral-100">
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 px-3">Quick Search</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 px-3">Quick Search</label>
                 <input
                   type="text"
                   name="search"
                   defaultValue={params.search}
                   placeholder={adminCopy.dashboard.searchPlaceholder}
-                  className="w-full rounded-2xl border border-neutral-100 bg-neutral-50 px-5 py-4 text-sm font-medium focus:outline-none focus:border-neutral-900 transition-colors"
+                  className="w-full rounded-2xl border-2 border-neutral-100 bg-white px-5 py-4 text-sm font-bold text-neutral-900 shadow-sm focus:outline-none focus:border-neutral-900 transition-all"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 px-3">Filter Bootcamp</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 px-3">Filter Bootcamp</label>
                 <select
                   name="diploma"
                   defaultValue={params.diploma ?? ""}
-                  className="w-full rounded-2xl border border-neutral-100 bg-neutral-50 px-5 py-4 text-sm font-medium focus:outline-none focus:border-neutral-900 transition-colors appearance-none"
+                  className="w-full rounded-2xl border-2 border-neutral-100 bg-white px-5 py-4 text-sm font-bold text-neutral-900 shadow-sm focus:outline-none focus:border-neutral-900 transition-all appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_1rem_center] bg-no-repeat"
                 >
                   <option value="">{adminCopy.dashboard.diplomaFilter}</option>
                   {bootcamps.map((bootcamp) => (
@@ -105,11 +105,11 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 px-3">Payment Method</label>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 px-3">Payment Method</label>
                 <select
                   name="payment_method"
                   defaultValue={params.payment_method ?? ""}
-                  className="w-full rounded-2xl border border-neutral-100 bg-neutral-50 px-5 py-4 text-sm font-medium focus:outline-none focus:border-neutral-900 transition-colors appearance-none"
+                  className="w-full rounded-2xl border-2 border-neutral-100 bg-white px-5 py-4 text-sm font-bold text-neutral-900 shadow-sm focus:outline-none focus:border-neutral-900 transition-all appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_1rem_center] bg-no-repeat"
                 >
                   <option value="">{adminCopy.dashboard.paymentFilter}</option>
                   <option value="online">{adminCopy.dashboard.paymentOptions.online}</option>
@@ -121,13 +121,13 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
               </div>
               <button
                 type="submit"
-                className="rounded-xl bg-neutral-900 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-neutral-900/10 transition-all hover:bg-neutral-800 active:scale-[0.98]"
+                className="rounded-full bg-neutral-900 px-10 py-5 text-xs font-black uppercase tracking-widest text-white shadow-xl shadow-neutral-900/10 transition-all hover:bg-neutral-800 active:scale-[0.98]"
               >
                 {adminCopy.dashboard.search}
               </button>
               <Link
                 href="/cca-admin-area/dashboard"
-                className="rounded-xl border border-neutral-200 bg-white px-8 py-4 text-sm font-bold text-neutral-900 transition-all hover:bg-neutral-50 active:scale-[0.98]"
+                className="rounded-full border-2 border-neutral-200 bg-white px-10 py-5 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:bg-neutral-50 active:scale-[0.98]"
               >
                 {adminCopy.dashboard.clear}
               </Link>
@@ -137,13 +137,13 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                   diploma: params.diploma,
                   payment_method: params.payment_method,
                 })}`}
-                className="rounded-xl border border-blue-200 bg-blue-50 px-8 py-4 text-sm font-bold text-blue-700 transition-all hover:bg-blue-100 active:scale-[0.98]"
+                className="rounded-full border-2 border-indigo-100 bg-indigo-600 px-10 py-5 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-indigo-700 shadow-xl shadow-indigo-600/20 active:scale-[0.98]"
               >
                 Export
               </a>
             </form>
 
-            <p className="mt-5 text-sm text-slate-600">
+            <p className="mt-8 text-xs font-bold uppercase tracking-widest text-neutral-400 px-2">
               {adminCopy.dashboard.showing
                 .replace("{first}", `${first}`)
                 .replace("{last}", `${last}`)
@@ -151,7 +151,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
             </p>
 
             {result.students.length > 0 ? (
-              <div className="mt-6">
+              <div className="mt-8">
                 <DashboardTable
                   students={result.students.map((student) => ({
                     id: student.id,
@@ -171,18 +171,18 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                 />
               </div>
             ) : (
-              <div className="mt-6 rounded-[2rem] border border-slate-200 bg-slate-50 p-8 text-center">
-                <h2 className="text-xl font-semibold text-slate-950">
+              <div className="mt-8 rounded-[2.5rem] border-2 border-dashed border-neutral-100 bg-neutral-50/50 p-16 text-center">
+                <h2 className="text-2xl font-black tracking-tight text-neutral-900 uppercase">
                   {adminCopy.dashboard.emptyTitle}
                 </h2>
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-3 text-sm font-medium text-neutral-500">
                   {adminCopy.dashboard.emptyBody}
                 </p>
               </div>
             )}
 
             {result.totalPages > 1 ? (
-              <div className="mt-6 flex flex-wrap items-center gap-3">
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-3 border-t border-neutral-100 pt-10">
                 {result.page > 1 ? (
                   <Link
                     href={`/cca-admin-area/dashboard${queryString({
@@ -191,7 +191,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                       payment_method: params.payment_method,
                       page: `${result.page - 1}`,
                     })}`}
-                    className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900"
+                    className="rounded-full border-2 border-neutral-200 bg-white px-6 py-3 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900"
                   >
                     {adminCopy.dashboard.previous}
                   </Link>
@@ -206,10 +206,10 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                         payment_method: params.payment_method,
                         page: `${page}`,
                       })}`}
-                      className={`rounded-full px-4 py-2 text-sm font-semibold ${
+                      className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-widest transition-all ${
                         page === result.page
-                          ? "bg-slate-950 text-white"
-                          : "border border-slate-300 bg-white text-slate-900"
+                          ? "bg-neutral-900 text-white shadow-xl shadow-neutral-900/20"
+                          : "border-2 border-neutral-100 bg-white text-neutral-400 hover:border-neutral-900 hover:text-neutral-900"
                       }`}
                     >
                       {page}
@@ -224,7 +224,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                       payment_method: params.payment_method,
                       page: `${result.page + 1}`,
                     })}`}
-                    className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-900"
+                    className="rounded-full border-2 border-neutral-200 bg-white px-6 py-3 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900"
                   >
                     {adminCopy.dashboard.next}
                   </Link>
