@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { publicCopy } from "@/lib/content/public";
+import { encodeBootcampQuery } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
 type EligibilityGateProps = {
@@ -12,7 +13,7 @@ type EligibilityGateProps = {
 export function EligibilityGate({ bootcamps }: EligibilityGateProps) {
   const [answer, setAnswer] = useState<"yes" | "no" | null>(null);
   const selectedBootcamps = bootcamps.join(" හෝ ");
-  const bootcampQuery = encodeURIComponent(bootcamps.join(","));
+  const bootcampQuery = encodeURIComponent(encodeBootcampQuery(bootcamps));
 
   return (
     <div className="space-y-8">

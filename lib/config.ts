@@ -79,6 +79,31 @@ export function isValidBootcamp(name: string) {
   return (bootcamps as readonly string[]).includes(name);
 }
 
+function toBootcampSlug(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+const bootcampSlugMap = Object.fromEntries(
+  bootcamps.map((bootcamp) => [toBootcampSlug(bootcamp), bootcamp]),
+) as Record<string, (typeof bootcamps)[number]>;
+
+export function encodeBootcampQuery(names: string[]) {
+  return names.map(toBootcampSlug).join(",");
+}
+
+export function decodeBootcampQuery(value?: string | null) {
+  if (!value) {
+    return [];
+  }
+
+  return value
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => bootcampSlugMap[entry] ?? entry)
+    .filter((entry, index, array) => isValidBootcamp(entry) && array.indexOf(entry) === index);
+}
+
 export function getDeadline() {
   return env.countdownDeadline;
 }

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { CountdownCard } from "@/components/countdown-card";
 import { PublicShell } from "@/components/public-shell";
 import { EligibilityGate } from "@/components/forms/eligibility-gate";
-import { getDeadline, isValidBootcamp } from "@/lib/config";
+import { decodeBootcampQuery, getDeadline, isValidBootcamp } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 
 export default async function CheckEligibilityPage({ searchParams }: Props) {
   const { bootcamp } = await searchParams;
-  const selectedBootcamps = (bootcamp ?? "").split(",").filter(Boolean);
+  const selectedBootcamps = decodeBootcampQuery(bootcamp);
   const valid =
     selectedBootcamps.length > 0 &&
     selectedBootcamps.length <= 2 &&

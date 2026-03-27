@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CountdownCard } from "@/components/countdown-card";
 import { ProgressStepper } from "@/components/progress-stepper";
 import { PublicShell } from "@/components/public-shell";
-import { getDeadline } from "@/lib/config";
+import { encodeBootcampQuery, getDeadline } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
 import { getRegistrationSessionOrRedirect } from "@/lib/flow";
 import { cn } from "@/lib/utils";
@@ -138,7 +138,7 @@ export default async function PaymentOptionsPage() {
 
             <div className="mt-12 pt-12 border-t border-white/10 text-center">
               <Link
-                href={`/register?bootcamp=${encodeURIComponent(data.selected_bootcamps.join(","))}`}
+                href={`/register?bootcamp=${encodeURIComponent(encodeBootcampQuery(data.selected_bootcamps))}`}
                 className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-neutral-400 hover:text-white transition-colors"
               >
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

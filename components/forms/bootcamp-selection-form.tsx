@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { encodeBootcampQuery } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
 type BootcampSelectionFormProps = {
@@ -81,7 +82,7 @@ export function BootcampSelectionForm({
           <button
             type="button"
             onClick={() => {
-              window.location.href = `/check-eligibility?bootcamp=${encodeURIComponent(selected.join(","))}`;
+              window.location.href = `/check-eligibility?bootcamp=${encodeURIComponent(encodeBootcampQuery(selected))}`;
             }}
             className="inline-flex w-full items-center justify-center rounded-full bg-emerald-600 px-10 py-5 text-base font-bold text-white shadow-xl shadow-emerald-500/20 transition-all hover:bg-emerald-700 hover:shadow-emerald-500/30 active:scale-[0.98] sm:w-auto"
           >
