@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { startTransition, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { startTransition, useState } from "react";
 
 import { StudentRecordDeleteButton } from "@/components/admin/student-record-delete-button";
 import { cn } from "@/lib/utils";
@@ -75,11 +75,7 @@ export function AdminEditForm({
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
-  const siblingRecords = useMemo(
-    () => relatedRecords.filter((record) => record.id !== student.id),
-    [relatedRecords, student.id],
-  );
+  const siblingRecords = relatedRecords.filter((record) => record.id !== student.id);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -117,12 +113,9 @@ export function AdminEditForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-8 xl:grid-cols-[1.3fr_0.9fr]">
-      <div className="space-y-8">
-        <Section
-          title="Shared Student Data"
-          body="These fields are shared across the whole registration group. Updating them will keep sibling program rows consistent."
-        >
+    <form onSubmit={handleSubmit} className="grid gap-6 xl:grid-cols-[1.3fr_0.85fr]">
+      <div className="space-y-6">
+        <Section title="Student details">
           <div className="grid gap-5 sm:grid-cols-2">
             <Field label="Full Name *" error={fieldErrors.full_name?.[0]}>
               <input
@@ -224,10 +217,7 @@ export function AdminEditForm({
           </div>
         </Section>
 
-        <Section
-          title="Current Program Row"
-          body="The selected bootcamp below applies only to this row. Other rows in the same registration group keep their own program assignment."
-        >
+        <Section title="This program">
           <div className="grid gap-5 sm:grid-cols-2">
             <Field label="Selected Bootcamp *" error={fieldErrors.selected_diploma?.[0]}>
               <select
@@ -245,6 +235,11 @@ export function AdminEditForm({
             </Field>
             <ReadonlyCard label="Registration ID" value={student.registration_id} mono />
           </div>
+          {siblingRecords.length > 0 ? (
+            <p className="mt-5 text-sm font-medium text-neutral-500">
+              This row cannot use a bootcamp already selected in this registration.
+            </p>
+          ) : null}
         </Section>
 
         {formError ? (
@@ -253,7 +248,7 @@ export function AdminEditForm({
           </div>
         ) : null}
 
-        <div className="flex flex-wrap gap-4 border-t border-neutral-100 pt-8">
+        <div className="flex flex-wrap gap-4 border-t border-neutral-100 pt-6">
           <button
             type="submit"
             disabled={submitting}
@@ -274,20 +269,21 @@ export function AdminEditForm({
         </div>
       </div>
 
-      <aside className="space-y-8">
-        <Section title="Current Row Snapshot">
-          <div className="grid gap-4">
+      <aside className="space-y-6">
+        <Section title="Quick info">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
             <ReadonlyCard label="Student ID" value={student.student_id || "Pending"} mono />
             <ReadonlyCard label="Payment Method" value={student.payment_method} />
             <ReadonlyCard label="Payment Status" value={student.payment_status} />
             <ReadonlyCard
               label="Amount Paid"
-              value={student.amount_paid ? `Rs. ${Number(student.amount_paid).toLocaleString()}` : "Rs. 0.00"}
+              value={
+                student.amount_paid
+                  ? `Rs. ${Number(student.amount_paid).toLocaleString()}`
+                  : "Rs. 0.00"
+              }
             />
             <ReadonlyCard label="Payment Date" value={student.payment_date} />
-            <ReadonlyCard label="PayHere Order" value={student.payhere_order_id || "Not available"} mono />
-            <ReadonlyCard label="Slip Path" value={student.payment_slip || "Not uploaded"} mono />
-            <ReadonlyCard label="Created" value={student.created_at} />
             <ReadonlyCard label="Updated" value={student.updated_at} />
           </div>
 
@@ -296,7 +292,7 @@ export function AdminEditForm({
               href={`/cca-admin-area/student/${student.id}`}
               className="inline-flex items-center justify-center rounded-full border border-neutral-200 bg-white px-5 py-4 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900"
             >
-              Open Detail View
+              Open Record
             </a>
             <a
               href={`/payment/receipt/${student.id}`}
@@ -319,7 +315,7 @@ export function AdminEditForm({
           </div>
         </Section>
 
-        <Section title="Related Program Rows">
+        <Section title="Programs in this registration">
           <div className="space-y-3">
             {relatedRecords.map((record) => (
               <Link
@@ -332,7 +328,7 @@ export function AdminEditForm({
                 }`}
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="text-base font-black tracking-tight">
+                  <p className="break-words text-base font-black tracking-tight">
                     {record.selected_diploma}
                   </p>
                   <span
@@ -342,24 +338,26 @@ export function AdminEditForm({
                         : "border border-neutral-200 bg-white text-neutral-700"
                     }`}
                   >
-                    {record.id === student.id ? "Editing" : "Open"}
+                    {record.id === student.id ? "Current" : "Open"}
                   </span>
                 </div>
-                <p className={`mt-2 text-xs font-bold uppercase tracking-widest ${record.id === student.id ? "text-white/65" : "text-neutral-500"}`}>
+                <p
+                  className={`mt-2 break-all text-xs font-bold uppercase tracking-widest ${
+                    record.id === student.id ? "text-white/65" : "text-neutral-500"
+                  }`}
+                >
                   {record.registration_id}
                 </p>
-                <p className={`mt-2 text-sm font-medium ${record.id === student.id ? "text-white/80" : "text-neutral-600"}`}>
+                <p
+                  className={`mt-2 text-sm font-medium ${
+                    record.id === student.id ? "text-white/80" : "text-neutral-600"
+                  }`}
+                >
                   {record.payment_method} • {record.payment_status}
                 </p>
               </Link>
             ))}
           </div>
-
-          {siblingRecords.length > 0 ? (
-            <div className="mt-5 rounded-[1.5rem] border border-amber-100 bg-amber-50 p-5 text-sm font-medium leading-7 text-amber-900">
-              If you change this row to a bootcamp already used by a sibling row, the update will be rejected.
-            </div>
-          ) : null}
         </Section>
       </aside>
     </form>
@@ -368,20 +366,15 @@ export function AdminEditForm({
 
 function Section({
   title,
-  body,
   children,
 }: {
   title: string;
-  body?: string;
   children: React.ReactNode;
 }) {
   return (
     <section className="rounded-[2rem] border border-neutral-100 bg-neutral-50/40 p-8">
       <h2 className="text-2xl font-black tracking-tight text-neutral-900">{title}</h2>
-      {body ? (
-        <p className="mt-2 text-sm font-medium leading-7 text-neutral-500">{body}</p>
-      ) : null}
-      <div className="mt-8">{children}</div>
+      <div className="mt-6">{children}</div>
     </section>
   );
 }
@@ -424,7 +417,12 @@ function ReadonlyCard({
       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
         {label}
       </p>
-      <p className={cn("mt-3 text-sm font-bold text-neutral-900", mono && "font-mono text-xs")}>
+      <p
+        className={cn(
+          "mt-3 whitespace-pre-wrap text-sm font-bold text-neutral-900",
+          mono ? "break-all font-mono text-xs" : "break-words",
+        )}
+      >
         {value}
       </p>
     </div>

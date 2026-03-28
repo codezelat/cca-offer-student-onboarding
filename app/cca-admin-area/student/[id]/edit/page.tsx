@@ -7,7 +7,7 @@ import { requireAdminSession } from "@/lib/auth";
 import { bootcamps, districts } from "@/lib/config";
 import { prisma } from "@/lib/db";
 import { getRegistrationGroupWhere } from "@/lib/registration-groups";
-import { formatCurrency, formatSimpleDate } from "@/lib/utils";
+import { formatSimpleDate } from "@/lib/utils";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -63,7 +63,7 @@ export default async function AdminEditPage({ params }: Props) {
       <div className="page-content">
         <SiteHeader
           admin
-          title="Edit Enrollment"
+          title="Edit Record"
           action={
             <div className="flex items-center gap-3">
               <Link
@@ -83,30 +83,19 @@ export default async function AdminEditPage({ params }: Props) {
         />
         <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <section className="rounded-[2.5rem] border border-neutral-100 bg-white p-10 shadow-premium sm:p-14">
-            <div className="flex flex-col gap-8 border-b border-neutral-100 pb-10 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
-                  Admin CRUD
-                </p>
-                <h1 className="mt-4 text-4xl font-black tracking-tight text-neutral-900 sm:text-5xl">
-                  Edit Enrollment Record
-                </h1>
-                <p className="mt-3 max-w-3xl text-base font-medium leading-7 text-neutral-500">
-                  Shared identity and contact fields update across the full registration group. The selected bootcamp only changes for the current row.
-                </p>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-3">
-                <MetricCard label="Current Row" value={student.selected_diploma} />
-                <MetricCard label="Group Rows" value={`${relatedRecords.length}`} />
-                <MetricCard
-                  label="Current Paid"
-                  value={student.amount_paid ? formatCurrency(student.amount_paid.toString()) : formatCurrency(0)}
-                />
-              </div>
+            <div className="border-b border-neutral-100 pb-8">
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
+                {student.registration_id}
+              </p>
+              <h1 className="mt-4 text-4xl font-black tracking-tight text-neutral-900 sm:text-5xl">
+                Edit {student.full_name}
+              </h1>
+              <p className="mt-3 text-base font-medium text-neutral-500">
+                Update student details and the current program row.
+              </p>
             </div>
 
-            <div className="mt-10">
+            <div className="mt-8">
               <AdminEditForm
                 student={{
                   id: student.id,
@@ -151,19 +140,6 @@ export default async function AdminEditPage({ params }: Props) {
           </section>
         </main>
       </div>
-    </div>
-  );
-}
-
-function MetricCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-[1.5rem] border border-neutral-100 bg-neutral-50/50 p-5">
-      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
-        {label}
-      </p>
-      <p className="mt-3 text-base font-black tracking-tight text-neutral-900">
-        {value}
-      </p>
     </div>
   );
 }

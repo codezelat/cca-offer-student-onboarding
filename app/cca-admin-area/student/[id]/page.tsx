@@ -6,7 +6,12 @@ import { SiteHeader } from "@/components/site-header";
 import { requireAdminSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getRegistrationGroupWhere } from "@/lib/registration-groups";
-import { digitsOnly, formatBirthDate, formatCurrency, formatSimpleDate } from "@/lib/utils";
+import {
+  digitsOnly,
+  formatBirthDate,
+  formatCurrency,
+  formatSimpleDate,
+} from "@/lib/utils";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -30,14 +35,14 @@ function formatPaymentMethod(value: string | null) {
 
 function paymentTone(status: string) {
   if (status === "completed") {
-    return "bg-emerald-50 text-emerald-700 border-emerald-100";
+    return "border-emerald-100 bg-emerald-50 text-emerald-700";
   }
 
   if (status === "pending_exam_fee") {
-    return "bg-sky-50 text-sky-700 border-sky-100";
+    return "border-sky-100 bg-sky-50 text-sky-700";
   }
 
-  return "bg-amber-50 text-amber-700 border-amber-100";
+  return "border-amber-100 bg-amber-50 text-amber-700";
 }
 
 export default async function AdminStudentDetailPage({ params, searchParams }: Props) {
@@ -63,21 +68,19 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
     orderBy: { registration_id: "asc" },
   });
 
-  const otherRecords = relatedRecords.filter((record) => record.id !== student.id);
-  const primaryAmount = student.amount_paid ? formatCurrency(student.amount_paid.toString()) : formatCurrency(0);
-  const totalAmount = formatCurrency(
-    relatedRecords.reduce((sum, record) => sum + Number(record.amount_paid ?? 0), 0),
-  );
   const receiptHref = `/payment/receipt/${student.id}`;
   const slipHref = student.payment_slip ? `/files/slips/${student.id}` : null;
   const whatsappHref = `https://wa.me/94${digitsOnly(student.whatsapp_number).replace(/^0/, "")}`;
+  const totalAmount = formatCurrency(
+    relatedRecords.reduce((sum, record) => sum + Number(record.amount_paid ?? 0), 0),
+  );
 
   return (
     <div className="page-frame">
       <div className="page-content">
         <SiteHeader
           admin
-          title="Enrollment Record"
+          title="Student Record"
           action={
             <div className="flex items-center gap-3">
               <Link
@@ -90,7 +93,7 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                 href={`/cca-admin-area/student/${student.id}/edit`}
                 className="rounded-xl bg-neutral-900 px-6 py-2.5 text-sm font-bold text-white transition-all hover:bg-neutral-800 active:scale-[0.98] shadow-lg shadow-neutral-900/10"
               >
-                Edit Record
+                Edit
               </Link>
               <StudentRecordDeleteButton
                 studentId={student.id}
@@ -101,115 +104,111 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
         />
 
         <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <section className="overflow-hidden rounded-[2.5rem] border border-neutral-100 bg-white p-10 shadow-premium sm:p-14">
+          <section className="rounded-[2.5rem] border border-neutral-100 bg-white p-10 shadow-premium sm:p-14">
             {updated ? (
               <div className="mb-8 rounded-[1.5rem] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-semibold text-emerald-800">
                 Student record updated successfully.
               </div>
             ) : null}
+
             <div className="flex flex-col gap-8 border-b border-neutral-100 pb-10 lg:flex-row lg:items-end lg:justify-between">
-              <div>
+              <div className="min-w-0">
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
-                  Enrollment Profile
+                  {student.registration_id}
                 </p>
                 <h1 className="mt-4 text-4xl font-black tracking-tight text-neutral-900 sm:text-5xl">
                   {student.full_name}
                 </h1>
                 <p className="mt-3 text-base font-medium text-neutral-500">
-                  {student.name_with_initials} • {student.email}
+                  {student.email} • {student.whatsapp_number}
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  {relatedRecords.map((record) => (
-                    <span
-                      key={record.registration_id}
-                      className="rounded-full border border-neutral-200 bg-neutral-50 px-4 py-2 text-xs font-black uppercase tracking-widest text-neutral-700"
-                    >
-                      {record.registration_id}
-                    </span>
-                  ))}
+                  <span
+                    className={`rounded-full border px-4 py-2 text-[10px] font-black uppercase tracking-widest ${paymentTone(
+                      student.payment_status,
+                    )}`}
+                  >
+                    {student.payment_status.replaceAll("_", " ")}
+                  </span>
+                  <span className="rounded-full border border-neutral-200 bg-neutral-50 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-neutral-700">
+                    {formatPaymentMethod(student.payment_method)}
+                  </span>
+                  <span className="rounded-full border border-neutral-200 bg-neutral-50 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-neutral-700">
+                    {student.selected_diploma}
+                  </span>
                 </div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-3">
                 <MetricCard label="Programs" value={`${relatedRecords.length}`} />
-                <MetricCard label="Current Row Paid" value={primaryAmount} />
-                <MetricCard label="Group Total" value={totalAmount} />
+                <MetricCard label="Paid" value={formatCurrency(student.amount_paid?.toString() ?? 0)} />
+                <MetricCard label="Group total" value={totalAmount} />
               </div>
             </div>
 
-            <div className="mt-10 grid gap-8 xl:grid-cols-[1.3fr_0.9fr]">
-              <div className="space-y-8">
+            <div className="mt-10 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+              <div className="space-y-6">
                 <section className="rounded-[2rem] border border-neutral-100 bg-neutral-50/40 p-8">
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <h2 className="text-2xl font-black tracking-tight text-neutral-900">
-                        Shared Student Profile
-                      </h2>
-                      <p className="mt-2 text-sm font-medium text-neutral-500">
-                        These identity and contact details are shared across every program row in the same registration group.
-                      </p>
-                    </div>
-                    <Link
-                      href={`/cca-admin-area/student/${student.id}/edit`}
-                      className="rounded-full border border-neutral-200 bg-white px-5 py-3 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900"
-                    >
-                      Edit Shared Data
-                    </Link>
-                  </div>
-
-                  <dl className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  <h2 className="text-2xl font-black tracking-tight text-neutral-900">
+                    Student details
+                  </h2>
+                  <dl className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                    <InfoCard label="Name With Initials" value={student.name_with_initials} />
                     <InfoCard label="NIC" value={student.nic} mono />
                     <InfoCard label="Date of Birth" value={formatBirthDate(student.date_of_birth)} />
                     <InfoCard label="Gender" value={student.gender} />
-                    <InfoCard label="WhatsApp" value={student.whatsapp_number} />
-                    <InfoCard label="Emergency Contact" value={student.home_contact_number} />
                     <InfoCard label="District" value={student.district} />
                     <InfoCard label="Postal Code" value={student.postal_code ?? "-"} />
-                    <InfoCard label="Terms Accepted" value={student.terms_accepted ? "Yes" : "No"} />
-                    <InfoCard label="Permanent Address" value={student.permanent_address} fullWidth />
+                    <InfoCard label="WhatsApp" value={student.whatsapp_number} />
+                    <InfoCard label="Emergency Contact" value={student.home_contact_number} />
+                    <InfoCard label="Student ID" value={student.student_id ?? "Pending"} mono />
+                    <InfoCard label="Address" value={student.permanent_address} fullWidth />
                   </dl>
                 </section>
 
                 <section className="rounded-[2rem] border border-neutral-100 bg-white p-8 shadow-sm">
-                  <h2 className="text-2xl font-black tracking-tight text-neutral-900">
-                    Program Rows In This Registration
-                  </h2>
-                  <p className="mt-2 text-sm font-medium text-neutral-500">
-                    Program assignment is row-specific. Shared personal details update across the whole group.
-                  </p>
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <h2 className="text-2xl font-black tracking-tight text-neutral-900">
+                      Programs
+                    </h2>
+                    <Link
+                      href={`/cca-admin-area/student/${student.id}/edit`}
+                      className="rounded-full border border-neutral-200 bg-white px-5 py-3 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900"
+                    >
+                      Edit current row
+                    </Link>
+                  </div>
 
-                  <div className="mt-8 grid gap-4">
+                  <div className="mt-6 space-y-3">
                     {relatedRecords.map((record) => {
                       const isCurrent = record.id === student.id;
+
                       return (
-                        <div
+                        <Link
                           key={record.id}
-                          className={`rounded-[1.75rem] border p-6 transition-all ${
+                          href={`/cca-admin-area/student/${record.id}${isCurrent ? "/edit" : ""}`}
+                          className={`block rounded-[1.5rem] border p-5 transition-all ${
                             isCurrent
                               ? "border-neutral-900 bg-neutral-900 text-white shadow-xl shadow-neutral-900/10"
-                              : "border-neutral-100 bg-neutral-50/50"
+                              : "border-neutral-100 bg-neutral-50/50 hover:border-neutral-900 hover:bg-white"
                           }`}
                         >
-                          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                            <div>
-                              <div className="flex flex-wrap items-center gap-3">
-                                <h3 className="text-xl font-black tracking-tight">
-                                  {record.selected_diploma}
-                                </h3>
-                                {isCurrent ? (
-                                  <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white">
-                                    Current row
-                                  </span>
-                                ) : null}
-                              </div>
-                              <p className={`mt-2 text-sm font-medium ${isCurrent ? "text-white/70" : "text-neutral-500"}`}>
-                                {record.registration_id} • {record.student_id ?? "Student ID pending"}
+                          <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div className="min-w-0">
+                              <p className="break-words text-base font-black tracking-tight">
+                                {record.selected_diploma}
+                              </p>
+                              <p
+                                className={`mt-2 break-all text-xs font-bold uppercase tracking-widest ${
+                                  isCurrent ? "text-white/65" : "text-neutral-500"
+                                }`}
+                              >
+                                {record.registration_id}
                               </p>
                             </div>
-
                             <div className="flex flex-wrap items-center gap-3">
                               <span
-                                className={`rounded-full border px-4 py-2 text-[10px] font-black uppercase tracking-widest ${
+                                className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
                                   isCurrent
                                     ? "border-white/15 bg-white/10 text-white"
                                     : paymentTone(record.payment_status)
@@ -218,7 +217,7 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                                 {record.payment_status.replaceAll("_", " ")}
                               </span>
                               <span
-                                className={`rounded-full border px-4 py-2 text-[10px] font-black uppercase tracking-widest ${
+                                className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
                                   isCurrent
                                     ? "border-white/15 bg-white/10 text-white"
                                     : "border-neutral-200 bg-white text-neutral-700"
@@ -226,55 +225,60 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                               >
                                 {formatPaymentMethod(record.payment_method)}
                               </span>
-                              <Link
-                                href={`/cca-admin-area/student/${record.id}${isCurrent ? "/edit" : ""}`}
-                                className={`rounded-full px-5 py-3 text-xs font-black uppercase tracking-widest transition-all ${
-                                  isCurrent
-                                    ? "bg-white text-neutral-900"
-                                    : "border border-neutral-200 bg-white text-neutral-900 hover:border-neutral-900"
-                                }`}
-                              >
-                                {isCurrent ? "Edit this row" : "Open row"}
-                              </Link>
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       );
                     })}
                   </div>
                 </section>
-
-                <section className="rounded-[2rem] border border-neutral-100 bg-white p-8 shadow-sm">
-                  <h2 className="text-2xl font-black tracking-tight text-neutral-900">
-                    System Timeline
-                  </h2>
-                  <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    <InfoCard label="Created" value={formatSimpleDate(student.created_at)} />
-                    <InfoCard label="Updated" value={formatSimpleDate(student.updated_at)} />
-                    <InfoCard label="Payment Date" value={formatSimpleDate(student.payment_date)} />
-                    <InfoCard label="PayHere Order" value={student.payhere_order_id ?? "Not available"} mono />
-                  </div>
-                </section>
               </div>
 
-              <aside className="space-y-8">
+              <aside className="space-y-6">
                 <section className="rounded-[2rem] border border-neutral-100 bg-neutral-900 p-8 text-white shadow-2xl">
-                  <h2 className="text-2xl font-black tracking-tight">
-                    Current Row Status
-                  </h2>
-                  <div className="mt-6 space-y-4">
-                    <SidebarLine label="Program" value={student.selected_diploma} />
-                    <SidebarLine label="Registration ID" value={student.registration_id} mono />
-                    <SidebarLine label="Student ID" value={student.student_id ?? "Pending"} mono />
-                    <SidebarLine label="Payment Method" value={formatPaymentMethod(student.payment_method)} />
-                    <SidebarLine label="Payment Status" value={student.payment_status.replaceAll("_", " ")} />
-                    <SidebarLine label="Amount Paid" value={primaryAmount} />
+                  <h2 className="text-2xl font-black tracking-tight">Payment</h2>
+                  <div className="mt-6 grid gap-4">
+                    <SidebarLine label="Amount Paid" value={formatCurrency(student.amount_paid?.toString() ?? 0)} />
+                    <SidebarLine label="Payment Date" value={formatSimpleDate(student.payment_date)} />
+                    <SidebarLine label="PayHere Order" value={student.payhere_order_id ?? "Not available"} mono />
+                    <SidebarLine label="Created" value={formatSimpleDate(student.created_at)} />
+                    <SidebarLine label="Updated" value={formatSimpleDate(student.updated_at)} />
                   </div>
 
-                  <div className="mt-8 grid gap-3">
+                  <div className="mt-6 grid gap-3">
+                    <a
+                      href={receiptHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center rounded-full bg-white px-5 py-4 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:bg-neutral-200"
+                    >
+                      Open Receipt
+                    </a>
+                    <a
+                      href={`${receiptHref}?download=true`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-4 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-white/20"
+                    >
+                      Download Receipt PDF
+                    </a>
+                    {slipHref ? (
+                      <a
+                        href={slipHref}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center justify-center rounded-full border border-indigo-200 bg-indigo-100 px-5 py-4 text-xs font-black uppercase tracking-widest text-indigo-900 transition-all hover:bg-indigo-200"
+                      >
+                        View Slip
+                      </a>
+                    ) : (
+                      <div className="rounded-[1.5rem] border border-white/10 bg-white/5 px-5 py-5 text-sm font-medium text-white/70">
+                        No payment slip uploaded for this row.
+                      </div>
+                    )}
                     <a
                       href={`mailto:${student.email}`}
-                      className="inline-flex items-center justify-center rounded-full bg-white px-5 py-4 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:bg-neutral-200"
+                      className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-4 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-white/20"
                     >
                       Email Student
                     </a>
@@ -288,68 +292,6 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                     </a>
                   </div>
                 </section>
-
-                <section className="rounded-[2rem] border border-neutral-100 bg-white p-8 shadow-sm">
-                  <h2 className="text-2xl font-black tracking-tight text-neutral-900">
-                    Payment Artifacts
-                  </h2>
-                  <div className="mt-6 grid gap-3">
-                    <a
-                      href={receiptHref}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center rounded-full border border-neutral-200 bg-neutral-900 px-5 py-4 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-neutral-800"
-                    >
-                      Open Receipt
-                    </a>
-                    <a
-                      href={`${receiptHref}?download=true`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center rounded-full border border-neutral-200 bg-white px-5 py-4 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900"
-                    >
-                      Download Receipt PDF
-                    </a>
-                    {slipHref ? (
-                      <a
-                        href={slipHref}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center justify-center rounded-full border border-indigo-100 bg-indigo-50 px-5 py-4 text-xs font-black uppercase tracking-widest text-indigo-700 transition-all hover:bg-indigo-100"
-                      >
-                        View Uploaded Slip
-                      </a>
-                    ) : (
-                      <div className="rounded-[1.5rem] border border-dashed border-neutral-200 bg-neutral-50 px-5 py-6 text-center text-sm font-semibold text-neutral-500">
-                        No payment slip is attached to this row.
-                      </div>
-                    )}
-                  </div>
-                </section>
-
-                {otherRecords.length > 0 ? (
-                  <section className="rounded-[2rem] border border-neutral-100 bg-white p-8 shadow-sm">
-                    <h2 className="text-2xl font-black tracking-tight text-neutral-900">
-                      Other Rows In Group
-                    </h2>
-                    <div className="mt-6 space-y-3">
-                      {otherRecords.map((record) => (
-                        <Link
-                          key={record.id}
-                          href={`/cca-admin-area/student/${record.id}`}
-                          className="block rounded-[1.5rem] border border-neutral-100 bg-neutral-50/50 p-5 transition-all hover:border-neutral-900 hover:bg-white"
-                        >
-                          <p className="text-base font-black tracking-tight text-neutral-900">
-                            {record.selected_diploma}
-                          </p>
-                          <p className="mt-2 text-xs font-bold uppercase tracking-widest text-neutral-500">
-                            {record.registration_id}
-                          </p>
-                        </Link>
-                      ))}
-                    </div>
-                  </section>
-                ) : null}
               </aside>
             </div>
           </section>
@@ -390,7 +332,11 @@ function InfoCard({
       <dt className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
         {label}
       </dt>
-      <dd className={`mt-3 text-base font-bold text-neutral-900 ${mono ? "font-mono text-sm" : ""}`}>
+      <dd
+        className={`mt-3 whitespace-pre-wrap text-base font-bold text-neutral-900 ${
+          mono ? "break-all font-mono text-sm" : "break-words"
+        }`}
+      >
         {value}
       </dd>
     </div>
@@ -411,7 +357,11 @@ function SidebarLine({
       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/45">
         {label}
       </p>
-      <p className={`mt-2 text-sm font-bold text-white ${mono ? "font-mono" : ""}`}>
+      <p
+        className={`mt-2 whitespace-pre-wrap text-sm font-bold text-white ${
+          mono ? "break-all font-mono" : "break-words"
+        }`}
+      >
         {value}
       </p>
     </div>
