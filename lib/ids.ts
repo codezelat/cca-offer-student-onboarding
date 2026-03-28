@@ -22,26 +22,3 @@ export async function generateRegistrationId(prisma: PrismaClient) {
 
   throw new Error("Could not generate a unique registration ID.");
 }
-
-export async function generateStudentId(prisma: PrismaClient, at = new Date()) {
-  const year = at.getFullYear();
-  const prefix = `${year}-std-`;
-
-  const latest = await prisma.student.findFirst({
-    where: {
-      student_id: {
-        startsWith: prefix,
-      },
-    },
-    orderBy: {
-      student_id: "desc",
-    },
-    select: {
-      student_id: true,
-    },
-  });
-
-  const current = latest?.student_id?.split("-").at(-1);
-  const nextNumber = current ? Number(current) + 1 : 2101;
-  return `${prefix}${`${nextNumber}`.padStart(4, "0")}`;
-}

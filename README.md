@@ -84,7 +84,7 @@ This repository is maintained by [Codezela Technologies](https://codezela.com) a
   - **PayHere online card payment**
   - **bank transfer with payment-slip upload**
 - View success states and registration confirmations after completion.
-- Generate and access downloadable receipt views.
+- Generate and access downloadable receipt views through signed receipt links or the admin area.
 
 ### 🧑‍💼 Admin capabilities
 
@@ -191,7 +191,7 @@ flowchart LR
 | `/payment/upload-slip` | Bank-transfer slip upload |
 | `/payment/slip-success` | Slip submission success view |
 | `/registration-success` | Success page for non-card completion flow |
-| `/payment/receipt/[id]` | Receipt display page |
+| `/payment/receipt/[id]` | Receipt display page with signed-link or admin access |
 | `/offer-ended` | Deadline-closed state |
 
 ### 🧑‍💼 Admin pages
@@ -293,7 +293,7 @@ flowchart LR
 ### 📌 Important source files
 
 - `lib/config.ts` contains business constants, fee values, bootcamp names, support details, and deadline accessors.
-- `lib/env.ts` defines environment-variable handling and local-development fallbacks.
+- `lib/env.ts` defines environment-variable handling and required runtime configuration.
 - `lib/validation.ts` is the core validation source of truth for registration input.
 - `lib/session.ts` controls encrypted cookie session behavior.
 - `lib/student-service.ts` contains persistence, payment-completion, duplication, and dashboard logic.

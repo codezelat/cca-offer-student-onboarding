@@ -71,7 +71,6 @@ If a fact is not grounded in the codebase, do not put it here.
 - Bootcamp selection is the current domain model. Some names and database fields still say `diploma`; do not rename casually unless doing a deliberate migration across UI, validation, DB, copy, and tests.
 - A user may select up to two bootcamps. Multi-bootcamp persistence creates one student row per bootcamp and may suffix `registration_id` values with `-1`, `-2`, etc. Do not break that behavior accidentally.
 - Registration IDs are generated from `BOOTCAMP_REG_PREFIX` in `lib/config.ts` and must continue matching validation and tests.
-- Student IDs are sequential per calendar year and start at `2101`.
 - Duplicate detection is scoped per bootcamp using normalized NIC, email, and WhatsApp fields.
 - Payment slips are stored as private Vercel Blob objects; changing pathname conventions or auth on `/files/slips/[studentId]` affects admin access and exports.
 - Online payments depend on PayHere hash generation. Treat `lib/payhere.ts` and `app/api/payment/notify/route.ts` as security-sensitive.
@@ -80,7 +79,7 @@ If a fact is not grounded in the codebase, do not put it here.
 ## Source Of Truth
 
 - Business constants and bootcamp lists: `lib/config.ts`
-- Environment fallbacks: `lib/env.ts`
+- Environment handling: `lib/env.ts`
 - Validation rules and user-facing validation copy: `lib/validation.ts`
 - Public marketing and form copy: `lib/content/public.ts`
 - Admin copy: `lib/content/admin.ts`
@@ -88,17 +87,17 @@ If a fact is not grounded in the codebase, do not put it here.
 - Auth gate: `lib/auth.ts`
 - Registration flow helpers: `lib/flow.ts`
 - Student persistence and payment outcomes: `lib/student-service.ts`
-- SQLite Prisma runtime wiring: `lib/db.ts`
+- Postgres Prisma runtime wiring: `lib/db.ts`
 - File storage behavior: `lib/storage.ts`
 
 When changing one of these areas, inspect its downstream callers before editing.
 
 ## Environment And Secrets
 
-- The app has local-development fallbacks for several env vars in `lib/env.ts`. That makes development easy, but do not treat those defaults as production-safe.
+- `lib/env.ts` is strict for operational secrets and required runtime settings. Missing `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `SESSION_SECRET`, `COUNTDOWN_DEADLINE`, or `DATABASE_URL` should fail fast.
+- `APP_URL` falls back to `VERCEL_URL` and then `http://localhost:3000` when not set, so link generation can still work in preview and local environments.
+- SMS settings and PayHere merchant settings are optional at startup, but missing values change runtime behavior: SMS silently skips, and live card payments cannot complete correctly without PayHere credentials.
 - `SESSION_SECRET`, admin credentials, PayHere credentials, SMS credentials, `DATABASE_URL`, `DIRECT_URL`, and `BLOB_READ_WRITE_TOKEN` are operationally sensitive.
-- `APP_URL` affects generated links and callbacks. Keep it aligned with the environment when testing flows.
-- `COUNTDOWN_DEADLINE` changes both user-facing countdown behavior and registration-closed behavior.
 
 ## Database Guidance
 

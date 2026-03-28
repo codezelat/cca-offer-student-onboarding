@@ -12,7 +12,6 @@ datasource db {
 model Student {
   id                  Int       @id @default(autoincrement())
   registration_id     String    @unique
-  student_id          String?   @unique
   full_name           String
   name_with_initials  String
   gender              String

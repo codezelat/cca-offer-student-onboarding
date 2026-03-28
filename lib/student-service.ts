@@ -3,7 +3,6 @@ import { Prisma } from "@/generated/postgres/client";
 import { getWhatsAppGroupLink, REGISTRATION_FEE } from "@/lib/config";
 import { prisma } from "@/lib/db";
 import { env } from "@/lib/env";
-import { generateStudentId } from "@/lib/ids";
 import { getRegistrationGroupWhere } from "@/lib/registration-groups";
 import {
   composeOnlinePaymentSms,
@@ -170,7 +169,6 @@ export async function completeStudyNowPayLater(data: RegistrationData) {
   for (let i = 0; i < data.selected_bootcamps.length; i++) {
     const bootcamp = data.selected_bootcamps[i];
     const suffix = data.selected_bootcamps.length > 1 ? `${i + 1}` : undefined;
-    const studentId = await generateStudentId(prisma);
     const base = registrationToCreateInput(data, bootcamp, suffix);
 
     const regId = base.registration_id;
@@ -178,7 +176,6 @@ export async function completeStudyNowPayLater(data: RegistrationData) {
       where: { registration_id: regId },
       update: {
         ...base,
-        student_id: studentId,
         payment_method: "study_now_pay_later",
         payment_status: "pending_exam_fee",
         amount_paid: new Prisma.Decimal(0),
@@ -186,7 +183,6 @@ export async function completeStudyNowPayLater(data: RegistrationData) {
       },
       create: {
         ...base,
-        student_id: studentId,
         payment_method: "study_now_pay_later",
         payment_status: "pending_exam_fee",
         amount_paid: new Prisma.Decimal(0),
@@ -208,7 +204,6 @@ export async function completeSlipSubmission(
   for (let i = 0; i < data.selected_bootcamps.length; i++) {
     const bootcamp = data.selected_bootcamps[i];
     const suffix = data.selected_bootcamps.length > 1 ? `${i + 1}` : undefined;
-    const studentId = await generateStudentId(prisma);
     const base = registrationToCreateInput(data, bootcamp, suffix);
 
     const regId = base.registration_id;
@@ -216,7 +211,6 @@ export async function completeSlipSubmission(
       where: { registration_id: regId },
       update: {
         ...base,
-        student_id: studentId,
         payment_method: "slip",
         payment_status: "pending",
         payment_slip: filename,
@@ -225,7 +219,6 @@ export async function completeSlipSubmission(
       },
       create: {
         ...base,
-        student_id: studentId,
         payment_method: "slip",
         payment_status: "pending",
         payment_slip: filename,
@@ -261,12 +254,9 @@ export async function completeOnlinePayment(input: {
 
   const results = [];
   for (const student of students) {
-    const studentId = student.student_id ?? (await generateStudentId(prisma));
-
     const updated = await prisma.student.update({
       where: { id: student.id },
       data: {
-        student_id: studentId,
         payment_method: "online",
         payment_status: "completed",
         payhere_order_id: input.orderId,

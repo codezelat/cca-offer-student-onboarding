@@ -161,7 +161,6 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                     <InfoCard label="Postal Code" value={student.postal_code ?? "-"} />
                     <InfoCard label="WhatsApp" value={student.whatsapp_number} />
                     <InfoCard label="Emergency Contact" value={student.home_contact_number} />
-                    <InfoCard label="Student ID" value={student.student_id ?? "Pending"} mono />
                     <InfoCard label="Address" value={student.permanent_address} fullWidth />
                   </dl>
                 </section>

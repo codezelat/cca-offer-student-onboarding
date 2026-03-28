@@ -22,7 +22,6 @@ type EditableStudent = {
   district: string;
   selected_diploma: string;
   registration_id: string;
-  student_id: string;
   payment_method: string;
   payment_status: string;
   amount_paid: string;
@@ -39,7 +38,6 @@ type RelatedRecord = {
   selected_diploma: string;
   payment_status: string;
   payment_method: string;
-  student_id: string | null;
 };
 
 type AdminEditFormProps = {
@@ -272,7 +270,6 @@ export function AdminEditForm({
       <aside className="space-y-6">
         <Section title="Quick info">
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-            <ReadonlyCard label="Student ID" value={student.student_id || "Pending"} mono />
             <ReadonlyCard label="Payment Method" value={student.payment_method} />
             <ReadonlyCard label="Payment Status" value={student.payment_status} />
             <ReadonlyCard

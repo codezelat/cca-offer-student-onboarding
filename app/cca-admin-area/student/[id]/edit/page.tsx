@@ -54,7 +54,6 @@ export default async function AdminEditPage({ params }: Props) {
       selected_diploma: true,
       payment_status: true,
       payment_method: true,
-      student_id: true,
     },
   });
 
@@ -118,7 +117,6 @@ export default async function AdminEditPage({ params }: Props) {
                   district: student.district,
                   selected_diploma: student.selected_diploma,
                   registration_id: student.registration_id,
-                  student_id: student.student_id ?? "",
                   payment_method: formatPaymentMethod(student.payment_method),
                   payment_status: student.payment_status.replaceAll("_", " "),
                   amount_paid: student.amount_paid?.toString() ?? "",
