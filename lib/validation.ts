@@ -120,24 +120,49 @@ export const adminUpdateSchema = z.object({
       nicRegex,
       "Please enter a valid NIC number (e.g., 123456789V or 123456789012).",
     ),
-  date_of_birth: z.string().min(1, "Please enter a valid date of birth."),
-  whatsapp_number: z.string().min(1, "Please enter your WhatsApp number."),
+  date_of_birth: z
+    .string()
+    .min(1, "Please enter a valid date of birth.")
+    .refine((value) => !Number.isNaN(new Date(value).getTime()), {
+      message: "Please enter a valid date of birth.",
+    }),
+  whatsapp_number: z
+    .string()
+    .min(1, "Please enter your WhatsApp number.")
+    .regex(
+      whatsappRegex,
+      "Please enter a valid Sri Lankan mobile number (e.g., 0771234567).",
+    ),
   home_contact_number: z
     .string()
-    .min(1, "Please enter your emergency contact number."),
+    .min(1, "Please enter your emergency contact number.")
+    .regex(
+      homeContactRegex,
+      "Please enter a valid Sri Lankan contact number (e.g., 0112345678).",
+    ),
   email: z
     .string()
     .min(1, "Please enter your email address.")
     .email("Please enter a valid email address."),
   permanent_address: z.string().optional().default(""),
-  postal_code: z.string().optional().default(""),
-  district: z.string().min(1, "Please select your district."),
-  selected_bootcamps: z
-    .array(z.string())
-    .min(1, "Please select at least one bootcamp.")
-    .max(2, "You can select up to two bootcamps only.")
-    .refine((values) => values.every((v) => validBootcampNames.has(v)), {
-      message: "Please select valid bootcamp options.",
+  postal_code: z
+    .string()
+    .optional()
+    .default("")
+    .refine((value) => !value || postalCodeRegex.test(value), {
+      message: "Please enter a valid 5-digit postal code.",
+    }),
+  district: z
+    .string()
+    .min(1, "Please select your district.")
+    .refine((value) => validDistricts.has(value as (typeof districts)[number]), {
+      message: "Please select a valid district.",
+    }),
+  selected_diploma: z
+    .string()
+    .min(1, "Please select a bootcamp.")
+    .refine((value) => validBootcampNames.has(value), {
+      message: "Please select a valid bootcamp.",
     }),
 });
 

@@ -4,6 +4,7 @@ import { getWhatsAppGroupLink, REGISTRATION_FEE } from "@/lib/config";
 import { prisma } from "@/lib/db";
 import { env } from "@/lib/env";
 import { generateStudentId } from "@/lib/ids";
+import { getRegistrationGroupWhere } from "@/lib/registration-groups";
 import {
   composeOnlinePaymentSms,
   composeSlipPaymentSms,
@@ -405,29 +406,66 @@ export async function updateStudentRecord(
     permanent_address?: string;
     postal_code?: string;
     district: string;
-    selected_bootcamps: string[];
+    selected_diploma: string;
   },
 ) {
-  // If editing, we might only want to update ONE specific record's bootcamp or both?
-  // Usually the admin edit is per record (per row). 
-  // So we accept selected_bootcamp (singular) for the actual DB update if it's the admin.
-  // Wait, let's keep it simple for admin: they edit the row's bootcamp.
-  const bootcamp = data.selected_bootcamps[0] ?? "";
-  
-  return prisma.student.update({
+  const existing = await prisma.student.findUnique({
     where: { id },
-    data: {
-      ...data,
-      selected_diploma: bootcamp,
-      nic: data.nic.trim().toUpperCase(),
-      nic_lookup: data.nic.trim().toUpperCase(),
-      email_lookup: data.email.trim().toLowerCase(),
-      whatsapp_lookup: digitsOnly(data.whatsapp_number),
-      date_of_birth: new Date(data.date_of_birth),
-      permanent_address: data.permanent_address ?? "",
-      postal_code: data.postal_code || null,
+    select: {
+      id: true,
+      registration_id: true,
     },
   });
+
+  if (!existing) {
+    throw new Error("STUDENT_NOT_FOUND");
+  }
+
+  const groupWhere = getRegistrationGroupWhere(existing.registration_id);
+  const siblingWithSameBootcamp = await prisma.student.findFirst({
+    where: {
+      ...groupWhere,
+      selected_diploma: data.selected_diploma,
+      NOT: { id },
+    },
+    select: { id: true },
+  });
+
+  if (siblingWithSameBootcamp) {
+    throw new Error("BOOTCAMP_ALREADY_EXISTS_IN_GROUP");
+  }
+
+  const sharedData = {
+    full_name: data.full_name.trim(),
+    name_with_initials: data.name_with_initials.trim(),
+    gender: data.gender,
+    nic: data.nic.trim().toUpperCase(),
+    nic_lookup: data.nic.trim().toUpperCase(),
+    date_of_birth: new Date(data.date_of_birth),
+    whatsapp_number: data.whatsapp_number.trim(),
+    whatsapp_lookup: digitsOnly(data.whatsapp_number),
+    home_contact_number: data.home_contact_number.trim(),
+    email: data.email.trim(),
+    email_lookup: data.email.trim().toLowerCase(),
+    permanent_address: data.permanent_address?.trim() ?? "",
+    postal_code: data.postal_code?.trim() || null,
+    district: data.district,
+  };
+
+  const [, updatedRecord] = await prisma.$transaction([
+    prisma.student.updateMany({
+      where: groupWhere,
+      data: sharedData,
+    }),
+    prisma.student.update({
+      where: { id },
+      data: {
+        selected_diploma: data.selected_diploma,
+      },
+    }),
+  ]);
+
+  return updatedRecord;
 }
 
 export function getPayHereUrls(origin = env.appUrl) {

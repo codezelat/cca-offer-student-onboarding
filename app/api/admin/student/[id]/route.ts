@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@/generated/postgres/client";
 
 import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/db";
@@ -60,6 +61,35 @@ export async function PUT(
     const student = await updateStudentRecord(Number(id), parsed.data);
     return NextResponse.json({ success: true, student });
   } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === "BOOTCAMP_ALREADY_EXISTS_IN_GROUP"
+    ) {
+      return NextResponse.json(
+        {
+          message: "This registration group already contains the selected bootcamp.",
+          errors: { selected_diploma: ["Choose a different bootcamp for this row."] },
+        },
+        { status: 409 },
+      );
+    }
+
+    if (error instanceof Error && error.message === "STUDENT_NOT_FOUND") {
+      return NextResponse.json({ message: "Not found" }, { status: 404 });
+    }
+
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return NextResponse.json(
+        {
+          message: "This update conflicts with another existing student record.",
+        },
+        { status: 409 },
+      );
+    }
+
     console.error(error);
     return NextResponse.json({ message: "Unable to update student." }, { status: 500 });
   }

@@ -26,23 +26,8 @@ type DashboardTableProps = {
   students: DashboardStudent[];
 };
 
-const labelMap: Record<string, string> = {
-  registration_id: "Registration ID",
-  full_name: "Full Name",
-  name_with_initials: "Name with Initials",
-  selected_diploma: "Selected Bootcamp",
-  nic: "NIC",
-  whatsapp_number: "WhatsApp",
-  email: "Email",
-  district: "District",
-  payment_method: "Payment Method",
-  payment_status: "Payment Status",
-  amount_paid: "Amount Paid",
-};
-
 export function DashboardTable({ students }: DashboardTableProps) {
   const router = useRouter();
-  const [viewStudent, setViewStudent] = useState<DashboardStudent | null>(null);
   const [deleteStudent, setDeleteStudent] = useState<DashboardStudent | null>(null);
   const [deleteText, setDeleteText] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -154,17 +139,16 @@ export function DashboardTable({ students }: DashboardTableProps) {
                 </td>
                 <td className="px-6 py-6 text-sm">
                   <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setViewStudent(student)}
+                    <Link
+                      href={`/cca-admin-area/student/${student.id}`}
                       className="group flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white shadow-sm transition-all hover:border-neutral-900 hover:text-neutral-900"
-                      title="View Details"
+                      title="Open Student Record"
                     >
                       <svg className="h-4 w-4 text-neutral-500 group-hover:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
-                    </button>
+                    </Link>
                     <Link
                       href={`/cca-admin-area/student/${student.id}/edit`}
                       className="group flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white shadow-sm transition-all hover:border-neutral-900 hover:text-neutral-900"
@@ -195,38 +179,6 @@ export function DashboardTable({ students }: DashboardTableProps) {
           </tbody>
         </table>
       </div>
-
-      {viewStudent ? (
-        <Modal onClose={() => setViewStudent(null)}>
-          <div className="flex items-center justify-between border-b border-neutral-100 pb-8">
-            <h2 className="text-3xl font-black text-neutral-900 uppercase italic">
-              {adminCopy.dashboard.viewModalTitle}
-            </h2>
-            <button onClick={() => setViewStudent(null)} className="h-10 w-10 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-500 hover:bg-neutral-900 hover:text-white transition-colors">
-              ✕
-            </button>
-          </div>
-          <dl className="mt-10 grid gap-4 sm:grid-cols-2">
-            {Object.entries(viewStudent).map(([key, value]) => {
-              if (!(key in labelMap)) {
-                return null;
-              }
-
-              return (
-                <div
-                  key={key}
-                  className="rounded-[2rem] border-2 border-neutral-100 bg-white p-6 transition-all hover:border-neutral-900"
-                >
-                  <dt className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400 mb-2">
-                    {labelMap[key]}
-                  </dt>
-                  <dd className="text-base font-bold text-neutral-900">{value || "-"}</dd>
-                </div>
-              );
-            })}
-          </dl>
-        </Modal>
-      ) : null}
 
       {deleteStudent ? (
         <Modal onClose={() => setDeleteStudent(null)}>
