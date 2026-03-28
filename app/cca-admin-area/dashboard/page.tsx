@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { SiteHeader } from "@/components/site-header";
+import { AdminHeader } from "@/components/admin/admin-header";
 import { DashboardTable } from "@/components/admin/dashboard-table";
 import { adminCopy } from "@/lib/content/admin";
 import { bootcamps } from "@/lib/config";
@@ -70,14 +70,14 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
   return (
     <div className="page-frame">
       <div className="page-content">
-        <SiteHeader
-          admin
-          title="CCA Management"
+        <AdminHeader
+          title="Dashboard"
+          subtitle="Students, payments, exports"
           action={
             <form action="/api/admin/logout" method="post">
               <button
                 type="submit"
-                className="rounded-xl border border-neutral-200 bg-white px-6 py-2.5 text-sm font-bold text-neutral-900 transition-all hover:bg-neutral-50 active:scale-[0.98]"
+                className="rounded-full border border-neutral-200 bg-white px-5 py-3 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900 hover:bg-neutral-50 active:scale-[0.98]"
               >
                 {adminCopy.dashboard.logout}
               </button>

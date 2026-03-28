@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { AdminHeader } from "@/components/admin/admin-header";
 import { StudentRecordDeleteButton } from "@/components/admin/student-record-delete-button";
-import { SiteHeader } from "@/components/site-header";
 import { requireAdminSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getRegistrationGroupWhere } from "@/lib/registration-groups";
@@ -78,20 +78,14 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
   return (
     <div className="page-frame">
       <div className="page-content">
-        <SiteHeader
-          admin
+        <AdminHeader
           title="Student Record"
+          subtitle={student.registration_id}
           action={
             <div className="flex items-center gap-3">
               <Link
-                href="/cca-admin-area/dashboard"
-                className="rounded-xl border border-neutral-200 bg-white px-6 py-2.5 text-sm font-bold text-neutral-900 transition-all hover:bg-neutral-50 active:scale-[0.98]"
-              >
-                Dashboard
-              </Link>
-              <Link
                 href={`/cca-admin-area/student/${student.id}/edit`}
-                className="rounded-xl bg-neutral-900 px-6 py-2.5 text-sm font-bold text-white transition-all hover:bg-neutral-800 active:scale-[0.98] shadow-lg shadow-neutral-900/10"
+                className="rounded-full bg-neutral-900 px-5 py-3 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-neutral-800 active:scale-[0.98] shadow-lg shadow-neutral-900/10"
               >
                 Edit
               </Link>

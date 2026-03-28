@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { AdminHeader } from "@/components/admin/admin-header";
 import { AdminEditForm } from "@/components/forms/admin-edit-form";
-import { SiteHeader } from "@/components/site-header";
 import { requireAdminSession } from "@/lib/auth";
 import { bootcamps, districts } from "@/lib/config";
 import { prisma } from "@/lib/db";
@@ -60,24 +60,16 @@ export default async function AdminEditPage({ params }: Props) {
   return (
     <div className="page-frame">
       <div className="page-content">
-        <SiteHeader
-          admin
+        <AdminHeader
           title="Edit Record"
+          subtitle={student.registration_id}
           action={
-            <div className="flex items-center gap-3">
-              <Link
-                href={`/cca-admin-area/student/${student.id}`}
-                className="rounded-xl border border-neutral-200 bg-white px-6 py-2.5 text-sm font-bold text-neutral-900 transition-all hover:bg-neutral-50"
-              >
-                View Record
-              </Link>
-              <Link
-                href="/cca-admin-area/dashboard"
-                className="rounded-xl border border-neutral-200 bg-white px-6 py-2.5 text-sm font-bold text-neutral-900 transition-all hover:bg-neutral-50"
-              >
-                Dashboard
-              </Link>
-            </div>
+            <Link
+              href={`/cca-admin-area/student/${student.id}`}
+              className="rounded-full border border-neutral-200 bg-white px-5 py-3 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900 hover:bg-neutral-50"
+            >
+              View Record
+            </Link>
           }
         />
         <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">

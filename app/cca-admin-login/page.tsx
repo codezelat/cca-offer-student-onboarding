@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { SiteHeader } from "@/components/site-header";
+import { AdminHeader } from "@/components/admin/admin-header";
 import { AdminLoginForm } from "@/components/forms/admin-login-form";
 import { adminCopy } from "@/lib/content/admin";
 import { getSession } from "@/lib/session";
@@ -14,7 +14,11 @@ export default async function AdminLoginPage() {
   return (
     <div className="page-frame">
       <div className="page-content">
-        <SiteHeader />
+        <AdminHeader
+          title="Admin Login"
+          subtitle="Authorized access only"
+          homeHref="/cca-admin-login"
+        />
         <main className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-6xl items-center px-4 py-20 sm:px-6 lg:px-8">
           <section className="mx-auto w-full max-w-md overflow-hidden rounded-[2.5rem] border border-neutral-100 bg-white p-12 shadow-premium">
             <div className="flex flex-col items-center">
