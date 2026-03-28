@@ -36,6 +36,29 @@ export function composeStudyNowPayLaterSms(input: SmsTemplateInput) {
   return parts.join(" ");
 }
 
+export function composeWhatsappLinksSms(input: {
+  diplomaNames: string[];
+  links: string[];
+}) {
+  if (input.links.length === 0) {
+    return null;
+  }
+
+  const label = input.diplomaNames.length > 1 ? "programs" : "program";
+  const entries = input.diplomaNames
+    .map((name, index) => {
+      const link = input.links[index];
+      return link ? `${name}: ${link}` : null;
+    })
+    .filter((entry): entry is string => Boolean(entry));
+
+  if (entries.length === 0) {
+    return null;
+  }
+
+  return `WhatsApp group links for your ${label}: ${entries.join(" | ")}`;
+}
+
 export async function sendSms(destination: string, message: string) {
   if (!env.smsApiUrl || !env.smsUsername || !env.smsPassword || !env.smsSource) {
     return { delivered: false, skipped: true };

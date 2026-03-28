@@ -8,6 +8,7 @@ import {
   composeOnlinePaymentSms,
   composeSlipPaymentSms,
   composeStudyNowPayLaterSms,
+  composeWhatsappLinksSms,
   sendSms,
 } from "@/lib/sms";
 import type {
@@ -52,7 +53,14 @@ async function sendOutcomeSms(
   phone: string,
 ) {
   const bootcamps = data.selected_bootcamps.join(" & ");
-  const whatsappLink = getWhatsAppGroupLink(data.selected_bootcamps[0]); // Join the first one or primary
+  const whatsappLinks = data.selected_bootcamps
+    .map((bootcamp) => getWhatsAppGroupLink(bootcamp))
+    .filter((link): link is string => Boolean(link));
+  const shouldSendFollowUpLinksSms =
+    paymentMethod !== "slip" &&
+    data.selected_bootcamps.length > 1 &&
+    whatsappLinks.length > 1;
+  const whatsappLink = shouldSendFollowUpLinksSms ? null : whatsappLinks[0] ?? null;
   const input = {
     studentName: data.full_name,
     diplomaName: bootcamps,
@@ -68,6 +76,17 @@ async function sendOutcomeSms(
         : composeStudyNowPayLaterSms(input);
 
   await sendSms(phone, message);
+
+  if (shouldSendFollowUpLinksSms) {
+    const linksSms = composeWhatsappLinksSms({
+      diplomaNames: data.selected_bootcamps,
+      links: whatsappLinks,
+    });
+
+    if (linksSms) {
+      await sendSms(phone, linksSms);
+    }
+  }
 }
 
 export async function checkScopedDuplicates(data: RegistrationData) {
