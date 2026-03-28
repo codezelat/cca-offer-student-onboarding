@@ -28,6 +28,14 @@ function formatPaymentMethod(value: string | null) {
     .join(" ");
 }
 
+function formatPaymentStatus(paymentMethod: string | null, paymentStatus: string) {
+  if (paymentMethod === "slip") {
+    return paymentStatus === "completed" ? "Slip Approved" : "Slip Pending";
+  }
+
+  return paymentStatus.replaceAll("_", " ");
+}
+
 export default async function AdminEditPage({ params }: Props) {
   await requireAdminSession();
   const { id } = await params;
@@ -110,7 +118,7 @@ export default async function AdminEditPage({ params }: Props) {
                   selected_diploma: student.selected_diploma,
                   registration_id: student.registration_id,
                   payment_method: formatPaymentMethod(student.payment_method),
-                  payment_status: student.payment_status.replaceAll("_", " "),
+                  payment_status: formatPaymentStatus(student.payment_method, student.payment_status),
                   amount_paid: student.amount_paid?.toString() ?? "",
                   payment_date: formatSimpleDate(student.payment_date),
                   payhere_order_id: student.payhere_order_id ?? "",
@@ -120,7 +128,7 @@ export default async function AdminEditPage({ params }: Props) {
                 }}
                 relatedRecords={relatedRecords.map((record) => ({
                   ...record,
-                  payment_status: record.payment_status.replaceAll("_", " "),
+                  payment_status: formatPaymentStatus(record.payment_method, record.payment_status),
                   payment_method: formatPaymentMethod(record.payment_method),
                 }))}
                 districts={districts}

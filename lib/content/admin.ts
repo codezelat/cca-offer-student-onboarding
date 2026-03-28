@@ -35,8 +35,15 @@ export const adminCopy = {
     status: {
       success: "Payment Success",
       pending: "Payment Pending",
+      slipApproved: "Slip Approved",
+      slipPending: "Slip Pending",
       viewSlip: "View Slip",
       noSlip: "No slip",
+    },
+    approve: {
+      action: "Approve Slip",
+      working: "Approving...",
+      error: "Unable to approve this slip right now. Please try again.",
     },
     emptyTitle: "No students found",
     emptyBody: "Try adjusting your search criteria",

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AdminHeader } from "@/components/admin/admin-header";
+import { ApproveSlipButton } from "@/components/admin/approve-slip-button";
 import { StudentRecordDeleteButton } from "@/components/admin/student-record-delete-button";
 import { requireAdminSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -43,6 +44,14 @@ function paymentTone(status: string) {
   }
 
   return "border-amber-100 bg-amber-50 text-amber-700";
+}
+
+function paymentStatusLabel(paymentMethod: string | null, paymentStatus: string) {
+  if (paymentMethod === "slip") {
+    return paymentStatus === "completed" ? "Slip approved" : "Slip pending";
+  }
+
+  return paymentStatus.replaceAll("_", " ");
 }
 
 export default async function AdminStudentDetailPage({ params, searchParams }: Props) {
@@ -122,7 +131,7 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                       student.payment_status,
                     )}`}
                   >
-                    {student.payment_status.replaceAll("_", " ")}
+                    {paymentStatusLabel(student.payment_method, student.payment_status)}
                   </span>
                   <span className="rounded-full border border-neutral-200 bg-neutral-50 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-neutral-700">
                     {formatPaymentMethod(student.payment_method)}
@@ -207,7 +216,7 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                                     : paymentTone(record.payment_status)
                                 }`}
                               >
-                                {record.payment_status.replaceAll("_", " ")}
+                                {paymentStatusLabel(record.payment_method, record.payment_status)}
                               </span>
                               <span
                                 className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
@@ -269,6 +278,11 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                         No payment slip uploaded for this row.
                       </div>
                     )}
+                    {student.payment_method === "slip" &&
+                    student.payment_status === "pending" &&
+                    student.payment_slip ? (
+                      <ApproveSlipButton studentId={student.id} />
+                    ) : null}
                     <a
                       href={`mailto:${student.email}`}
                       className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-5 py-4 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-white/20"

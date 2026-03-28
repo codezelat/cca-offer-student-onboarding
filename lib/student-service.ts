@@ -458,6 +458,48 @@ export async function updateStudentRecord(
   return updatedRecord;
 }
 
+export async function approveSlipPayment(id: number) {
+  const existing = await prisma.student.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      registration_id: true,
+      payment_method: true,
+      payment_status: true,
+      payment_slip: true,
+    },
+  });
+
+  if (!existing) {
+    throw new Error("STUDENT_NOT_FOUND");
+  }
+
+  if (existing.payment_method !== "slip") {
+    throw new Error("SLIP_APPROVAL_NOT_ALLOWED");
+  }
+
+  if (!existing.payment_slip) {
+    throw new Error("SLIP_FILE_REQUIRED");
+  }
+
+  const groupWhere = getRegistrationGroupWhere(existing.registration_id);
+
+  await prisma.student.updateMany({
+    where: {
+      ...groupWhere,
+      payment_method: "slip",
+    },
+    data: {
+      payment_status: "completed",
+    },
+  });
+
+  return prisma.student.findMany({
+    where: groupWhere,
+    orderBy: { registration_id: "asc" },
+  });
+}
+
 export function getPayHereUrls(origin = env.appUrl) {
   return {
     returnUrl: `${origin}/payment/payhere-success`,

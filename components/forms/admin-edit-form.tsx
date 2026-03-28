@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { startTransition, useState } from "react";
 
+import { ApproveSlipButton } from "@/components/admin/approve-slip-button";
 import { StudentRecordDeleteButton } from "@/components/admin/student-record-delete-button";
 import { cn } from "@/lib/utils";
 
@@ -308,6 +309,11 @@ export function AdminEditForm({
               >
                 View Slip
               </a>
+            ) : null}
+            {student.payment_method === "Slip" &&
+            student.payment_status === "Slip Pending" &&
+            student.payment_slip ? (
+              <ApproveSlipButton studentId={student.id} />
             ) : null}
           </div>
         </Section>

@@ -66,6 +66,7 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
   const first = result.total === 0 ? 0 : (result.page - 1) * result.perPage + 1;
   const last = Math.min(result.page * result.perPage, result.total);
   const paginationItems = buildPaginationItems(result.page, result.totalPages);
+  const filtersKey = `${params.search ?? ""}|${params.diploma ?? ""}|${params.payment_method ?? ""}`;
 
   return (
     <div className="page-frame">
@@ -101,7 +102,10 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
                 Student updated successfully.
               </div>
             ) : null}
-            <form className="mt-10 grid gap-5 lg:grid-cols-[1.5fr_1fr_1fr_auto_auto_auto] items-end bg-neutral-50/50 p-6 rounded-3xl border border-neutral-100">
+            <form
+              key={filtersKey}
+              className="mt-10 grid gap-5 lg:grid-cols-[1.5fr_1fr_1fr_auto_auto_auto] items-end rounded-3xl border border-neutral-100 bg-neutral-50/50 p-6"
+            >
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 px-3">Quick Search</label>
                 <input

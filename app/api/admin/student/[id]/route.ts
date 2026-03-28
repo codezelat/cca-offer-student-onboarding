@@ -5,7 +5,7 @@ import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/db";
 import { getRegistrationGroupWhere } from "@/lib/registration-groups";
 import { removeSlipFile } from "@/lib/storage";
-import { updateStudentRecord } from "@/lib/student-service";
+import { approveSlipPayment, updateStudentRecord } from "@/lib/student-service";
 import { adminUpdateSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -92,6 +92,51 @@ export async function PUT(
 
     console.error(error);
     return NextResponse.json({ message: "Unable to update student." }, { status: 500 });
+  }
+}
+
+export async function PATCH(
+  request: Request,
+  context: { params: Promise<{ id: string }> },
+) {
+  if (!(await ensureAdmin())) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await context.params;
+    const body = (await request.json().catch(() => null)) as { action?: string } | null;
+
+    if (body?.action !== "approve-slip") {
+      return NextResponse.json({ message: "Invalid action" }, { status: 422 });
+    }
+
+    const students = await approveSlipPayment(Number(id));
+    return NextResponse.json({ success: true, students });
+  } catch (error) {
+    if (error instanceof Error && error.message === "STUDENT_NOT_FOUND") {
+      return NextResponse.json({ message: "Not found" }, { status: 404 });
+    }
+
+    if (
+      error instanceof Error &&
+      error.message === "SLIP_APPROVAL_NOT_ALLOWED"
+    ) {
+      return NextResponse.json(
+        { message: "Only bank slip payments can be approved from this action." },
+        { status: 409 },
+      );
+    }
+
+    if (error instanceof Error && error.message === "SLIP_FILE_REQUIRED") {
+      return NextResponse.json(
+        { message: "No uploaded slip was found for this registration." },
+        { status: 409 },
+      );
+    }
+
+    console.error(error);
+    return NextResponse.json({ message: "Unable to approve slip." }, { status: 500 });
   }
 }
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { ApproveSlipButton } from "@/components/admin/approve-slip-button";
 import { adminCopy } from "@/lib/content/admin";
 
 type DashboardStudent = {
@@ -139,6 +140,11 @@ export function DashboardTable({ students }: DashboardTableProps) {
                 </td>
                 <td className="px-6 py-6 text-sm">
                   <div className="flex items-center gap-3">
+                    {student.payment_method === "slip" &&
+                    student.payment_status === "pending" &&
+                    student.payment_slip ? (
+                      <ApproveSlipButton studentId={student.id} variant="icon" />
+                    ) : null}
                     <Link
                       href={`/cca-admin-area/student/${student.id}`}
                       className="group flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white shadow-sm transition-all hover:border-neutral-900 hover:text-neutral-900"
