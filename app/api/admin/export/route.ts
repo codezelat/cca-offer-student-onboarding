@@ -79,7 +79,7 @@ export async function GET(request: Request) {
     headers: {
       "Content-Type":
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "Content-Disposition": 'attachment; filename="sitc-students.xlsx"',
+      "Content-Disposition": 'attachment; filename="cca-students.xlsx"',
     },
   });
 }
