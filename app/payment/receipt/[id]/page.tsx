@@ -1,20 +1,22 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+
 import { ReceiptDownloadTrigger } from "@/components/receipt-download-trigger";
 import { prisma } from "@/lib/db";
-import { formatCurrency, formatSimpleDate } from "@/lib/utils";
-import { publicCopy } from "@/lib/content/public";
 import { supportContact } from "@/lib/config";
+import { hasReceiptAccess } from "@/lib/receipt-access";
 import { getRegistrationGroupWhere } from "@/lib/registration-groups";
+import { getSession } from "@/lib/session";
+import { formatSimpleDate } from "@/lib/utils";
 
 type Props = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ download?: string }>;
+  searchParams: Promise<{ download?: string; token?: string }>;
 };
 
 export default async function ReceiptPage({ params, searchParams }: Props) {
   const { id } = await params;
-  const { download } = await searchParams;
+  const { download, token } = await searchParams;
   const studentId = Number(id);
 
   if (!studentId) {
@@ -26,6 +28,17 @@ export default async function ReceiptPage({ params, searchParams }: Props) {
   });
 
   if (!record) {
+    return notFound();
+  }
+
+  const session = await getSession();
+  const allowed = await hasReceiptAccess({
+    registrationId: record.registration_id,
+    token,
+    adminLoggedIn: session.admin_logged_in,
+  });
+
+  if (!allowed) {
     return notFound();
   }
 
@@ -42,7 +55,9 @@ export default async function ReceiptPage({ params, searchParams }: Props) {
     <div className="min-h-screen bg-white p-4 sm:p-8 font-sans text-neutral-900 print:p-0">
       <div className="mx-auto max-w-2xl border border-neutral-200 bg-white p-8 shadow-sm sm:p-12 print:border-none print:shadow-none">
         {download === "true" ? (
-          <ReceiptDownloadTrigger href={`/payment/receipt/${record.id}/download`} />
+          <ReceiptDownloadTrigger
+            href={`/payment/receipt/${record.id}/download?token=${encodeURIComponent(token ?? "")}`}
+          />
         ) : null}
         
         {/* Header */}
@@ -173,7 +188,7 @@ export default async function ReceiptPage({ params, searchParams }: Props) {
             </p>
             <div className="mt-8 flex justify-center no-print">
               <a
-                href={`/payment/receipt/${record.id}/download`}
+                href={`/payment/receipt/${record.id}/download?token=${encodeURIComponent(token ?? "")}`}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-neutral-800 active:scale-[0.98]"

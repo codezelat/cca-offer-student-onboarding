@@ -31,6 +31,15 @@ export function sanitizePathSegment(value: string) {
     .toLowerCase();
 }
 
+export function getSlipRegistrationDirectory(registrationId: string) {
+  const safeRegistrationId = sanitizePathSegment(registrationId) || "registration";
+  return `${SLIP_BLOB_PREFIX}/${safeRegistrationId}`;
+}
+
+export function isSlipPathOwnedByRegistration(pathname: string, registrationId: string) {
+  return pathname.startsWith(`${getSlipRegistrationDirectory(registrationId)}/`);
+}
+
 export function isAllowedSlipFile(input: {
   filename: string;
   size: number;
@@ -59,10 +68,10 @@ export function isAllowedSlipFile(input: {
 
 export function buildSlipBlobPath(registrationId: string, filename: string) {
   const extension = getSlipFileExtension(filename);
-  const safeRegistrationId = sanitizePathSegment(registrationId) || "registration";
+  const registrationDirectory = getSlipRegistrationDirectory(registrationId);
   const safeBaseName =
     sanitizePathSegment(filename.replace(/\.[^.]+$/, "")) || "payment-slip";
   const suffix = typeof crypto !== "undefined" ? crypto.randomUUID() : `${Date.now()}`;
 
-  return `${SLIP_BLOB_PREFIX}/${safeRegistrationId}/${safeBaseName}-${suffix}.${extension}`;
+  return `${registrationDirectory}/${safeBaseName}-${suffix}.${extension}`;
 }

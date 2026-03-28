@@ -56,8 +56,10 @@ export function AdminLoginForm() {
         <input
           type="email"
           value={values.email}
-          placeholder="admin@codezela.com"
           onChange={(event) => setValues((current) => ({ ...current, email: event.target.value }))}
+          autoComplete="username"
+          autoCapitalize="none"
+          autoCorrect="off"
           className="w-full rounded-2xl border-2 border-neutral-100 bg-white px-6 py-4 text-sm font-black text-neutral-900 shadow-sm focus:outline-none focus:border-neutral-900 transition-all"
         />
       </label>

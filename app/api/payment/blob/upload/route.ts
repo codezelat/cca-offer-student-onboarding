@@ -8,6 +8,7 @@ import {
   MAX_SLIP_FILE_SIZE,
   SLIP_BLOB_PREFIX,
   getSlipFileExtension,
+  isSlipPathOwnedByRegistration,
 } from "@/lib/slip-files";
 
 export const runtime = "nodejs";
@@ -24,6 +25,10 @@ export async function POST(request: Request) {
       onBeforeGenerateToken: async (pathname) => {
         if (!pathname.startsWith(`${SLIP_BLOB_PREFIX}/`)) {
           throw new Error("INVALID_SLIP_UPLOAD_PATH");
+        }
+
+        if (!isSlipPathOwnedByRegistration(pathname, registration.registration_id)) {
+          throw new Error("SLIP_REGISTRATION_MISMATCH");
         }
 
         const extension = getSlipFileExtension(pathname);

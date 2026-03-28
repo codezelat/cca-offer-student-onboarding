@@ -1,11 +1,3 @@
-function fallbackValue(key: string, fallback: string) {
-  const value = process.env[key];
-  if (value && value.length > 0) {
-    return value;
-  }
-  return fallback;
-}
-
 function requireValue(key: string) {
   const value = process.env[key];
   if (value && value.length > 0) {
@@ -39,6 +31,7 @@ export const env = {
   adminPassword: requireValue("ADMIN_PASSWORD"),
   countdownDeadline: requireValue("COUNTDOWN_DEADLINE"),
   sessionSecret: requireValue("SESSION_SECRET"),
+  databaseUrl: requireValue("DATABASE_URL"),
   payhereMerchantId: optionalValue("PAYHERE_MERCHANT_ID"),
   payhereMerchantSecret: optionalValue("PAYHERE_MERCHANT_SECRET"),
   payhereSandbox: (process.env.PAYHERE_SANDBOX ?? "true") === "true",

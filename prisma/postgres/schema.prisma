@@ -46,3 +46,16 @@ model Student {
   @@index([payment_status])
   @@index([payhere_order_id])
 }
+
+model AdminLoginAttempt {
+  id         Int      @id @default(autoincrement())
+  email_hash String?
+  ip_hash    String
+  success    Boolean
+  reason     String
+  created_at DateTime @default(now())
+
+  @@index([created_at])
+  @@index([ip_hash, created_at])
+  @@index([email_hash, created_at])
+}

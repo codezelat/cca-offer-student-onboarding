@@ -1,14 +1,18 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+
 import { prisma } from "@/lib/db";
 import { supportContact } from "@/lib/config";
+import { hasReceiptAccess } from "@/lib/receipt-access";
 import { getRegistrationGroupWhere } from "@/lib/registration-groups";
+import { getSession } from "@/lib/session";
 
 export const runtime = "nodejs";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   context: { params: Promise<{ id: string }> },
 ) {
   const { id } = await context.params;
@@ -17,6 +21,18 @@ export async function GET(
   });
 
   if (!student) {
+    return new Response("Not found", { status: 404 });
+  }
+
+  const token = new URL(request.url).searchParams.get("token");
+  const session = await getSession();
+  const allowed = await hasReceiptAccess({
+    registrationId: student.registration_id,
+    token,
+    adminLoggedIn: session.admin_logged_in,
+  });
+
+  if (!allowed) {
     return new Response("Not found", { status: 404 });
   }
 

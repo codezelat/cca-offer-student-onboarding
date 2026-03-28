@@ -2,10 +2,7 @@ import type { PrismaClient } from "@/generated/postgres/client";
 
 import { BOOTCAMP_REG_PREFIX } from "@/lib/config";
 
-export async function generateRegistrationId(
-  prisma: PrismaClient,
-  bootcampNames: string[],
-) {
+export async function generateRegistrationId(prisma: PrismaClient) {
   // We use the same prefix for all bootcamps now
   const prefix = BOOTCAMP_REG_PREFIX;
 

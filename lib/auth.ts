@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 
-import { env } from "@/lib/env";
 import { getSession } from "@/lib/session";
+import { validateAdminCredentials as validateCredentials } from "@/lib/admin-login-security";
 
 export function validateAdminCredentials(email: string, password: string) {
-  return email === env.adminUsername && password === env.adminPassword;
+  return validateCredentials(email, password);
 }
 
 export async function requireAdminSession() {

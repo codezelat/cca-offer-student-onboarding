@@ -10,10 +10,7 @@ describe("ID generators", () => {
       },
     } as never;
 
-    const id = await generateRegistrationId(
-      fakePrisma,
-      ["Software Engineer"],
-    );
+    const id = await generateRegistrationId(fakePrisma);
 
     expect(id).toMatch(/^CCA\/BC\/2026\/03\/\d{8}$/);
   });

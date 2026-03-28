@@ -81,7 +81,7 @@ export function RegisterForm({
       startTransition(() => {
         router.push("/payment/options");
       });
-    } catch (error) {
+    } catch {
       setSubmitting(false);
       toast.error("An unexpected error occurred. Please check your connection.");
     }

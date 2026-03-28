@@ -22,10 +22,7 @@ export default async function RegisterPage({ searchParams }: Props) {
     redirect("/select-bootcamp");
   }
 
-  const registrationId = await generateRegistrationId(
-    prisma,
-    selectedBootcamps,
-  );
+  const registrationId = await generateRegistrationId(prisma);
 
   return (
     <PublicShell>

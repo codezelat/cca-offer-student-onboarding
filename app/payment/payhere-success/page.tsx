@@ -9,6 +9,7 @@ import { RegistrationSessionCleaner } from "@/components/registration-session-cl
 import { supportContact } from "@/lib/config";
 import { publicCopy } from "@/lib/content/public";
 import { prisma } from "@/lib/db";
+import { createReceiptAccessToken } from "@/lib/receipt-access";
 import { getRegistrationGroupWhere } from "@/lib/registration-groups";
 import { getDeadline } from "@/lib/server-config";
 import { getSession } from "@/lib/session";
@@ -35,6 +36,7 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
   }
 
   const completed = student.payment_status === "completed";
+  const receiptToken = await createReceiptAccessToken(student.registration_id);
 
   // Fetch all registered bootcamps for this session
   const allRecords = await prisma.student.findMany({
@@ -255,7 +257,7 @@ export default async function PayHereSuccessPage({ searchParams }: Props) {
                 </div>
                 <div className="mt-12 flex flex-col sm:flex-row gap-4 pt-10 border-t border-neutral-100">
                   <a
-                    href={`/payment/receipt/${student.id}?download=true`}
+                    href={`/payment/receipt/${student.id}?download=true&token=${encodeURIComponent(receiptToken)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="w-full sm:w-auto inline-flex justify-center rounded-xl bg-neutral-900 px-10 py-4 text-sm font-semibold text-white transition-all hover:bg-neutral-800 active:scale-[0.98] shadow-lg shadow-neutral-900/10"

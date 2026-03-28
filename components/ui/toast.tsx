@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import type { ToastEventDetail, ToastType } from "@/lib/toast";
+import type { ToastEventDetail } from "@/lib/toast";
 
 interface ToastItem extends ToastEventDetail {
   id: number;
@@ -36,7 +36,7 @@ export function ToastContainer() {
   );
 }
 
-function ToastItem({ message, type, id }: ToastItem) {
+function ToastItem({ message, type }: ToastItem) {
   const icons = {
     success: (
       <svg className="h-5 w-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

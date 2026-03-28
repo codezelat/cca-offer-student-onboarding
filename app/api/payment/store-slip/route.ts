@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { assertOfferOpen, getRegistrationSessionOrRedirect } from "@/lib/flow";
+import { createReceiptAccessToken } from "@/lib/receipt-access";
 import { completeSlipSubmission } from "@/lib/student-service";
 import { clearRegistrationSession } from "@/lib/session";
 import { validateUploadedSlip } from "@/lib/storage";
@@ -28,14 +29,15 @@ export async function POST(request: Request) {
       );
     }
 
-    const blob = await validateUploadedSlip(payload.data);
+    const blob = await validateUploadedSlip(payload.data, data.registration_id);
     const student = await completeSlipSubmission(data, blob.pathname);
+    const receiptToken = await createReceiptAccessToken(student.registration_id);
     await clearRegistrationSession();
 
     return NextResponse.json(
       {
         success: true,
-        redirectTo: `/payment/slip-success?student=${student.id}`,
+        redirectTo: `/payment/slip-success?student=${student.id}&token=${encodeURIComponent(receiptToken)}`,
       },
       { status: 200 },
     );

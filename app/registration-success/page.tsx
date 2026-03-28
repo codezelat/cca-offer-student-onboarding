@@ -1,17 +1,19 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { PublicShell } from "@/components/public-shell";
 import { publicCopy } from "@/lib/content/public";
 import { prisma } from "@/lib/db";
+import { hasReceiptAccess } from "@/lib/receipt-access";
+import { getSession } from "@/lib/session";
 import { getBootcampWhatsappLink } from "@/lib/student-service";
 
 type Props = {
-  searchParams: Promise<{ student?: string }>;
+  searchParams: Promise<{ student?: string; token?: string }>;
 };
 
 export default async function RegistrationSuccessPage({ searchParams }: Props) {
-  const { student } = await searchParams;
+  const { student, token } = await searchParams;
   const studentId = Number(student);
   if (!studentId) {
     redirect("/");
@@ -20,6 +22,17 @@ export default async function RegistrationSuccessPage({ searchParams }: Props) {
   const record = await prisma.student.findUnique({ where: { id: studentId } });
   if (!record) {
     redirect("/");
+  }
+
+  const session = await getSession();
+  const allowed = await hasReceiptAccess({
+    registrationId: record.registration_id,
+    token,
+    adminLoggedIn: session.admin_logged_in,
+  });
+
+  if (!allowed) {
+    return notFound();
   }
 
   const whatsappLink = getBootcampWhatsappLink(record.selected_diploma);
@@ -111,7 +124,7 @@ export default async function RegistrationSuccessPage({ searchParams }: Props) {
               {publicCopy.genericSuccess.buttons.home}
             </Link>
             <a
-              href={`/payment/receipt/${record.id}?download=true`}
+              href={`/payment/receipt/${record.id}?download=true&token=${encodeURIComponent(token ?? "")}`}
               target="_blank"
               rel="noreferrer"
               className="w-full sm:w-auto inline-flex justify-center rounded-full border-2 border-white/20 bg-transparent px-10 py-5 text-sm font-black uppercase tracking-widest text-white transition-all hover:bg-white/10 active:scale-[0.98]"
