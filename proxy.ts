@@ -7,6 +7,7 @@ const excludedPrefixes = [
   "/cca-admin-login",
   "/cca-admin-area",
   "/files/slips",
+  "/payment/receipt",
 ];
 
 export function proxy(request: NextRequest) {

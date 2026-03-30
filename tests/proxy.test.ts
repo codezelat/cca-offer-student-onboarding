@@ -45,4 +45,18 @@ describe("deadline proxy", () => {
 
     vi.useRealTimers();
   });
+
+  it("allows admin receipt routes after deadline", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2027-01-01T00:00:00Z"));
+
+    const response = proxy(
+      new NextRequest("https://offer.codezela.com/payment/receipt/123"),
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("location")).toBeNull();
+
+    vi.useRealTimers();
+  });
 });
