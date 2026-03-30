@@ -2,7 +2,12 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { getCountdownDeadlineDate } from "@/lib/deadline";
 
-const excludedPrefixes = ["/offer-ended", "/cca-admin-login", "/cca-admin-area"];
+const excludedPrefixes = [
+  "/offer-ended",
+  "/cca-admin-login",
+  "/cca-admin-area",
+  "/files/slips",
+];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -13,7 +18,9 @@ export function proxy(request: NextRequest) {
 
   const deadline = getCountdownDeadlineDate();
   if (!deadline) {
-    console.error("COUNTDOWN_DEADLINE could not be parsed; middleware bypassed.");
+    console.error(
+      "COUNTDOWN_DEADLINE could not be parsed; middleware bypassed.",
+    );
     return NextResponse.next();
   }
 

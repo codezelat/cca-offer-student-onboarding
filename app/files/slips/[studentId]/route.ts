@@ -4,22 +4,41 @@ import { readSlipFile } from "@/lib/storage";
 
 export const runtime = "nodejs";
 
+const privateNoStoreHeaders = {
+  "Cache-Control": "private, no-store, no-cache, must-revalidate",
+  Pragma: "no-cache",
+} as const;
+
 export async function GET(
   _request: Request,
   context: { params: Promise<{ studentId: string }> },
 ) {
   const session = await getSession();
   if (!session.admin_logged_in) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response("Unauthorized", {
+      status: 401,
+      headers: privateNoStoreHeaders,
+    });
   }
 
   const { studentId } = await context.params;
+  const studentIdNumber = Number(studentId);
+  if (!Number.isInteger(studentIdNumber) || studentIdNumber <= 0) {
+    return new Response("Not found", {
+      status: 404,
+      headers: privateNoStoreHeaders,
+    });
+  }
+
   const student = await prisma.student.findUnique({
-    where: { id: Number(studentId) },
+    where: { id: studentIdNumber },
   });
 
   if (!student?.payment_slip) {
-    return new Response("Not found", { status: 404 });
+    return new Response("Not found", {
+      status: 404,
+      headers: privateNoStoreHeaders,
+    });
   }
 
   try {
@@ -29,7 +48,10 @@ export async function GET(
     );
 
     if (!result) {
-      return new Response("Not found", { status: 404 });
+      return new Response("Not found", {
+        status: 404,
+        headers: privateNoStoreHeaders,
+      });
     }
 
     if (result.statusCode === 304) {
@@ -37,7 +59,7 @@ export async function GET(
         status: 304,
         headers: {
           ETag: result.blob.etag,
-          "Cache-Control": "private, no-cache",
+          ...privateNoStoreHeaders,
         },
       });
     }
@@ -48,10 +70,13 @@ export async function GET(
         "Content-Disposition": result.blob.contentDisposition,
         "X-Content-Type-Options": "nosniff",
         ETag: result.blob.etag,
-        "Cache-Control": "private, no-cache",
+        ...privateNoStoreHeaders,
       },
     });
   } catch {
-    return new Response("Not found", { status: 404 });
+    return new Response("Not found", {
+      status: 404,
+      headers: privateNoStoreHeaders,
+    });
   }
 }
