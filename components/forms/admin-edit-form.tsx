@@ -247,24 +247,44 @@ export function AdminEditForm({
           </div>
         ) : null}
 
-        <div className="flex flex-wrap gap-4 border-t border-neutral-100 pt-6">
+        <div className="flex flex-wrap items-center gap-3 border-t border-neutral-100 pt-6">
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-full bg-neutral-900 px-10 py-5 text-sm font-black uppercase tracking-widest text-white transition-all hover:bg-neutral-800 active:scale-[0.98] disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-3.5 text-sm font-black uppercase tracking-widest text-white transition-all hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/10 disabled:opacity-60"
           >
-            {submitting ? "Saving Changes..." : "Save Changes"}
+            {submitting ? (
+              <>
+                <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Saving...
+              </>
+            ) : (
+              <>
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                </svg>
+                Save Changes
+              </>
+            )}
           </button>
           <Link
             href={`/cca-admin-area/student/${student.id}`}
-            className="rounded-full border-2 border-neutral-200 bg-white px-10 py-5 text-sm font-black uppercase tracking-widest text-neutral-900 transition-all hover:bg-neutral-50 active:scale-[0.98]"
+            className="inline-flex items-center gap-2 rounded-xl border-2 border-neutral-200 bg-white px-6 py-3.5 text-sm font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900 hover:bg-neutral-50"
           >
-            Back To Record
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Cancel
           </Link>
-          <StudentRecordDeleteButton
-            studentId={student.id}
-            studentName={student.full_name}
-          />
+          <div className="ml-auto">
+            <StudentRecordDeleteButton
+              studentId={student.id}
+              studentName={student.full_name}
+            />
+          </div>
         </div>
       </div>
 
@@ -285,35 +305,64 @@ export function AdminEditForm({
             <ReadonlyCard label="Updated" value={student.updated_at} />
           </div>
 
-          <div className="mt-6 grid gap-3">
-            <a
-              href={`/cca-admin-area/student/${student.id}`}
-              className="inline-flex items-center justify-center rounded-full border border-neutral-200 bg-white px-5 py-4 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900"
-            >
-              Open Record
-            </a>
-            <a
-              href={`/payment/receipt/${student.id}`}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full border border-neutral-200 bg-neutral-900 px-5 py-4 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-neutral-800"
-            >
-              Open Receipt
-            </a>
-            {student.payment_slip ? (
+          <div className="mt-6 space-y-3">
+            <div className="grid grid-cols-2 gap-3">
               <a
-                href={`/files/slips/${student.id}`}
+                href={`/cca-admin-area/student/${student.id}`}
+                className="group inline-flex items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3.5 text-[11px] font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900 hover:bg-neutral-50"
+              >
+                <svg className="h-4 w-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                View Record
+              </a>
+              <a
+                href={`/payment/receipt/${student.id}`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-indigo-100 bg-indigo-50 px-5 py-4 text-xs font-black uppercase tracking-widest text-indigo-700 transition-all hover:bg-indigo-100"
+                className="group inline-flex items-center justify-center gap-2 rounded-xl border-2 border-neutral-200 bg-neutral-900 px-4 py-3.5 text-[11px] font-black uppercase tracking-widest text-white transition-all hover:bg-neutral-800"
               >
-                View Slip
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Receipt
               </a>
-            ) : null}
-            {student.payment_method === "Slip" &&
-            student.payment_status === "Slip Pending" &&
-            student.payment_slip ? (
-              <ApproveSlipButton studentId={student.id} />
+            </div>
+
+            {student.payment_slip ? (
+              <div className="rounded-2xl border border-indigo-100 bg-indigo-50/50 p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-100">
+                      <svg className="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-indigo-600">Payment Slip</p>
+                      <p className="text-xs font-medium text-indigo-500">Uploaded</p>
+                    </div>
+                  </div>
+                  <a
+                    href={`/files/slips/${student.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-100 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-indigo-700 transition-all hover:bg-indigo-200"
+                  >
+                    View
+                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+                {student.payment_method === "Slip" &&
+                student.payment_status === "Slip Pending" ? (
+                  <div className="mt-3 border-t border-indigo-200 pt-3">
+                    <ApproveSlipButton studentId={student.id} />
+                  </div>
+                ) : null}
+              </div>
             ) : null}
           </div>
         </Section>

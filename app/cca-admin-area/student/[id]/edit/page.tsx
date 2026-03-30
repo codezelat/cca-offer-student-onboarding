@@ -87,7 +87,7 @@ export default async function AdminEditPage({ params }: Props) {
                 {student.registration_id}
               </p>
               <h1 className="mt-4 text-4xl font-black tracking-tight text-neutral-900 sm:text-5xl">
-                Edit {student.full_name}
+                Edit: {student.full_name}
               </h1>
               <p className="mt-3 text-base font-medium text-neutral-500">
                 Update student details and the current program row.
