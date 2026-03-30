@@ -46,7 +46,10 @@ function paymentTone(status: string) {
   return "border-amber-100 bg-amber-50 text-amber-700";
 }
 
-function paymentStatusLabel(paymentMethod: string | null, paymentStatus: string) {
+function paymentStatusLabel(
+  paymentMethod: string | null,
+  paymentStatus: string,
+) {
   if (paymentMethod === "slip") {
     return paymentStatus === "completed" ? "Slip approved" : "Slip pending";
   }
@@ -54,7 +57,10 @@ function paymentStatusLabel(paymentMethod: string | null, paymentStatus: string)
   return paymentStatus.replaceAll("_", " ");
 }
 
-export default async function AdminStudentDetailPage({ params, searchParams }: Props) {
+export default async function AdminStudentDetailPage({
+  params,
+  searchParams,
+}: Props) {
   await requireAdminSession();
   const { id } = await params;
   const { updated } = await searchParams;
@@ -81,7 +87,10 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
   const slipHref = student.payment_slip ? `/files/slips/${student.id}` : null;
   const whatsappHref = `https://wa.me/94${digitsOnly(student.whatsapp_number).replace(/^0/, "")}`;
   const totalAmount = formatCurrency(
-    relatedRecords.reduce((sum, record) => sum + Number(record.amount_paid ?? 0), 0),
+    relatedRecords.reduce(
+      (sum, record) => sum + Number(record.amount_paid ?? 0),
+      0,
+    ),
   );
 
   return (
@@ -114,7 +123,7 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
               </div>
             ) : null}
 
-            <div className="flex flex-col gap-8 border-b border-neutral-100 pb-10 lg:flex-row lg:items-end lg:justify-between">
+            <div className="flex min-w-0 flex-col gap-8 border-b border-neutral-100 pb-10 lg:flex-row lg:items-end lg:justify-between">
               <div className="min-w-0">
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
                   {student.registration_id}
@@ -131,7 +140,10 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                       student.payment_status,
                     )}`}
                   >
-                    {paymentStatusLabel(student.payment_method, student.payment_status)}
+                    {paymentStatusLabel(
+                      student.payment_method,
+                      student.payment_status,
+                    )}
                   </span>
                   <span className="rounded-full border border-neutral-200 bg-neutral-50 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-neutral-700">
                     {formatPaymentMethod(student.payment_method)}
@@ -142,9 +154,15 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                 </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-3">
-                <MetricCard label="Programs" value={`${relatedRecords.length}`} />
-                <MetricCard label="Paid" value={formatCurrency(student.amount_paid?.toString() ?? 0)} />
+              <div className="grid min-w-0 gap-4 sm:grid-cols-3">
+                <MetricCard
+                  label="Programs"
+                  value={`${relatedRecords.length}`}
+                />
+                <MetricCard
+                  label="Paid"
+                  value={formatCurrency(student.amount_paid?.toString() ?? 0)}
+                />
                 <MetricCard label="Group total" value={totalAmount} />
               </div>
             </div>
@@ -156,15 +174,34 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                     Student details
                   </h2>
                   <dl className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                    <InfoCard label="Name With Initials" value={student.name_with_initials} />
+                    <InfoCard
+                      label="Name With Initials"
+                      value={student.name_with_initials}
+                    />
                     <InfoCard label="NIC" value={student.nic} mono />
-                    <InfoCard label="Date of Birth" value={formatBirthDate(student.date_of_birth)} />
+                    <InfoCard
+                      label="Date of Birth"
+                      value={formatBirthDate(student.date_of_birth)}
+                    />
                     <InfoCard label="Gender" value={student.gender} />
                     <InfoCard label="District" value={student.district} />
-                    <InfoCard label="Postal Code" value={student.postal_code ?? "-"} />
-                    <InfoCard label="WhatsApp" value={student.whatsapp_number} />
-                    <InfoCard label="Emergency Contact" value={student.home_contact_number} />
-                    <InfoCard label="Address" value={student.permanent_address} fullWidth />
+                    <InfoCard
+                      label="Postal Code"
+                      value={student.postal_code ?? "-"}
+                    />
+                    <InfoCard
+                      label="WhatsApp"
+                      value={student.whatsapp_number}
+                    />
+                    <InfoCard
+                      label="Emergency Contact"
+                      value={student.home_contact_number}
+                    />
+                    <InfoCard
+                      label="Address"
+                      value={student.permanent_address}
+                      fullWidth
+                    />
                   </dl>
                 </section>
 
@@ -202,7 +239,9 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                               </p>
                               <p
                                 className={`mt-2 break-all text-xs font-bold uppercase tracking-widest ${
-                                  isCurrent ? "text-white/65" : "text-neutral-500"
+                                  isCurrent
+                                    ? "text-white/65"
+                                    : "text-neutral-500"
                                 }`}
                               >
                                 {record.registration_id}
@@ -216,7 +255,10 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
                                     : paymentTone(record.payment_status)
                                 }`}
                               >
-                                {paymentStatusLabel(record.payment_method, record.payment_status)}
+                                {paymentStatusLabel(
+                                  record.payment_method,
+                                  record.payment_status,
+                                )}
                               </span>
                               <span
                                 className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
@@ -238,13 +280,33 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
 
               <aside className="space-y-6">
                 <section className="rounded-[2rem] border border-neutral-100 bg-neutral-900 p-8 text-white shadow-2xl">
-                  <h2 className="text-2xl font-black tracking-tight">Payment</h2>
+                  <h2 className="text-2xl font-black tracking-tight">
+                    Payment
+                  </h2>
                   <div className="mt-6 grid gap-4">
-                    <SidebarLine label="Amount Paid" value={formatCurrency(student.amount_paid?.toString() ?? 0)} />
-                    <SidebarLine label="Payment Date" value={formatSimpleDate(student.payment_date)} />
-                    <SidebarLine label="PayHere Order" value={student.payhere_order_id ?? "Not available"} mono />
-                    <SidebarLine label="Created" value={formatSimpleDate(student.created_at)} />
-                    <SidebarLine label="Updated" value={formatSimpleDate(student.updated_at)} />
+                    <SidebarLine
+                      label="Amount Paid"
+                      value={formatCurrency(
+                        student.amount_paid?.toString() ?? 0,
+                      )}
+                    />
+                    <SidebarLine
+                      label="Payment Date"
+                      value={formatSimpleDate(student.payment_date)}
+                    />
+                    <SidebarLine
+                      label="PayHere Order"
+                      value={student.payhere_order_id ?? "Not available"}
+                      mono
+                    />
+                    <SidebarLine
+                      label="Created"
+                      value={formatSimpleDate(student.created_at)}
+                    />
+                    <SidebarLine
+                      label="Updated"
+                      value={formatSimpleDate(student.updated_at)}
+                    />
                   </div>
 
                   <div className="mt-6 grid gap-3">
@@ -310,11 +372,11 @@ export default async function AdminStudentDetailPage({ params, searchParams }: P
 
 function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[1.5rem] border border-neutral-100 bg-neutral-50/50 p-5">
+    <div className="min-w-0 rounded-[1.5rem] border border-neutral-100 bg-neutral-50/50 p-5">
       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
         {label}
       </p>
-      <p className="mt-3 text-2xl font-black tracking-tight text-neutral-900">
+      <p className="mt-3 break-words text-2xl font-black tracking-tight text-neutral-900">
         {value}
       </p>
     </div>
