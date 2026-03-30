@@ -59,11 +59,3 @@ export function extractLastName(fullName: string) {
 export function digitsOnly(value: string) {
   return value.replace(/\D/g, "");
 }
-
-export function notEmpty<T>(value: T | null | undefined): value is T {
-  return value !== null && value !== undefined;
-}
-
-export function absoluteUrl(pathname: string) {
-  return new URL(pathname, process.env.APP_URL ?? "http://localhost:3000").toString();
-}

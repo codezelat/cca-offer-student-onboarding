@@ -33,13 +33,4 @@ export function generatePayHereNotifyHash(input: {
   );
 }
 
-export function isValidPayHereNotifySignature(input: {
-  merchant_id: string;
-  order_id: string;
-  payhere_amount: string;
-  payhere_currency: string;
-  status_code: string;
-  md5sig: string;
-}) {
-  return generatePayHereNotifyHash(input) === input.md5sig.toUpperCase();
-}
+

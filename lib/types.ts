@@ -19,19 +19,6 @@ export type RegistrationData = {
   selected_bootcamps: string[];
 };
 
-export type BootcampConfig = {
-  name: string;
-  reg_prefix: string;
-  course_link?: string;
-};
-
-export type BankAccount = {
-  bank: string;
-  accountNumber: string;
-  accountName: string;
-  branch: string;
-};
-
 export type SessionPayload = {
   registration_data?: RegistrationData;
   registration_id?: string;
