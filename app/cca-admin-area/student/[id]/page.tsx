@@ -86,12 +86,6 @@ export default async function AdminStudentDetailPage({
   const receiptHref = `/payment/receipt/${student.id}`;
   const slipHref = student.payment_slip ? `/files/slips/${student.id}` : null;
   const whatsappHref = `https://wa.me/94${digitsOnly(student.whatsapp_number).replace(/^0/, "")}`;
-  const totalAmount = formatCurrency(
-    relatedRecords.reduce(
-      (sum, record) => sum + Number(record.amount_paid ?? 0),
-      0,
-    ),
-  );
 
   return (
     <div className="page-frame">
@@ -152,18 +146,19 @@ export default async function AdminStudentDetailPage({
                     {student.selected_diploma}
                   </span>
                 </div>
-              </div>
 
-              <div className="grid min-w-0 gap-4 sm:grid-cols-3">
-                <MetricCard
-                  label="Programs"
-                  value={`${relatedRecords.length}`}
-                />
-                <MetricCard
-                  label="Paid"
-                  value={formatCurrency(student.amount_paid?.toString() ?? 0)}
-                />
-                <MetricCard label="Group total" value={totalAmount} />
+                <div className="mt-6 flex flex-wrap items-center gap-4">
+                  <StatPill
+                    label="Programs"
+                    value={`${relatedRecords.length}`}
+                    tone="neutral"
+                  />
+                  <StatPill
+                    label="Paid"
+                    value={formatCurrency(student.amount_paid?.toString() ?? 0)}
+                    tone="success"
+                  />
+                </div>
               </div>
             </div>
 
@@ -470,15 +465,28 @@ export default async function AdminStudentDetailPage({
   );
 }
 
-function MetricCard({ label, value }: { label: string; value: string }) {
+function StatPill({
+  label,
+  value,
+  tone = "neutral",
+}: {
+  label: string;
+  value: string;
+  tone?: "neutral" | "success";
+}) {
+  const toneStyles =
+    tone === "success"
+      ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+      : "bg-neutral-50 text-neutral-700 border-neutral-100";
+
   return (
-    <div className="min-w-0 rounded-[1.5rem] border border-neutral-100 bg-neutral-50/50 p-5">
-      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400">
+    <div
+      className={`inline-flex items-center gap-3 rounded-full border px-4 py-2.5 ${toneStyles}`}
+    >
+      <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
         {label}
-      </p>
-      <p className="mt-3 break-words text-2xl font-black tracking-tight text-neutral-900">
-        {value}
-      </p>
+      </span>
+      <span className="text-sm font-black tracking-tight">{value}</span>
     </div>
   );
 }
@@ -522,13 +530,13 @@ function SidebarLine({
   mono?: boolean;
 }) {
   return (
-    <div className="rounded-[1.25rem] border border-white/10 bg-white/5 px-4 py-4">
+    <div className="flex min-w-0 flex-col justify-between rounded-[1.25rem] border border-white/10 bg-white/5 px-4 py-4">
       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/45">
         {label}
       </p>
       <p
-        className={`mt-2 whitespace-pre-wrap text-sm font-bold text-white ${
-          mono ? "break-all font-mono" : "break-words"
+        className={`mt-1 break-words text-sm font-bold leading-tight text-white ${
+          mono ? "break-all font-mono text-xs" : ""
         }`}
       >
         {value}
