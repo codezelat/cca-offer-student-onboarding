@@ -31,9 +31,9 @@ export function ApproveSlipButton({
         body: JSON.stringify({ action: "approve-slip" }),
       });
 
-      const payload = (await response.json().catch(() => null)) as
-        | { message?: string }
-        | null;
+      const payload = (await response.json().catch(() => null)) as {
+        message?: string;
+      } | null;
 
       if (!response.ok) {
         throw new Error(payload?.message ?? adminCopy.dashboard.approve.error);
@@ -59,7 +59,11 @@ export function ApproveSlipButton({
           disabled={submitting}
           onClick={() => void handleApprove()}
           className="group flex h-9 w-9 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 shadow-sm transition-all hover:bg-emerald-600 hover:text-white disabled:opacity-50"
-          title={submitting ? adminCopy.dashboard.approve.working : adminCopy.dashboard.approve.action}
+          title={
+            submitting
+              ? adminCopy.dashboard.approve.working
+              : adminCopy.dashboard.approve.action
+          }
         >
           <svg
             className="h-4 w-4 text-emerald-600 group-hover:text-white"
@@ -67,25 +71,49 @@ export function ApproveSlipButton({
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2.5"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         </button>
-        {error ? <p className="mt-2 text-xs font-semibold text-rose-600">{error}</p> : null}
+        {error ? (
+          <p className="mt-2 text-xs font-semibold text-rose-600">{error}</p>
+        ) : null}
       </>
     );
   }
 
   return (
-    <div className="grid gap-3">
+    <>
       <button
         type="button"
         disabled={submitting}
         onClick={() => void handleApprove()}
-        className="inline-flex items-center justify-center rounded-full border border-emerald-200 bg-emerald-500 px-5 py-4 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-emerald-600 disabled:opacity-50"
+        className="group flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 text-[11px] font-black uppercase tracking-widest text-white transition-all hover:bg-emerald-400 disabled:opacity-50 shadow-lg shadow-emerald-500/20"
       >
-        {submitting ? adminCopy.dashboard.approve.working : adminCopy.dashboard.approve.action}
+        <svg
+          className="h-4 w-4 transition-transform group-hover:scale-110"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2.5"
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+        {submitting
+          ? adminCopy.dashboard.approve.working
+          : adminCopy.dashboard.approve.action}
       </button>
-      {error ? <p className="text-xs font-semibold text-rose-600">{error}</p> : null}
-    </div>
+      {error ? (
+        <p className="text-xs font-semibold text-rose-400">{error}</p>
+      ) : null}
+    </>
   );
 }
