@@ -74,7 +74,9 @@ export function AdminEditForm({
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const siblingRecords = relatedRecords.filter((record) => record.id !== student.id);
+  const siblingRecords = relatedRecords.filter(
+    (record) => record.id !== student.id,
+  );
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -90,9 +92,10 @@ export function AdminEditForm({
       body: JSON.stringify(values),
     });
 
-    const payload = (await response.json().catch(() => null)) as
-      | { message?: string; errors?: FieldErrors }
-      | null;
+    const payload = (await response.json().catch(() => null)) as {
+      message?: string;
+      errors?: FieldErrors;
+    } | null;
 
     if (!response.ok) {
       setFieldErrors(payload?.errors ?? {});
@@ -107,12 +110,18 @@ export function AdminEditForm({
     });
   }
 
-  function update<K extends keyof typeof values>(name: K, value: (typeof values)[K]) {
+  function update<K extends keyof typeof values>(
+    name: K,
+    value: (typeof values)[K],
+  ) {
     setValues((current) => ({ ...current, [name]: value }));
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-6 xl:grid-cols-[1.3fr_0.85fr]">
+    <form
+      onSubmit={handleSubmit}
+      className="grid gap-6 xl:grid-cols-[1.3fr_0.85fr]"
+    >
       <div className="space-y-6">
         <Section title="Student details">
           <div className="grid gap-5 sm:grid-cols-2">
@@ -123,28 +132,40 @@ export function AdminEditForm({
                 className={inputClass(fieldErrors.full_name?.[0])}
               />
             </Field>
-            <Field label="Name With Initials *" error={fieldErrors.name_with_initials?.[0]}>
+            <Field
+              label="Name With Initials *"
+              error={fieldErrors.name_with_initials?.[0]}
+            >
               <input
                 value={values.name_with_initials}
-                onChange={(event) => update("name_with_initials", event.target.value)}
+                onChange={(event) =>
+                  update("name_with_initials", event.target.value)
+                }
                 className={inputClass(fieldErrors.name_with_initials?.[0])}
               />
             </Field>
             <Field label="Gender *" error={fieldErrors.gender?.[0]}>
               <select
                 value={values.gender}
-                onChange={(event) => update("gender", event.target.value as "male" | "female")}
+                onChange={(event) =>
+                  update("gender", event.target.value as "male" | "female")
+                }
                 className={selectClass(fieldErrors.gender?.[0])}
               >
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </select>
             </Field>
-            <Field label="Date of Birth *" error={fieldErrors.date_of_birth?.[0]}>
+            <Field
+              label="Date of Birth *"
+              error={fieldErrors.date_of_birth?.[0]}
+            >
               <input
                 type="date"
                 value={values.date_of_birth}
-                onChange={(event) => update("date_of_birth", event.target.value)}
+                onChange={(event) =>
+                  update("date_of_birth", event.target.value)
+                }
                 className={inputClass(fieldErrors.date_of_birth?.[0])}
               />
             </Field>
@@ -163,10 +184,15 @@ export function AdminEditForm({
                 className={inputClass(fieldErrors.email?.[0])}
               />
             </Field>
-            <Field label="WhatsApp Number *" error={fieldErrors.whatsapp_number?.[0]}>
+            <Field
+              label="WhatsApp Number *"
+              error={fieldErrors.whatsapp_number?.[0]}
+            >
               <input
                 value={values.whatsapp_number}
-                onChange={(event) => update("whatsapp_number", event.target.value)}
+                onChange={(event) =>
+                  update("whatsapp_number", event.target.value)
+                }
                 className={inputClass(fieldErrors.whatsapp_number?.[0])}
               />
             </Field>
@@ -176,7 +202,9 @@ export function AdminEditForm({
             >
               <input
                 value={values.home_contact_number}
-                onChange={(event) => update("home_contact_number", event.target.value)}
+                onChange={(event) =>
+                  update("home_contact_number", event.target.value)
+                }
                 className={inputClass(fieldErrors.home_contact_number?.[0])}
               />
             </Field>
@@ -208,7 +236,9 @@ export function AdminEditForm({
             >
               <textarea
                 value={values.permanent_address}
-                onChange={(event) => update("permanent_address", event.target.value)}
+                onChange={(event) =>
+                  update("permanent_address", event.target.value)
+                }
                 rows={5}
                 className={inputClass(fieldErrors.permanent_address?.[0])}
               />
@@ -218,10 +248,15 @@ export function AdminEditForm({
 
         <Section title="This program">
           <div className="grid gap-5 sm:grid-cols-2">
-            <Field label="Selected Bootcamp *" error={fieldErrors.selected_diploma?.[0]}>
+            <Field
+              label="Selected Bootcamp *"
+              error={fieldErrors.selected_diploma?.[0]}
+            >
               <select
                 value={values.selected_diploma}
-                onChange={(event) => update("selected_diploma", event.target.value)}
+                onChange={(event) =>
+                  update("selected_diploma", event.target.value)
+                }
                 className={selectClass(fieldErrors.selected_diploma?.[0])}
               >
                 <option value="">Select a bootcamp</option>
@@ -232,11 +267,16 @@ export function AdminEditForm({
                 ))}
               </select>
             </Field>
-            <ReadonlyCard label="Registration ID" value={student.registration_id} mono />
+            <ReadonlyCard
+              label="Registration ID"
+              value={student.registration_id}
+              mono
+            />
           </div>
           {siblingRecords.length > 0 ? (
             <p className="mt-5 text-sm font-medium text-neutral-500">
-              This row cannot use a bootcamp already selected in this registration.
+              This row cannot use a bootcamp already selected in this
+              registration.
             </p>
           ) : null}
         </Section>
@@ -247,24 +287,49 @@ export function AdminEditForm({
           </div>
         ) : null}
 
-        <div className="flex flex-wrap items-center gap-3 border-t border-neutral-100 pt-6">
+        <div className="grid gap-3 border-t border-neutral-100 pt-6 sm:flex sm:flex-wrap sm:items-center">
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-3.5 text-sm font-black uppercase tracking-widest text-white transition-all hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/10 disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 px-6 py-3.5 text-sm font-black uppercase tracking-widest text-white transition-all hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/10 disabled:opacity-60 sm:w-auto"
           >
             {submitting ? (
               <>
-                <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                <svg
+                  className="h-4 w-4 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
                 </svg>
                 Saving...
               </>
             ) : (
               <>
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2.5"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
                 Save Changes
               </>
@@ -272,14 +337,24 @@ export function AdminEditForm({
           </button>
           <Link
             href={`/cca-admin-area/student/${student.id}`}
-            className="inline-flex items-center gap-2 rounded-xl border-2 border-neutral-200 bg-white px-6 py-3.5 text-sm font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900 hover:bg-neutral-50"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-neutral-200 bg-white px-6 py-3.5 text-sm font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900 hover:bg-neutral-50 sm:w-auto"
           >
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
-            Cancel
+            Back
           </Link>
-          <div className="ml-auto">
+          <div className="sm:ml-auto">
             <StudentRecordDeleteButton
               studentId={student.id}
               studentName={student.full_name}
@@ -291,8 +366,14 @@ export function AdminEditForm({
       <aside className="space-y-6">
         <Section title="Quick info">
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-            <ReadonlyCard label="Payment Method" value={student.payment_method} />
-            <ReadonlyCard label="Payment Status" value={student.payment_status} />
+            <ReadonlyCard
+              label="Payment Method"
+              value={student.payment_method}
+            />
+            <ReadonlyCard
+              label="Payment Status"
+              value={student.payment_status}
+            />
             <ReadonlyCard
               label="Amount Paid"
               value={
@@ -305,28 +386,53 @@ export function AdminEditForm({
             <ReadonlyCard label="Updated" value={student.updated_at} />
           </div>
 
-          <div className="mt-6 space-y-3">
+          <div className="mt-6 space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <a
                 href={`/cca-admin-area/student/${student.id}`}
-                className="group inline-flex items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-3.5 text-[11px] font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900 hover:bg-neutral-50"
+                className="group inline-flex items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-white px-4 py-3.5 text-[11px] font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900 hover:bg-neutral-50"
               >
-                <svg className="h-4 w-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                <svg
+                  className="h-4 w-4 transition-transform group-hover:scale-110"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
                 </svg>
-                View Record
+                View
               </a>
               <a
-                href={`/payment/receipt/${student.id}`}
+                href={`/payment/receipt/${student.id}?download=true`}
                 target="_blank"
                 rel="noreferrer"
-                className="group inline-flex items-center justify-center gap-2 rounded-xl border-2 border-neutral-200 bg-neutral-900 px-4 py-3.5 text-[11px] font-black uppercase tracking-widest text-white transition-all hover:bg-neutral-800"
+                className="group inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-neutral-200 bg-neutral-900 px-4 py-3.5 text-[11px] font-black uppercase tracking-widest text-white transition-all hover:bg-neutral-800"
               >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
                 </svg>
-                Receipt
+                PDF
               </a>
             </div>
 
@@ -335,13 +441,27 @@ export function AdminEditForm({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-100">
-                      <svg className="h-4 w-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      <svg
+                        className="h-4 w-4 text-indigo-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-indigo-600">Payment Slip</p>
-                      <p className="text-xs font-medium text-indigo-500">Uploaded</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-indigo-600">
+                        Payment Slip
+                      </p>
+                      <p className="text-xs font-medium text-indigo-500">
+                        Uploaded
+                      </p>
                     </div>
                   </div>
                   <a
@@ -351,8 +471,18 @@ export function AdminEditForm({
                     className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-100 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-indigo-700 transition-all hover:bg-indigo-200"
                   >
                     View
-                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    <svg
+                      className="h-3 w-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
                     </svg>
                   </a>
                 </div>
@@ -395,14 +525,18 @@ export function AdminEditForm({
                 </div>
                 <p
                   className={`mt-2 break-all text-xs font-bold uppercase tracking-widest ${
-                    record.id === student.id ? "text-white/65" : "text-neutral-500"
+                    record.id === student.id
+                      ? "text-white/65"
+                      : "text-neutral-500"
                   }`}
                 >
                   {record.registration_id}
                 </p>
                 <p
                   className={`mt-2 text-sm font-medium ${
-                    record.id === student.id ? "text-white/80" : "text-neutral-600"
+                    record.id === student.id
+                      ? "text-white/80"
+                      : "text-neutral-600"
                   }`}
                 >
                   {record.payment_method} • {record.payment_status}
@@ -425,7 +559,9 @@ function Section({
 }) {
   return (
     <section className="rounded-[2rem] border border-neutral-100 bg-neutral-50/40 p-8">
-      <h2 className="text-2xl font-black tracking-tight text-neutral-900">{title}</h2>
+      <h2 className="text-2xl font-black tracking-tight text-neutral-900">
+        {title}
+      </h2>
       <div className="mt-6">{children}</div>
     </section>
   );
@@ -449,7 +585,9 @@ function Field({
       </span>
       {children}
       {error ? (
-        <span className="mt-2 block text-xs font-bold text-rose-600">{error}</span>
+        <span className="mt-2 block text-xs font-bold text-rose-600">
+          {error}
+        </span>
       ) : null}
     </label>
   );
