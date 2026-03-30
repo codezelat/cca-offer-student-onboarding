@@ -19,11 +19,11 @@ export const validationMessages = {
     "Please enter a valid Sri Lankan mobile number (e.g., 0771234567).",
   whatsapp_required: "Please enter your WhatsApp number.",
   terms_required: "You must accept the terms and conditions to proceed.",
-  diploma_required: "Please select a diploma.",
-  diploma_invalid: "Please select a valid diploma option.",
-  nic_duplicate: "This NIC is already registered for the selected diploma.",
-  email_duplicate: "This email is already registered for the selected diploma.",
+  diploma_required: "Please select a program.",
+  diploma_invalid: "Please select a valid program option.",
+  nic_duplicate: "This NIC is already registered for the selected program.",
+  email_duplicate: "This email is already registered for the selected program.",
   whatsapp_duplicate:
-    "This WhatsApp number is already registered for the selected diploma.",
+    "This WhatsApp number is already registered for the selected program.",
   nic_logic: "Please enter a valid Sri Lankan NIC number.",
 };

@@ -215,7 +215,7 @@ export async function GET(
     },
   );
 
-  const footerText = `This is an official computer-generated digital receipt issued by CCA Campus and SITC Campus. No physical signature is required. For any inquiries, please contact our support at ${supportContact.whatsapp}.`;
+  const footerText = `This is an official computer-generated digital receipt issued by CCA and SITC Campus. No physical signature is required. For any inquiries, please contact our support at ${supportContact.whatsapp}.`;
   page.drawText(footerText, {
     x: 50,
     y: 50,

@@ -31,8 +31,10 @@ export const publicCopy = {
     title: "Register Now",
     questionPrefix: "මාර්තු 22 ආරම්භ කළ",
     questionSuffix: "Bootcamp Batch සදහා දැනටමත් ලියාපදිංචි වී සිටීද?",
-    questionEn: "Have you already registered for the {bootcamps} Batch that started on March 22nd?",
-    subtitle: "පහතින් ඔබගේ පිළිතුර තෝරා ඉදිරියට යන්න / Please select your answer to continue",
+    questionEn:
+      "Have you already registered for the {bootcamps} Batch that started on March 22nd?",
+    subtitle:
+      "පහතින් ඔබගේ පිළිතුර තෝරා ඉදිරියට යන්න / Please select your answer to continue",
     yes: "ඔව් / Yes",
     no: "නැත / No",
     yesCardTitle: "Thank You for Your Interest!",
@@ -100,7 +102,7 @@ export const publicCopy = {
         placeholder: "e.g., 07XXXXXXXX (Active number)",
       },
       terms_accepted:
-        "I confirm that the information provided is accurate and I agree to the terms and conditions provided by CCA Campus via their support channels. *",
+        "I confirm that the information provided is accurate and I agree to the terms and conditions provided by CCA via their support channels. *",
     },
     actions: {
       submit: "Continue to Register",
@@ -148,10 +150,12 @@ export const publicCopy = {
     agreementTitle: "Confirm Your Details",
     agreementLabels: ["Full Name", "NIC Number"],
     onlineTitle: "Card Payment",
-    onlineBody: "Pay the registration fee securely using your debit or credit card.",
+    onlineBody:
+      "Pay the registration fee securely using your debit or credit card.",
     onlineCta: "Pay with Card",
     slipTitle: "Bank Transfer",
-    slipBody: "Transfer the registration fee to our bank account and upload the payment slip.",
+    slipBody:
+      "Transfer the registration fee to our bank account and upload the payment slip.",
     slipCta: "Bank Transfer / Upload Slip",
     back: "Back to Registration Details",
     bullets: [
@@ -205,7 +209,7 @@ export const publicCopy = {
     labels: {
       registrationId: "Registration ID",
       studentName: "Student Name",
-      selectedDiploma: "Selected Bootcamp(s)",
+      selectedDiploma: "Selected Program(s)",
       totalAmount: "Total Amount",
       amount: "LKR 3,000 per program",
     },
@@ -310,16 +314,16 @@ export const publicCopy = {
   },
   offerEnded: {
     title: "Registration Period Has Ended",
-    subtitle: "Thank you for your interest in CCA Campus diploma programs",
+    subtitle: "Thank you for your interest in CCA programs",
     badge: "Offer Deadline Passed",
-    body: "We appreciate your interest in our diploma programs. Unfortunately, the registration period for this special offer has now closed.",
+    body: "We appreciate your interest in our career accelerator and bootcamp programs. Unfortunately, the registration period for this special offer has now closed.",
     bodyFollowup:
       "But don’t worry! We have more opportunities available for you.",
     whatsappTitle: "Need More Information?",
     whatsappBody:
       "Chat with us on WhatsApp to learn about upcoming intakes and special offers",
     whatsappCta: "Contact Us on WhatsApp",
-    footer: "CCA Campus - Empowering Your Future with Quality Education",
+    footer: "CCA - Empowering Your Future with Quality Education",
   },
   genericSuccess: {
     title: "Registration Successful!",
@@ -330,7 +334,7 @@ export const publicCopy = {
     registrationIdBody: "Please save this ID for future reference",
     whatsappTitle: "Join Course WhatsApp Group",
     whatsappBody:
-      "Get instant updates, class schedules, and connect with other students in your diploma program.",
+      "Get instant updates, class schedules, and connect with other students in your program.",
     whatsappCta: "Join WhatsApp Group",
     nextStepsTitle: "Next Steps",
     nextSteps: [

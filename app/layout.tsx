@@ -10,10 +10,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "CCA Offer Student Registration 2026",
-    template: "%s | CCA Offer Student Registration 2026",
+    default: "CCA Bootcamp Special Offer Student Registration System",
+    template: "%s | CCA Bootcamp Special Offer Student Registration System",
   },
-  description: "CCA Campus special offer student registration system",
+  description: "CCA Bootcamp special offer student registration system",
   robots: {
     index: false,
     follow: false,
@@ -34,7 +34,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`h-full bg-white antialiased ${inter.className}`}>
+    <html
+      lang="en"
+      className={`h-full bg-white antialiased ${inter.className}`}
+    >
       <body className="min-h-full bg-white text-neutral-900">
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}

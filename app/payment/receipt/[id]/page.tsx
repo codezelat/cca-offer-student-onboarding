@@ -183,7 +183,7 @@ export default async function ReceiptPage({ params, searchParams }: Props) {
           {/* Footer */}
           <div className="border-t border-neutral-200 pt-10 text-center">
             <p className="text-[10px] font-medium leading-relaxed text-neutral-400">
-              This is an official computer-generated digital receipt issued by CCA Campus and SITC Campus. 
+              This is an official computer-generated digital receipt issued by CCA and SITC Campus. 
               No physical signature is required. For any inquiries, please contact our support at {supportContact.whatsapp}.
             </p>
             <div className="mt-8 flex justify-center no-print">

@@ -20,7 +20,7 @@ export const registrationSchema = z.object({
     .min(1, "Please enter a registration ID.")
     .regex(
       registrationIdRegex,
-      "Please enter a valid registration ID for the selected diploma.",
+      "Please enter a valid registration ID for the selected program.",
     ),
   full_name: z
     .string()
