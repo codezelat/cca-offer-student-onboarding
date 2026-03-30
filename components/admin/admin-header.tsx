@@ -24,7 +24,7 @@ export function AdminHeader({
               alt="CCA and SITC Campus Logos"
               width={600}
               height={240}
-              className="h-10 w-auto sm:h-12"
+              className="h-10 w-auto object-contain sm:h-12"
               priority
             />
           </Link>

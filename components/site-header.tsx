@@ -20,7 +20,10 @@ export function SiteHeader({ admin = false, title, action }: SiteHeaderProps) {
             alt="CCA and SITC Campus Logos"
             width={600}
             height={240}
-            className={cn("h-14 w-auto sm:h-16", admin && "h-10")}
+            className={cn(
+              "h-14 w-auto object-contain sm:h-16",
+              admin && "h-10",
+            )}
             priority
           />
         </Link>
