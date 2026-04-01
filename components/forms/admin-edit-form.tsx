@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { startTransition, useState } from "react";
 
+import { AdminSlipUploadButton } from "@/components/admin/admin-slip-upload-button";
 import { ApproveSlipButton } from "@/components/admin/approve-slip-button";
 import { StudentRecordDeleteButton } from "@/components/admin/student-record-delete-button";
 import { cn } from "@/lib/utils";
@@ -492,6 +493,18 @@ export function AdminEditForm({
                     <ApproveSlipButton studentId={student.id} />
                   </div>
                 ) : null}
+              </div>
+            ) : student.payment_method === "Slip" ? (
+              <div className="rounded-2xl border border-neutral-200 bg-white p-4">
+                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                  Payment Slip
+                </p>
+                <p className="mt-2 text-sm font-medium text-neutral-600">
+                  No slip attached yet.
+                </p>
+                <div className="mt-4">
+                  <AdminSlipUploadButton studentId={student.id} />
+                </div>
               </div>
             ) : null}
           </div>

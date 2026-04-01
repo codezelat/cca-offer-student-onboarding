@@ -48,6 +48,12 @@ export const adminCopy = {
       working: "Approving...",
       error: "Unable to approve this slip right now. Please try again.",
     },
+    uploadSlip: {
+      action: "Upload Slip",
+      working: "Uploading...",
+      error: "Unable to upload this slip right now. Please try again.",
+      attached: "Slip uploaded",
+    },
     emptyTitle: "No students found",
     emptyBody: "Try adjusting your search criteria",
     previous: "Previous",

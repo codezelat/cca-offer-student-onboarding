@@ -603,6 +603,51 @@ export async function approveSlipPayment(id: number) {
   });
 }
 
+export async function attachSlipToRegistrationGroup(
+  id: number,
+  reference: AdminCreateInput["uploaded_slip"],
+) {
+  const existing = await prisma.student.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      registration_id: true,
+      payment_method: true,
+    },
+  });
+
+  if (!existing) {
+    throw new Error("STUDENT_NOT_FOUND");
+  }
+
+  if (existing.payment_method !== "slip") {
+    throw new Error("SLIP_ATTACHMENT_NOT_ALLOWED");
+  }
+
+  if (!reference) {
+    throw new Error("SLIP_FILE_REQUIRED");
+  }
+
+  const blob = await validateUploadedSlip(reference);
+  const groupWhere = getRegistrationGroupWhere(existing.registration_id);
+
+  await prisma.student.updateMany({
+    where: {
+      ...groupWhere,
+      payment_method: "slip",
+    },
+    data: {
+      payment_slip: blob.pathname,
+      payment_date: new Date(),
+    },
+  });
+
+  return prisma.student.findMany({
+    where: groupWhere,
+    orderBy: { registration_id: "asc" },
+  });
+}
+
 export function getPayHereUrls(origin = env.appUrl) {
   return {
     returnUrl: `${origin}/payment/payhere-success`,

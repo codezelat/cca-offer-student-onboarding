@@ -13,7 +13,7 @@ const postalCodeRegex = /^[0-9]{5}$/;
 const homeContactRegex = /^0[0-9]{9}$/;
 const whatsappRegex = /^07[0-9]{8}$/;
 const registrationIdRegex = new RegExp(`^${BOOTCAMP_REG_PREFIX.replace(/\//g, "\\/")}\\/\\d{8}$`);
-const uploadedSlipReferenceSchema = z.object({
+export const uploadedSlipReferenceSchema = z.object({
   pathname: z.string().min(1),
   url: z.string().url(),
   size: z.number().int().positive(),
@@ -328,4 +328,8 @@ export function validateAdminCreateInput(
       postal_code: result.data.postal_code?.trim() || "",
     },
   };
+}
+
+export function validateUploadedSlipReference(input: unknown) {
+  return uploadedSlipReferenceSchema.safeParse(input);
 }

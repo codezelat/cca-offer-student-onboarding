@@ -5,8 +5,15 @@ import { getSession } from "@/lib/session";
 import { prisma } from "@/lib/db";
 import { getRegistrationGroupWhere } from "@/lib/registration-groups";
 import { removeSlipFile } from "@/lib/storage";
-import { approveSlipPayment, updateStudentRecord } from "@/lib/student-service";
-import { adminUpdateSchema } from "@/lib/validation";
+import {
+  approveSlipPayment,
+  attachSlipToRegistrationGroup,
+  updateStudentRecord,
+} from "@/lib/student-service";
+import {
+  adminUpdateSchema,
+  validateUploadedSlipReference,
+} from "@/lib/validation";
 
 export const runtime = "nodejs";
 
@@ -105,13 +112,39 @@ export async function PATCH(
 
   try {
     const { id } = await context.params;
-    const body = (await request.json().catch(() => null)) as { action?: string } | null;
+    const body = (await request.json().catch(() => null)) as
+      | {
+          action?: string;
+          uploaded_slip?: {
+            pathname: string;
+            url: string;
+            size: number;
+            contentType?: string | null;
+          };
+        }
+      | null;
 
-    if (body?.action !== "approve-slip") {
+    let students;
+    if (body?.action === "approve-slip") {
+      students = await approveSlipPayment(Number(id));
+    } else if (body?.action === "attach-slip") {
+      const slipCheck = validateUploadedSlipReference(body.uploaded_slip);
+
+      if (!slipCheck.success) {
+        return NextResponse.json(
+          { message: "Invalid uploaded slip reference." },
+          { status: 422 },
+        );
+      }
+
+      students = await attachSlipToRegistrationGroup(
+        Number(id),
+        slipCheck.data,
+      );
+    } else {
       return NextResponse.json({ message: "Invalid action" }, { status: 422 });
     }
 
-    const students = await approveSlipPayment(Number(id));
     return NextResponse.json({ success: true, students });
   } catch (error) {
     if (error instanceof Error && error.message === "STUDENT_NOT_FOUND") {
@@ -135,8 +168,21 @@ export async function PATCH(
       );
     }
 
+    if (
+      error instanceof Error &&
+      error.message === "SLIP_ATTACHMENT_NOT_ALLOWED"
+    ) {
+      return NextResponse.json(
+        { message: "Only bank slip registrations can receive an uploaded slip." },
+        { status: 409 },
+      );
+    }
+
     console.error(error);
-    return NextResponse.json({ message: "Unable to approve slip." }, { status: 500 });
+    return NextResponse.json(
+      { message: "Unable to complete this slip action." },
+      { status: 500 },
+    );
   }
 }
 

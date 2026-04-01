@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { AdminSlipUploadButton } from "@/components/admin/admin-slip-upload-button";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { ApproveSlipButton } from "@/components/admin/approve-slip-button";
 import { StudentRecordDeleteButton } from "@/components/admin/student-record-delete-button";
@@ -416,6 +417,18 @@ export default async function AdminStudentDetailPage({
                             <ApproveSlipButton studentId={student.id} />
                           </div>
                         ) : null}
+                      </div>
+                    ) : student.payment_method === "slip" ? (
+                      <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-white/60">
+                          Payment Slip
+                        </p>
+                        <p className="mt-2 text-sm font-medium text-white/80">
+                          No slip attached yet.
+                        </p>
+                        <div className="mt-4">
+                          <AdminSlipUploadButton studentId={student.id} />
+                        </div>
                       </div>
                     ) : null}
 
