@@ -75,14 +75,22 @@ export default async function AdminDashboardPage({ searchParams }: Props) {
           title="Dashboard"
           subtitle="Students, payments, exports"
           action={
-            <form action="/api/admin/logout" method="post">
-              <button
-                type="submit"
-                className="rounded-full border border-neutral-200 bg-white px-5 py-3 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900 hover:bg-neutral-50 active:scale-[0.98]"
+            <>
+              <Link
+                href="/cca-admin-area/student/new"
+                className="rounded-full bg-neutral-900 px-5 py-3 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-neutral-800 active:scale-[0.98] shadow-lg shadow-neutral-900/10"
               >
-                {adminCopy.dashboard.logout}
-              </button>
-            </form>
+                {adminCopy.dashboard.addRecord}
+              </Link>
+              <form action="/api/admin/logout" method="post">
+                <button
+                  type="submit"
+                  className="rounded-full border border-neutral-200 bg-white px-5 py-3 text-xs font-black uppercase tracking-widest text-neutral-900 transition-all hover:border-neutral-900 hover:bg-neutral-50 active:scale-[0.98]"
+                >
+                  {adminCopy.dashboard.logout}
+                </button>
+              </form>
+            </>
           }
         />
         <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">

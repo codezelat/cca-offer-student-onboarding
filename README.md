@@ -89,8 +89,10 @@ This repository is maintained by [Codezela Technologies](https://codezela.com) a
 ### 🧑‍💼 Admin capabilities
 
 - Secure admin login backed by encrypted session cookies.
-- Paginated student dashboard with search and filters.
+- Paginated student dashboard with search, filters, and manual record creation.
 - Individual student record view and edit flows.
+- Manual admin-side grouped registration creation for one or two bootcamps.
+- Optional bank-slip attachment during manual admin record creation.
 - Student deletion support through admin API routes.
 - Export student data to **XLSX**.
 - Access uploaded payment slips through secured file-serving routes.
@@ -200,6 +202,7 @@ flowchart LR
 | --- | --- |
 | `/cca-admin-login` | Admin login |
 | `/cca-admin-area/dashboard` | Student dashboard |
+| `/cca-admin-area/student/new` | Manual admin record creation |
 | `/cca-admin-area/student/[id]` | Student detail view |
 | `/cca-admin-area/student/[id]/edit` | Student edit screen |
 
@@ -235,8 +238,11 @@ flowchart LR
 | `/api/admin/login` | `POST` | Authenticate admin session |
 | `/api/admin/logout` | `POST` | Clear admin session |
 | `/api/admin/export` | `GET` | Export filtered student records to XLSX |
+| `/api/admin/student` | `POST` | Create a manual admin student registration |
+| `/api/admin/student/slip-upload` | `POST` | Authorize optional admin-side slip upload during manual record creation |
 | `/api/admin/student/[id]` | `GET` | Retrieve student details |
 | `/api/admin/student/[id]` | `PUT` | Update student data |
+| `/api/admin/student/[id]` | `PATCH` | Approve a pending bank-slip registration group |
 | `/api/admin/student/[id]` | `DELETE` | Delete a student record |
 
 ---
@@ -364,7 +370,6 @@ The Prisma CLI uses:
 The primary persisted entity is `Student`, which includes:
 
 - registration identifiers
-- student IDs
 - student identity fields
 - selected bootcamp
 - normalized duplicate-detection fields
@@ -458,10 +463,7 @@ Use:
 
 - [http://localhost:3000/cca-admin-login](http://localhost:3000/cca-admin-login)
 
-With local fallback credentials, if no admin env vars are configured:
-
-- `admin@cca.local`
-- `password123`
+Use the `ADMIN_USERNAME` and `ADMIN_PASSWORD` values from your local `.env`.
 
 ---
 
@@ -486,7 +488,7 @@ npm run test:watch
 - copy parity checks
 - registration validation
 - Sri Lankan NIC validation
-- registration and student ID generation
+- registration ID generation
 - PayHere hash generation
 - XLSX workbook generation
 

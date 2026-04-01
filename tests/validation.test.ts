@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { validateRegistrationInput } from "@/lib/validation";
+import { validateAdminCreateInput, validateRegistrationInput } from "@/lib/validation";
 
 describe("registration validation", () => {
   it("returns exact duplicate-friendly server copy for missing fields", () => {
@@ -47,5 +47,53 @@ describe("registration validation", () => {
     });
 
     expect(result.success).toBe(true);
+  });
+});
+
+describe("admin create validation", () => {
+  it("accepts a valid manual admin record payload", () => {
+    const result = validateAdminCreateInput({
+      full_name: "Jane Doe",
+      name_with_initials: "J. Doe",
+      gender: "female",
+      nic: "951231234V",
+      date_of_birth: "1995-05-01",
+      email: "jane@example.com",
+      permanent_address: "123 Main Street",
+      postal_code: "10200",
+      district: "Colombo",
+      home_contact_number: "0112345678",
+      whatsapp_number: "0771234567",
+      selected_bootcamps: ["Software Engineer", "QA Engineer"],
+      payment_setup: "online_completed",
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects duplicate bootcamp selections in admin create", () => {
+    const result = validateAdminCreateInput({
+      full_name: "Jane Doe",
+      name_with_initials: "J. Doe",
+      gender: "female",
+      nic: "951231234V",
+      date_of_birth: "1995-05-01",
+      email: "jane@example.com",
+      permanent_address: "123 Main Street",
+      postal_code: "10200",
+      district: "Colombo",
+      home_contact_number: "0112345678",
+      whatsapp_number: "0771234567",
+      selected_bootcamps: ["Software Engineer", "Software Engineer"],
+      payment_setup: "online_completed",
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) {
+      throw new Error("Expected validation failure");
+    }
+    expect(result.errors.selected_bootcamps?.[0]).toBe(
+      "Please select each bootcamp only once.",
+    );
   });
 });

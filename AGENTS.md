@@ -28,11 +28,14 @@ If a fact is not grounded in the codebase, do not put it here.
 - Additional schema assets exist for MySQL under `prisma/mysql` and `generated/mysql`, but the active runtime path is Neon/Postgres.
 - Persistent file storage: Vercel Blob private storage for uploaded payment slips.
 - Domain: multi-step student onboarding and payment flow for CCA bootcamp registrations, plus a lightweight admin area.
+- Admins can also create manual grouped registrations from `/cca-admin-area/student/new`, including optional slip attachment via the admin-only upload route.
 
 ## Repository Map
 
 - `app/`: App Router pages and route handlers.
 - `app/api/`: server endpoints for registration, admin auth/export, payment start/notify, and session cleanup.
+- `app/cca-admin-area/student/new/`: admin-side manual record creation flow.
+- `app/api/admin/student/slip-upload/`: admin-only Blob upload authorization for manual slip attachment.
 - `components/`: public UI, admin UI, form components, and small client-side helpers.
 - `lib/`: business logic, validation, content copy, config, auth/session, storage, payment, IDs, SMS, and Prisma access.
 - `prisma/postgres/`: Postgres schema used for local and deployed Prisma generation.

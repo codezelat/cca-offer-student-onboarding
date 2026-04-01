@@ -16,7 +16,7 @@ import {
 
 type Props = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ updated?: string }>;
+  searchParams: Promise<{ updated?: string; created?: string }>;
 };
 
 function formatPaymentMethod(value: string | null) {
@@ -63,7 +63,7 @@ export default async function AdminStudentDetailPage({
 }: Props) {
   await requireAdminSession();
   const { id } = await params;
-  const { updated } = await searchParams;
+  const { updated, created } = await searchParams;
   const studentId = Number(id);
 
   if (!studentId) {
@@ -111,9 +111,11 @@ export default async function AdminStudentDetailPage({
 
         <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <section className="rounded-[2.5rem] border border-neutral-100 bg-white p-10 shadow-premium sm:p-14">
-            {updated ? (
+            {updated || created ? (
               <div className="mb-8 rounded-[1.5rem] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-semibold text-emerald-800">
-                Student record updated successfully.
+                {created
+                  ? "Student record created successfully."
+                  : "Student record updated successfully."}
               </div>
             ) : null}
 

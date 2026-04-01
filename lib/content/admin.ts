@@ -12,6 +12,7 @@ export const adminCopy = {
     identity: "CCA Registration System",
     title: "Admin Dashboard",
     logout: "Logout",
+    addRecord: "Add Record",
     searchPlaceholder: "Search students...",
     diplomaFilter: "All Bootcamps",
     paymentFilter: "All Payment Methods",
@@ -29,7 +30,7 @@ export const adminCopy = {
       "Selected Bootcamp",
       "NIC",
       "WhatsApp",
-      "Payment Slip",
+      "Payment",
       "Actions",
     ],
     status: {
@@ -37,6 +38,8 @@ export const adminCopy = {
       pending: "Payment Pending",
       slipApproved: "Slip Approved",
       slipPending: "Slip Pending",
+      studyNowPayLater: "Pending Exam Fee",
+      notSet: "Not set",
       viewSlip: "View Slip",
       noSlip: "No slip",
     },
@@ -61,6 +64,41 @@ export const adminCopy = {
       cancel: "Cancel",
       confirm: "Delete",
     },
+  },
+  create: {
+    title: "Add Student Record",
+    subtitle: "Create a manual registration with one or two bootcamps.",
+    save: "Create Record",
+    saving: "Creating...",
+    back: "Back",
+    error: "Unable to create the student record right now.",
+    sections: {
+      student: "Student details",
+      registration: "Programs and payment",
+      notes: "How this works",
+    },
+    paymentSetup: {
+      label: "Payment Setup *",
+      options: {
+        online_completed: "Online Payment Completed",
+        slip_pending: "Bank Slip Pending Review",
+        slip_approved: "Bank Slip Approved",
+        study_now_pay_later: "Study Now Pay Later",
+      },
+      helper:
+        "Choose the state that best matches the record you are adding. This creates the full registration group immediately.",
+    },
+    bootcamps: {
+      label: "Selected Bootcamps *",
+      helper: "Choose one or two bootcamps for this registration.",
+      limit: "You can select up to two bootcamps only.",
+    },
+    notes: [
+      "One bootcamp creates one row. Two bootcamps create a grouped registration with two rows.",
+      "Manual records do not send SMS and do not create a public session.",
+      "Slip records without an uploaded file can still be saved, but only uploaded slips can be approved from the dashboard action.",
+    ],
+    created: "Student record created successfully.",
   },
   edit: {
     identity: "CCA Registration System",

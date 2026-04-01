@@ -3,7 +3,9 @@ import { Prisma } from "@/generated/postgres/client";
 import { getWhatsAppGroupLink, REGISTRATION_FEE } from "@/lib/config";
 import { prisma } from "@/lib/db";
 import { env } from "@/lib/env";
+import { generateRegistrationId } from "@/lib/ids";
 import { getRegistrationGroupWhere } from "@/lib/registration-groups";
+import { validateUploadedSlip } from "@/lib/storage";
 import {
   composeOnlinePaymentSms,
   composeSlipPaymentSms,
@@ -12,12 +14,14 @@ import {
   sendSms,
 } from "@/lib/sms";
 import type {
+  Gender,
   PaymentMethod,
   RegistrationData,
   ValidationResult,
 } from "@/lib/types";
 import { digitsOnly, extractFirstName } from "@/lib/utils";
 import { validationMessages } from "@/lib/content/messages";
+import type { AdminCreateInput } from "@/lib/validation";
 
 function lookupValues(data: Pick<RegistrationData, "nic" | "email" | "whatsapp_number">) {
   return {
@@ -130,6 +134,105 @@ export async function checkScopedDuplicates(data: RegistrationData) {
   }
 
   return { success: true, data } satisfies ValidationResult<RegistrationData>;
+}
+
+function adminCreateInputToRegistrationData(
+  data: AdminCreateInput,
+  registrationId: string,
+): RegistrationData {
+  return {
+    registration_id: registrationId,
+    full_name: data.full_name,
+    name_with_initials: data.name_with_initials,
+    gender: data.gender as Gender,
+    nic: data.nic,
+    date_of_birth: data.date_of_birth,
+    email: data.email,
+    permanent_address: data.permanent_address,
+    postal_code: data.postal_code || undefined,
+    district: data.district,
+    home_contact_number: data.home_contact_number,
+    whatsapp_number: data.whatsapp_number,
+    terms_accepted: true,
+    selected_bootcamps: data.selected_bootcamps,
+  };
+}
+
+function getManualPaymentData(
+  paymentSetup: AdminCreateInput["payment_setup"],
+  bootcampCount: number,
+): Pick<
+  Prisma.StudentUncheckedCreateInput,
+  "payment_method" | "payment_status" | "amount_paid" | "payment_date"
+> {
+  const now = new Date();
+
+  switch (paymentSetup) {
+    case "online_completed":
+      return {
+        payment_method: "online",
+        payment_status: "completed",
+        amount_paid: new Prisma.Decimal(REGISTRATION_FEE),
+        payment_date: now,
+      };
+    case "slip_pending":
+      return {
+        payment_method: "slip",
+        payment_status: "pending",
+        amount_paid: new Prisma.Decimal(REGISTRATION_FEE * bootcampCount),
+        payment_date: now,
+      };
+    case "slip_approved":
+      return {
+        payment_method: "slip",
+        payment_status: "completed",
+        amount_paid: new Prisma.Decimal(REGISTRATION_FEE * bootcampCount),
+        payment_date: now,
+      };
+    case "study_now_pay_later":
+      return {
+        payment_method: "study_now_pay_later",
+        payment_status: "pending_exam_fee",
+        amount_paid: new Prisma.Decimal(0),
+        payment_date: now,
+      };
+  }
+}
+
+export async function createAdminStudentRecords(data: AdminCreateInput) {
+  const registrationId = await generateRegistrationId(prisma);
+  const registrationData = adminCreateInputToRegistrationData(data, registrationId);
+  const duplicateCheck = await checkScopedDuplicates(registrationData);
+
+  if (!duplicateCheck.success) {
+    const error = new Error("DUPLICATE_CONFLICT");
+    Object.assign(error, { errors: duplicateCheck.errors });
+    throw error;
+  }
+
+  const paymentData = getManualPaymentData(
+    data.payment_setup,
+    data.selected_bootcamps.length,
+  );
+  const uploadedSlip =
+    data.payment_setup.startsWith("slip") && data.uploaded_slip
+      ? await validateUploadedSlip(data.uploaded_slip)
+      : null;
+
+  return prisma.$transaction(
+    data.selected_bootcamps.map((bootcamp, index) => {
+      const suffix = data.selected_bootcamps.length > 1 ? `${index + 1}` : undefined;
+      const base = registrationToCreateInput(registrationData, bootcamp, suffix);
+
+      return prisma.student.create({
+        data: {
+          ...base,
+          ...paymentData,
+          payment_slip: uploadedSlip?.pathname ?? null,
+        },
+      });
+    }),
+  );
 }
 
 export async function ensureStudentForOnlinePending(data: RegistrationData, orderId: string) {

@@ -13,6 +13,12 @@ const postalCodeRegex = /^[0-9]{5}$/;
 const homeContactRegex = /^0[0-9]{9}$/;
 const whatsappRegex = /^07[0-9]{8}$/;
 const registrationIdRegex = new RegExp(`^${BOOTCAMP_REG_PREFIX.replace(/\//g, "\\/")}\\/\\d{8}$`);
+const uploadedSlipReferenceSchema = z.object({
+  pathname: z.string().min(1),
+  url: z.string().url(),
+  size: z.number().int().positive(),
+  contentType: z.string().optional().nullable(),
+});
 
 export const registrationSchema = z.object({
   registration_id: z
@@ -166,6 +172,92 @@ export const adminUpdateSchema = z.object({
     }),
 });
 
+export const adminCreateSchema = z.object({
+  full_name: z
+    .string()
+    .min(1, "Please enter the full name.")
+    .max(255)
+    .regex(fullNameRegex, "Full name should only contain letters and spaces."),
+  name_with_initials: z
+    .string()
+    .min(1, "Please enter the name with initials.")
+    .max(255),
+  gender: z
+    .string()
+    .min(1, "Please select the gender.")
+    .refine((value) => value === "male" || value === "female", {
+      message: "Please select a valid gender option.",
+    }),
+  nic: z
+    .string()
+    .min(1, "Please enter the NIC number.")
+    .regex(
+      nicRegex,
+      "Please enter a valid NIC number (e.g., 123456789V or 123456789012).",
+    ),
+  date_of_birth: z
+    .string()
+    .min(1, "Please enter a valid date of birth.")
+    .refine((value) => !Number.isNaN(new Date(value).getTime()), {
+      message: "Please enter a valid date of birth.",
+    }),
+  email: z
+    .string()
+    .min(1, "Please enter the email address.")
+    .email("Please enter a valid email address.")
+    .max(255),
+  permanent_address: z
+    .string()
+    .min(1, "Please enter the permanent address.")
+    .max(500, "Address cannot exceed 500 characters."),
+  postal_code: z
+    .string()
+    .optional()
+    .default("")
+    .refine((value) => !value || postalCodeRegex.test(value), {
+      message: "Please enter a valid 5-digit postal code.",
+    }),
+  district: z
+    .string()
+    .min(1, "Please select the district.")
+    .refine((value) => validDistricts.has(value as (typeof districts)[number]), {
+      message: "Please select a valid district.",
+    }),
+  home_contact_number: z
+    .string()
+    .min(1, "Please enter the emergency contact number.")
+    .regex(
+      homeContactRegex,
+      "Please enter a valid Sri Lankan contact number (e.g., 0112345678).",
+    ),
+  whatsapp_number: z
+    .string()
+    .min(1, "Please enter the WhatsApp number.")
+    .regex(
+      whatsappRegex,
+      "Please enter a valid Sri Lankan mobile number (e.g., 0771234567).",
+    ),
+  selected_bootcamps: z
+    .array(z.string())
+    .min(1, "Please select at least one bootcamp.")
+    .max(2, "You can select up to two bootcamps only.")
+    .refine((values) => values.every((value) => validBootcampNames.has(value)), {
+      message: "Please select valid bootcamp options.",
+    })
+    .refine((values) => new Set(values).size === values.length, {
+      message: "Please select each bootcamp only once.",
+    }),
+  payment_setup: z.enum(
+    ["online_completed", "slip_pending", "slip_approved", "study_now_pay_later"],
+    {
+      message: "Please choose a valid payment setup.",
+    },
+  ),
+  uploaded_slip: uploadedSlipReferenceSchema.optional(),
+});
+
+export type AdminCreateInput = z.infer<typeof adminCreateSchema>;
+
 export const adminLoginSchema = z.object({
   email: z
     .string()
@@ -203,6 +295,37 @@ export function validateRegistrationInput(input: unknown): ValidationResult<z.in
       email: result.data.email.trim(),
       permanent_address: result.data.permanent_address.trim(),
       postal_code: result.data.postal_code?.trim() || undefined,
+    },
+  };
+}
+
+export function validateAdminCreateInput(
+  input: unknown,
+): ValidationResult<AdminCreateInput> {
+  const result = adminCreateSchema.safeParse(input);
+  if (!result.success) {
+    return {
+      success: false,
+      errors: zodErrorsToFieldErrors(result.error),
+    };
+  }
+
+  const nicResult = validateSriLankanNic(result.data.nic);
+  if (!nicResult.valid) {
+    return {
+      success: false,
+      errors: { nic: ["Please enter a valid Sri Lankan NIC number."] },
+    };
+  }
+
+  return {
+    success: true,
+    data: {
+      ...result.data,
+      nic: normalizeNic(result.data.nic),
+      email: result.data.email.trim(),
+      permanent_address: result.data.permanent_address.trim(),
+      postal_code: result.data.postal_code?.trim() || "",
     },
   };
 }

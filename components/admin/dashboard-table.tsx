@@ -27,6 +27,52 @@ type DashboardTableProps = {
   students: DashboardStudent[];
 };
 
+function paymentBadge(paymentMethod: string | null, paymentStatus: string) {
+  if (paymentMethod === "online") {
+    return {
+      label:
+        paymentStatus === "completed"
+          ? adminCopy.dashboard.status.success
+          : adminCopy.dashboard.status.pending,
+      className:
+        paymentStatus === "completed"
+          ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+          : "bg-amber-50 text-amber-700 border-amber-100",
+      dotClassName:
+        paymentStatus === "completed" ? "bg-emerald-500" : "bg-amber-500",
+    };
+  }
+
+  if (paymentMethod === "slip") {
+    return {
+      label:
+        paymentStatus === "completed"
+          ? adminCopy.dashboard.status.slipApproved
+          : adminCopy.dashboard.status.slipPending,
+      className:
+        paymentStatus === "completed"
+          ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+          : "bg-amber-50 text-amber-700 border-amber-100",
+      dotClassName:
+        paymentStatus === "completed" ? "bg-emerald-500" : "bg-amber-500",
+    };
+  }
+
+  if (paymentMethod === "study_now_pay_later") {
+    return {
+      label: adminCopy.dashboard.status.studyNowPayLater,
+      className: "bg-sky-50 text-sky-700 border-sky-100",
+      dotClassName: "bg-sky-500",
+    };
+  }
+
+  return {
+    label: adminCopy.dashboard.status.notSet,
+    className: "bg-neutral-100 text-neutral-600 border-neutral-200",
+    dotClassName: "bg-neutral-400",
+  };
+}
+
 export function DashboardTable({ students }: DashboardTableProps) {
   const [deleteStudent, setDeleteStudent] = useState<DashboardStudent | null>(null);
 
@@ -56,8 +102,14 @@ export function DashboardTable({ students }: DashboardTableProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-50 bg-white">
-            {formatted.map((student) => (
-              <tr key={student.id} className="hover:bg-neutral-50/50 transition-colors">
+            {formatted.map((student) => {
+              const badge = paymentBadge(
+                student.payment_method,
+                student.payment_status,
+              );
+
+              return (
+                <tr key={student.id} className="hover:bg-neutral-50/50 transition-colors">
                 <td className="px-6 py-6 text-sm font-black text-neutral-900 tabular-nums">
                   {student.registration_id}
                 </td>
@@ -70,37 +122,50 @@ export function DashboardTable({ students }: DashboardTableProps) {
                   {student.whatsapp_number}
                 </td>
                 <td className="px-6 py-6 text-sm">
-                  {student.payment_method === "online" ? (
+                  <div className="space-y-2">
                     <span
-                      className={`inline-flex items-center gap-2 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] rounded-full border shadow-sm ${
-                        student.payment_status === "completed"
-                          ? "bg-emerald-50 text-emerald-700 border-emerald-100"
-                          : "bg-amber-50 text-amber-700 border-amber-100"
-                      }`}
+                      className={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] shadow-sm ${badge.className}`}
                     >
-                      <span className={`h-2 w-2 rounded-full shadow-inner ${student.payment_status === "completed" ? "bg-emerald-500" : "bg-amber-500"}`} />
-                      {student.payment_status === "completed"
-                        ? adminCopy.dashboard.status.success
-                        : adminCopy.dashboard.status.pending}
+                      <span
+                        className={`h-2 w-2 rounded-full shadow-inner ${badge.dotClassName}`}
+                      />
+                      {badge.label}
                     </span>
-                  ) : student.payment_slip ? (
-                    <a
-                      href={`/files/slips/${student.id}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] text-indigo-700 border border-indigo-100 shadow-sm transition-all hover:bg-indigo-100"
-                    >
-                      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      {adminCopy.dashboard.status.viewSlip}
-                    </a>
-                  ) : (
-                    <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
-                      {adminCopy.dashboard.status.noSlip}
-                    </span>
-                  )}
+
+                    {student.payment_slip ? (
+                      <a
+                        href={`/files/slips/${student.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.1em] text-indigo-700 border border-indigo-100 shadow-sm transition-all hover:bg-indigo-100"
+                      >
+                        <svg
+                          className="h-3 w-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="3"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                          />
+                        </svg>
+                        {adminCopy.dashboard.status.viewSlip}
+                      </a>
+                    ) : student.payment_method === "slip" ? (
+                      <span className="block text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                        {adminCopy.dashboard.status.noSlip}
+                      </span>
+                    ) : null}
+                  </div>
                 </td>
                 <td className="px-6 py-6 text-sm">
                   <div className="flex items-center gap-3">
@@ -140,8 +205,9 @@ export function DashboardTable({ students }: DashboardTableProps) {
                     </button>
                   </div>
                 </td>
-              </tr>
-            ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
